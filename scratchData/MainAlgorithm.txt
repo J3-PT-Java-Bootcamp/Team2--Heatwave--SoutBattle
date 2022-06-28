@@ -1,0 +1,37 @@
+
+
+startMenu(){
+	if(checkSaveddata(bool : thereAreSavedData)){
+		loadData()
+	}else { newGame() }
+	
+	startGame(){
+		playerParty= new Party()->5? random characters
+		enemyParty=new Party()
+		while(playerParty.getMembers()>0&&enemyParty.getMembers()>0){
+			playerParty.printCharacters();
+			playerCharacter= chooseCharacter();
+			enemyCharacter=randomEnemyCharacter();
+			
+			playerCharacter.attack(enemyCharacter);
+			enemyCharacter.attack(playerCharacter);
+			if(!playerCharacter.isAlive())playerCharacter.die()
+			if(!playerCharacter.isAlive())playerCharacter.die()
+		}
+		checkWinner()
+		showMemorial(graveyard)
+	}	
+}
+
+
+
+
+
+die(){
+	print(character is dead)
+	graveyard.add(character)
+	this.party.remove(this)
+	
+	
+	
+}
