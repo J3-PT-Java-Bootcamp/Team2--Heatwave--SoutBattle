@@ -1,27 +1,75 @@
 
 
-startMenu(){
+mainStart(){
 	if(checkSaveddata(bool : thereAreSavedData)){
 		loadData()
 	}else { newGame() }
-	
-	startGame(){
-		playerParty= new Party()->5? random characters
-		enemyParty=new Party()
-		while(playerParty.getMembers()>0&&enemyParty.getMembers()>0){
-			playerParty.printCharacters();
-			playerCharacter= chooseCharacter();
-			enemyCharacter=randomEnemyCharacter();
-			
-			playerCharacter.attack(enemyCharacter);
-			enemyCharacter.attack(playerCharacter);
-			if(!playerCharacter.isAlive())playerCharacter.die()
-			if(!playerCharacter.isAlive())playerCharacter.die()
-		}
-		checkWinner()
-		showMemorial(graveyard)
-	}	
 }
+startMenu(){
+	printMenu();
+	switch(input.newLine();){
+		case SELECT-PARTY
+			//TODO save multiple partys? meanwhile could be simply PLAY with current party
+			playerParty=selectedParty OR loadedParty
+			startGame();
+		case NEW-PARTY
+			//CREATE NEW PARTY WITHOUT CLEAR if there are multiparty implemented
+			newGame();
+		case CLEAR
+			//CLEARS all saved data
+			clearData();
+			newGame();
+		case ABOUT
+			aboutApp();
+			startMenu();
+		case GRAVEYARD
+			showMemorial();
+	}
+}
+
+loadData(){
+	File data= data/savedData.csv
+	File graveyardSTR= data/graveyard.csv
+	Party  playerParty=new Party(data);
+	String[] graveyard=graveyardSTR.split(",");
+	startMenu();
+	
+}
+saveData(){
+	//TODO
+}
+newGame(){
+	 enterPartyName(){
+		name=input.nextLine()
+		playerParty= new Party(name)//->5? random characters
+		startGame();
+	 }
+}
+
+startGame(){
+	enemyParty=new Party()
+	while(playerParty.getMembers()>0&&enemyParty.getMembers()>0){
+		playerParty.printCharacters();
+		playerCharacter= chooseCharacter();
+		enemyCharacter=enemyParty.randomCharacter();
+		playerCharacter.attack(enemyCharacter);
+		enemyCharacter.attack(playerCharacter);
+		if(!playerCharacter.isAlive())playerCharacter.die()
+		if(!playerCharacter.isAlive())playerCharacter.die()
+	}
+	checkWinner()
+	showMemorial(graveyard)
+}
+	
+clearData(){
+	userConfirm()
+}
+showMemorial(){
+}
+aboutApp(){
+	printReadMe()
+}
+
 
 
 
@@ -30,8 +78,18 @@ startMenu(){
 die(){
 	print(character is dead)
 	graveyard.add(character)
-	this.party.remove(this)
+	this.party.remove(this)	
+}
+
+Character.attack(Character enemy){
 	
-	
+	if(mana>=heavyAttack.cost){
+		enemy.hp-=heavyAttack.damage;
+		this.mana+=heavyAttack.cost; //---> Heavy attack cost will be a negative value
+		this
+	}else{
+		enemyHP-=weakAttack.damage;//---> Weak attack cost will be positive value
+		this.mana+=weakAttack.cost;
+	}
 	
 }
