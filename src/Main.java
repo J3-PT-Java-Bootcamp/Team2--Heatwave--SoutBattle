@@ -1,7 +1,10 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        System.out.println("First Change");
-        System.out.println("Carlos Change");
+        testPrinter();
+    }
+
+    private static void testPrinter() {
+        ConsolePrinter printer= new ConsolePrinter();
+        printer.splashScreen();
     }
 }
