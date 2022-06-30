@@ -8,7 +8,7 @@ public class ConsolePrinter {
     //---------------------------------------------------------------------------ATTRIBUTES
     enum Menu{
         PLAY("Play Game","P"),
-        NEW_TEAM("Create New Team","N"),
+        NEW_PARTY("Create New Party","N"),
         ABOUT("Read Me","R"),
         MEMORIAL("See Graveyard","G"),
         CALIBRATE("Calibrate Screen","S"),
@@ -69,11 +69,10 @@ public class ConsolePrinter {
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
      */
-
     public void calibrateScreen() throws IOException {
-        System.out.println("X".repeat(120)
-                + "\n" + ("Y" + " ".repeat(118) + "Y\n").repeat(18) + "X".repeat(120) +
-                centerText("\n\nAdjust your console size to fit the square above.Press Enter TWICE when done"
+        System.out.println("X".repeat(LIMIT_X)
+                + "\n" + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y-4) + "X".repeat(LIMIT_X) +
+                centerText("\n\nAdjust your console size to fit the rectangle above.Press Enter TWICE when done"
                         , LIMIT_X));
 
         in.skip(2);
@@ -95,6 +94,7 @@ public class ConsolePrinter {
                 LIMIT_X/2,
                 new String[]{strBuilder.toString(), auxString.toString()})+"\n";
         if(showError) outputText+=("\n\n \u001B[31m        ERR_   Input not recognized \u001B[0m");
+        outputText+="\n Enter a number to continue";
         System.out.println(textToTop(centerText(strBuilderAux.append(outputText).toString(),LIMIT_X),LIMIT_Y));
         var input= in.readLine();
         input=input.replace("\n","").trim();
@@ -112,12 +112,16 @@ public class ConsolePrinter {
     public void printError(String message){
         //TODO prints a error message
     }
-    public void printChooseCharacter(Party party){
+    public Party chooseParty(Party[] parties){
+        return parties[0];
+    }
+    public Character chooseCharacter(Party party){
         //TODO prints all characters of a party and all the stats and waits until user choose one
         out.println(partyToString(party));
+        return 'a';
     }
-    public void printWinnerCharacter(Character fighter){
-        //TODO print message to announce current fight winner
+    public void printFight(){
+
     }
     public void printGameOver(Boolean playerWins){
         //TODO print game over screen (model depends on player winning or not)
