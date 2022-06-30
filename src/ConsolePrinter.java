@@ -27,8 +27,9 @@ public class ConsolePrinter {
         }
     }
     private final int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
-    private final String GAME_NAME="AmazingFighter"
-            , HEADER="=".repeat(LIMIT_X)+"\n"+"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X);
+    private final String GAME_NAME="AmazingFighter";
+    private final String HEADER="=".repeat(LIMIT_X)+"\n"
+            +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X);
     private final String GAME_LOGO= """
                   |XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|
                   |X____ _____                          _____ __                    X|
