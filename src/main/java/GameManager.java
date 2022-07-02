@@ -1,20 +1,19 @@
-import java.io.IOException;
-
+import ScreenManager.*;
 public class GameManager {
-    private final ConsolePrinter printer;
-    private ConsolePrinter.Party playerParty;
+    public final ScreenManager.ConsolePrinter printer;
 
     public GameManager() {
-        printer= new ConsolePrinter();
+        printer= new ScreenManager.ConsolePrinter();
     }
-    void startGame() throws IOException {
+    void startGame() throws Exception {
         printer.splashScreen();
         startMenu(printer);
     }
-    private void startMenu(ConsolePrinter printer) throws IOException {
+    private void startMenu(ScreenManager.ConsolePrinter printer) throws Exception {
         switch (printer.showMenu(false)){
             case PLAY ->
-                    printer.chooseCharacter(new ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
+                    System.out.println("LETS PLAY");
+//                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
             case NEW_PARTY -> System.out.println("TODO - CREATE A NEW PARTY SCREEN");//TODO CREATE A NEW TEAM SCREEN
             case ABOUT -> System.out.println("This is the Read Me & instructions");//TODO CREATE A README SCREEN
             case MEMORIAL -> System.out.println("IN MEMORIAM");//TODO CREATE MEMORIAL
@@ -29,7 +28,7 @@ public class GameManager {
     }
     private void playGame(){
 //        //TODO implement all dependencies
-//        this.playerParty=printer.chooseParty(new ConsolePrinter.Party[]{new ConsolePrinter.Party(new String[]{"a","b"})});
+//        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Party[]{new ScreenManager.ConsolePrinter.Party(new String[]{"a","b"})});
 //        if(this.playerParty.missingCharacters()){
 //            this.playerParty.recruitCharacters(printer);
 //        }
@@ -47,7 +46,7 @@ public class GameManager {
     }
     private void loadData(){}
     private void saveData(){}
-    private void gameOver() throws IOException {
+    private void gameOver() throws Exception {
         printer.printGameOver(true);
         startMenu(printer);
 
