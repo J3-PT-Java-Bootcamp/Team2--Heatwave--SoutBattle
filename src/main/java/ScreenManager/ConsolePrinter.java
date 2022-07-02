@@ -1,3 +1,5 @@
+package ScreenManager;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -6,19 +8,18 @@ import java.util.ArrayList;
  */
 public class ConsolePrinter {
     //---------------------------------------------------------------------------ATTRIBUTES
-    enum Menu{
-        PLAY("Play Game","P"),
-        NEW_PARTY("Create New Party","N"),
-        ABOUT("Read Me","R"),
-        MEMORIAL("See Graveyard","G"),
-        CALIBRATE("Calibrate Screen","S"),
-        CLEAR_DATA("Clear All Data","C"),
-        EXIT("Exit Game","E");
+    public enum Menu{
+        PLAY("Play Game"),
+        NEW_PARTY("Create New Party"),
+        ABOUT("Read Me"),
+        MEMORIAL("See Graveyard"),
+        CALIBRATE("Calibrate Screen"),
+        CLEAR_DATA("Clear All Data"),
+        EXIT("Exit Game");
         private final String label;
-        private final String keyChar;
-        Menu(String label,String keyChar){
+
+        Menu(String label){
             this.label=label;
-            this.keyChar=keyChar;
         }
 
         @Override
@@ -26,6 +27,18 @@ public class ConsolePrinter {
             return this.label;
         }
     }
+    enum Modal{OK("Confirm"),
+        CANCEL("Cancel");
+        private final String label;
+
+        Modal(String label){
+            this.label=label;
+        }
+
+        @Override
+        public String toString() {
+            return this.label;
+        }}
     private final int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
     private final String GAME_NAME="AmazingFighter";
     private final String HEADER="=".repeat(LIMIT_X)+"\n"
@@ -46,40 +59,37 @@ public class ConsolePrinter {
  / /    / __ \\ / __ \\ / /  / /  / _ \\ / __ `// __ `__ \\
 / /___ / /_/ // /_/ // /  / /  /  __// /_/ // / / / / /
 \\____/ \\____/ \\____//_/  /_/   \\___/ \\__,_//_/ /_/ /_/"""; //TEAM NAME LOGO
-    private final PrintStream out;
     private final BufferedReader in;
 
 
     //---------------------------------------------------------------------------   CONSTRUCTOR
     public ConsolePrinter() {
-        this.out = System.out;
         this.in= new BufferedReader(new InputStreamReader(System.in));
     }
 
     //---------------------------------------------------------------------------   PUBLIC METHODS
     /**Shows the Team Logo after calibrating console size
      */
-    public void splashScreen() throws IOException {
+    public void splashScreen() throws Exception {
         calibrateScreen();
         clearScreen();
-        out.println(TEAM_LOGO+"\n\n");
-        out.println(centerText(GAME_LOGO,LIMIT_X));
+        sendToPrint(TEAM_LOGO+"\n\n");
+        sendToPrint(centerText(GAME_LOGO,LIMIT_X));
         waitFor(2000);
     }
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
      */
-    public void calibrateScreen() throws IOException {
-        System.out.println("X".repeat(LIMIT_X)
+    public void calibrateScreen() throws Exception {
+      sendToPrint("X".repeat(LIMIT_X)
                 + "\n" + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y-4) + "X".repeat(LIMIT_X) +
                 centerText("\n\nAdjust your console size to fit the rectangle above.Press Enter TWICE when done"
                         , LIMIT_X));
-
-        in.skip(2);
+      in.skip(2);
 
     }
 
-    public Menu showMenu(boolean showError) throws IOException {
+    public Menu showMenu(boolean showError) throws Exception {
         clearScreen();
         var strBuilder= new StringBuilder();
         var strBuilderAux= new StringBuilder();
@@ -95,7 +105,7 @@ public class ConsolePrinter {
                 new String[]{strBuilder.toString(), auxString.toString()})+"\n";
         if(showError) outputText+=("\n\n \u001B[31m        ERR_   Input not recognized \u001B[0m");
         outputText+="\n Enter a number to continue";
-        System.out.println(textToTop(centerText(strBuilderAux.append(outputText).toString(),LIMIT_X),LIMIT_Y));
+       sendToPrint(textToTop(centerText(strBuilderAux.append(outputText).toString(),LIMIT_X),LIMIT_Y));
         var input= in.readLine();
         input=input.replace("\n","").trim();
         int inputNumber = -1;
@@ -117,7 +127,7 @@ public class ConsolePrinter {
     }
     public Character chooseCharacter(Party party){
         //TODO prints all characters of a party and all the stats and waits until user choose one
-        out.println(partyToString(party));
+//        (partyToString(party));
         return 'a';
     }
     public void printFight(){
@@ -128,6 +138,10 @@ public class ConsolePrinter {
     }
     public void printMemorial(String[] graveyard){
         //TODO prints memorial screen with all dead fighters
+    }
+
+    public Modal showModal(String message, String captureInput){
+        return ConsolePrinter.Modal.OK;
     }
 
     //---------------------------------------------------------------------------   TEXT MANIPULATION
@@ -149,6 +163,15 @@ public class ConsolePrinter {
         }
         return resVal.toString();
     }
+
+    /**Method that adjusts line width of a text to fit in a determinate width
+     * if it doesnt fits, it will separate the text by words, if possible, otherwise breaking word with a hyphen
+     * It also feeds free space with spaces.
+     * @param text multiline text to justify
+     * @param width desired max width for the text
+     *
+     * @return formatted String
+     */
     private String justifyText(String text,int width){
         var strBuilder = new StringBuilder();
         for (String str:text.split("\n")) {
@@ -175,6 +198,13 @@ public class ConsolePrinter {
         }
         return strBuilder.toString();
     }
+
+    /**Centers a given text into available vertical space
+     * @param text text to be centered, could be multiline
+     * @param height total number of lines
+     *
+     * @return formatted text
+     */
     private String centerTextVertically(String text,int height){
         int remainingLines= height - text.split("\n").length;
         if (remainingLines>1){
@@ -182,6 +212,14 @@ public class ConsolePrinter {
                     text + "\n".repeat(Math.floorDiv(remainingLines, 2));
         }
         return text;
+    }
+    private String fillSpace(String text, int width){
+        var splitText= splitText(text);
+        for (String line :
+                splitText) {
+            if(line.length()<width)line+=" ".repeat(width-line.length());
+        }
+        return joinText(splitText);
     }
     private String textToTable(int numberOfColumns, int totalSize, String [] columnsContent){
         int charLimit = (numberOfColumns>1?(totalSize/numberOfColumns):totalSize)-numberOfColumns;
@@ -270,6 +308,18 @@ public class ConsolePrinter {
 
     //---------------------------------------------------------------------------   CONSOLE MANAGER
 
+    public void sendToPrint(String text) throws TextOutOfScreenException {
+        if(textFitsOnScreen(text)){
+            System.out.println(text);
+        }else throw new TextOutOfScreenException("FATAL FORMAT ERROR",text,0);
+    }
+
+    private boolean textFitsOnScreen(String text) {
+        //TODO IT FAILS IF text.indexOf('\n') DOESNT FOUND NOTHING THROWS java.lang.StringIndexOutOfBoundsException
+        return countLines(text) <= LIMIT_Y + 1&&text.subSequence(0,text.indexOf('\n')).length()<=LIMIT_X+1;
+        //TODO check all lines not only first, and throw an exception that modifies that line to fit screen
+    }
+
     /**Shorthand for Thread.sleep(miliseconds)
      * @param milis time to sleep in miliseconds
      */
@@ -282,8 +332,8 @@ public class ConsolePrinter {
     }
     /** Sends new lines to fill screen and clear last output
      */
-    private void clearScreen(){
-        out.println("\n".repeat(LIMIT_Y));
+    private void clearScreen() throws Exception {
+        sendToPrint("\n".repeat(LIMIT_Y));
     }
 
     /**Prints the text line per line with specified delay
