@@ -1,4 +1,12 @@
 import ScreenManager.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class GameManager {
     public final ScreenManager.ConsolePrinter printer;
 
@@ -50,5 +58,25 @@ public class GameManager {
         printer.printGameOver(true);
         startMenu(printer);
 
+    }
+
+
+    public static ArrayList<String> loadData(String fileName) throws FileNotFoundException {
+        Scanner sc = new Scanner(new File(fileName));
+        ArrayList<String> tempArray = new ArrayList<String>();
+        while (sc.hasNext())
+        {
+            tempArray.add(sc.nextLine());
+        }
+        sc.close();
+        return tempArray;
+    }
+    public static void writeToFile(ArrayList<String> arr, String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName);
+
+        for(int i = 0; i<arr.size(); i++){
+            writer.write(arr.get(i) + '\n');
+        }
+        writer.close();
     }
 }
