@@ -296,7 +296,8 @@ public class TextObject{
         }
         return this;
     }
-
+    //TODO Function to add a frame around text object
+    //TODO Function to add bg box
 
     @Override
     public String toString() {

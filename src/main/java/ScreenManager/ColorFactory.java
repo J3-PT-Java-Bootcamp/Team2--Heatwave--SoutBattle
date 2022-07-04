@@ -75,37 +75,22 @@ public class ColorFactory {
 
     }
     public enum CColors {
-         BLACK( "[030m"),
-
-         RED( "[031m"),
-
-         GREEN( "[032m"),
-
-         YELLOW( "[033m"),
-
-         BLUE( "[034m"),
-
-         PURPLE( "[035m"),
-
-         CYAN( "[036m"),
-
-         WHITE( "[037m"),
-
-         BRIGHT_BLACK( "[090m"),
-
-         BRIGHT_RED( "[091m"),
-
-         BRIGHT_GREEN( "[092m"),
-
-         BRIGHT_YELLOW( "[093m"),
-
-         BRIGHT_BLUE( "[094m"),
-
-         BRIGHT_PURPLE( "[095m"),
-
-         BRIGHT_CYAN( "[096m"),
-
-         BRIGHT_WHITE( "[097m");
+        BLACK( "[030m"),
+        BRIGHT_BLACK( "[090m"),
+        WHITE( "[037m"),
+        BRIGHT_WHITE( "[097m"),
+        RED( "[031m"),
+        BRIGHT_RED( "[091m"),
+        BRIGHT_YELLOW( "[093m"),
+        YELLOW( "[033m"),
+        GREEN( "[032m"),
+        BRIGHT_GREEN( "[092m"),
+        BRIGHT_CYAN( "[096m"),
+        CYAN( "[036m"),
+        BRIGHT_BLUE( "[094m"),
+        BLUE( "[034m"),
+        PURPLE( "[035m"),
+        BRIGHT_PURPLE( "[095m");
 
          
         final String label;
@@ -121,14 +106,12 @@ public class ColorFactory {
 
     public static CColors getRandomColor(){
         int num;
-        boolean noColor;
-        do {
-            num = new java.util.Random().nextInt(CColors.values().length);
-            noColor = num == ScreenManager.ColorFactory.CColors.BLACK.ordinal()
-                    || num == ScreenManager.ColorFactory.CColors.BRIGHT_BLACK.ordinal()
-                    || num == ScreenManager.ColorFactory.CColors.BRIGHT_WHITE.ordinal()
-                    || num == ScreenManager.ColorFactory.CColors.WHITE.ordinal();
-        } while (noColor);
+            num = new java.util.Random().nextInt(4,CColors.values().length);
+        return CColors.values()[num];
+    }
+    public static CColors getNextRainbowColor(CColors currentColor){
+        int num= currentColor.ordinal()+1;
+        if(num>= CColors.values().length||num<4)num=4;
         return CColors.values()[num];
     }
 
@@ -146,6 +129,20 @@ public class ColorFactory {
         }
         return new String(charList);
 
+    }
+    public static String rainbowCharacters(String line,int startVal){
+        var color= CColors.values()[startVal];
+        var charList=line.toCharArray();
+        var sb= new StringBuilder();
+        for(char ch: charList) {
+            if (ch!=BLANK_SPACE_CH) {
+
+                sb.append(color);
+                color=getNextRainbowColor(color);
+            }
+            sb.append(ch);
+        }
+        return sb.append(TextStyle.RESET).toString();
     }
 
 }

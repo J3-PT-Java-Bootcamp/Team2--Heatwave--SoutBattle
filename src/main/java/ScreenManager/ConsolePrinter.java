@@ -95,7 +95,7 @@ public class ConsolePrinter {
         clearScreen();
         sendToQueue(TEAM_LOGO
                 .colorizeAllText(CColors.BRIGHT_RED,CColors.RED,CColors.RED,  CColors.YELLOW, CColors.BRIGHT_YELLOW)
-                .stylizeAllText(TextStyle.BOLD).alignTextTop(),2);
+                .stylizeAllText(TextStyle.BOLD));
         sendToQueue(GAME_LOGO.alignTextCenter().colorizeAllText().stylizeAllText(TextStyle.BOLD).alignTextMiddle(),2);
         this.printSpeed =2;
         startPrint(Scroll.BLOCK);
@@ -106,7 +106,7 @@ public class ConsolePrinter {
      */
     public void calibrateScreen() throws Exception {
       sendToQueue(SCREEN_RECT.setAllTextBackground(BgColors.BRIGHT_WHITE));
-      sendToQueue((new TextObject("Adjust your console size to fit the rectangle above.", LIMIT_X,2)
+      sendToQueue((new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), LIMIT_X,2)
               .addText(CColors.CYAN +"Press Enter TWICE when done"+TextStyle.RESET).alignTextCenter()));
       startPrint(Scroll.BLOCK);
       in.skip(2);
