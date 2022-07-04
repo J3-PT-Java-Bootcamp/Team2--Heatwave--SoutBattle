@@ -1,10 +1,11 @@
 public class Main {
     public static void main(String[] args) throws Exception {
-        testPrinter();
-        //Character.hurt();
-        //Character.heal();
-        //Character.die();
-        //Character.deleteFromParty();
+       // testPrinter();
+        Character.hurt();
+        Character.heal();
+        Character.die();
+        Character.deleteFromParty();
+        Character.isalive();
     }
 
     private static void testPrinter() throws Exception {
