@@ -114,36 +114,63 @@ public class ConsolePrinter {
     }
 
     public Menu showMenu(boolean showError) {
-//        clearScreen();
-//        var strBuilder= new StringBuilder();
-//        var strBuilderAux= new StringBuilder();
-//        StringBuilder auxString= new StringBuilder();
-//
-//        strBuilderAux.append(HEADER).append("\n").append("--------------------------//  MENU  \\\\--------------------------\n");
-//        for (int i = 0; i < Menu.values().length; i++) {
-//            strBuilder.append("\n").append(" ".repeat(TAB_INDENT*3)).append(i).append(" -->");
-//            auxString.append("\n").append(Menu.values()[i].toString());
-//        }
-//        String outputText=textToTable(2,
-//                LIMIT_X/2,
-//                new String[]{strBuilder.toString(), auxString.toString()})+"\n";
-//        if(showError) outputText+=("\n\n \u001B[31m        ERR_   Input not recognized \u001B[0m");
-//        outputText+="\n Enter a number to continue";
+        if(showError) {
+            var str= CColors.BRIGHT_RED + "ERR_   Input not recognized" + TextStyle.RESET;
+            int availableSpace=(int)((LIMIT_X-(str.length()-(3*COLOR_LABEL_CHAR_SIZE)))/2);
+            str= BLANK_SPACE.repeat(availableSpace)+str+BLANK_SPACE.repeat(availableSpace);
+            System.out.print(str);
+            waitFor(600);
+            System.out.print(DELETE_CURRENT_LINE + CColors.BRIGHT_GREEN.toString()+(BLANK_SPACE.repeat(availableSpace))+" TRY AGAIN "+TextStyle.RESET );
+            waitFor(500);
+            System.out.print(DELETE_CURRENT_LINE + BLANK_SPACE.repeat(availableSpace) );
+
+        }else {
+
+            clearScreen();
+            var numberTextObject = new TextObject(LIMIT_X / 2, LIMIT_Y - (HEADER.getTotalHeight() + 1));
+            var titleTextObject = new TextObject(HEADER, LIMIT_X, HEADER.getTotalHeight() + 1);
+            var nameTextObject = new TextObject(LIMIT_X / 2, LIMIT_Y - (HEADER.getTotalHeight() + 1));
+
+            titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------").addText(EMPTY_LINE).alignTextCenter();
+            sendToQueue(titleTextObject);
+            for (int i = 0; i < Menu.values().length; i++) {
+                numberTextObject.addText(i + " -->");
+                nameTextObject.addText(Menu.values()[i].toString());
+            }
+            numberTextObject.alignTextRight();
+            nameTextObject.fillAllLines();
+            var finalTxtObj = new TextObject(LIMIT_X, LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
+                    LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
+//            if (showError)
+            sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
+            sendToQueue(new TextObject("Enter a number to continue",  LIMIT_X, 1).alignTextCenter());
 //       sendToPrint(textToTop(centerText(strBuilderAux.append(outputText).toString(),LIMIT_X),LIMIT_Y));
-//        var input= in.readLine();
-//        input=input.replace("\n","").trim();
-//        int inputNumber = -1;
-//        try {
-//            inputNumber = Integer.parseInt(input);
-//        }catch (Exception e){
-//            return showMenu(true);
-//        }
-//        if (inputNumber<Menu.values().length&&inputNumber>=0) {
-//            return Menu.values()[inputNumber];
-//        }
-//        return showMenu(true);
-        return ScreenManager.ConsolePrinter.Menu.EXIT;
+            startPrint(Scroll.NO);
+
+        }
+        int inputNumber;
+        try {
+            inputNumber = Integer.parseInt(getInp());
+        } catch (Exception e) {
+            return showMenu(true);
+        }
+        if (inputNumber < Menu.values().length && inputNumber >= 0) {
+            return Menu.values()[inputNumber];
+        }
+        return showMenu(true);
     }
+
+    private String getInp() {
+        String input;
+        try {
+            input = in.readLine();
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+        input = input.replace("\n", "").trim();
+        return input;
+    }
+
     public Party chooseParty(Party[] parties){
         return parties[0];
     }
@@ -227,7 +254,7 @@ public class ConsolePrinter {
     /** Sends new lines to fill screen and clear last output
      */
     private void clearScreen() {
-        sendToQueue(new TextObject((EMPTY_LINE+NEW_LINE).repeat(LIMIT_Y),LIMIT_X,LIMIT_Y));
+        sendToQueue(new TextObject(EMPTY_LINE,LIMIT_X,LIMIT_Y).alignTextTop());
     }
 
 

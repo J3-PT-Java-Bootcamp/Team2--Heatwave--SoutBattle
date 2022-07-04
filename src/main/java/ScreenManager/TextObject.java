@@ -3,14 +3,28 @@ package ScreenManager;
 import java.util.ArrayList;
 
 import static ScreenManager.ColorFactory.*;
-import static java.lang.String.valueOf;
 
+ /**TextObject class:
+ * A textObject is mostly a sorted ArrayList of String, each as lines of the total text.
+ * Thought as a kind of StringBuilder, lets you construct complicated text structure for a console printer
+ * without constructing and deconstructing each text on each change and adding all necessary methods for this use case.
+ * It also has a bunch of utilities to format its lines, change color,background,style,create boxes and titles,
+ * merge into new textObjects as columns, fit in determinate sizes, etc...
+ * @since v0.1
+ * @author DidacLL
+ */
 public class TextObject{
-    ArrayList<String> text;
+
+    private final ArrayList<String> text;
     private final int MAX_WIDTH,MAX_HEIGHT;
     private int totalWidth,totalHeight;
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public TextObject(String text, int maxWidth,int maxHeight){
+    TextObject(int maxWidth,int maxHeight){
+        MAX_WIDTH=maxWidth;
+        MAX_HEIGHT=maxHeight;
+        this.text=new java.util.ArrayList<>();
+    }
+     TextObject(String text, int maxWidth,int maxHeight){
         MAX_WIDTH=maxWidth;
         MAX_HEIGHT=maxHeight;
         this.text=new java.util.ArrayList<>();
@@ -18,17 +32,12 @@ public class TextObject{
         this.setTotalHeight();
         addText(text);
     }
-    public TextObject(int maxWidth,int maxHeight){
-        MAX_WIDTH=maxWidth;
-        MAX_HEIGHT=maxHeight;
-        this.text=new java.util.ArrayList<>();
-    }
-    public TextObject(String[] textLines, int maxWidth,int maxHeight) {
+    TextObject(String[] textLines, int maxWidth,int maxHeight) {
         MAX_WIDTH=maxWidth;
         MAX_HEIGHT=maxHeight;
         this.text= new ArrayList<>(java.util.List.of(textLines));
     }
-    public TextObject(TextObject txtObject, int maxWidth,int maxHeight) {
+    TextObject(TextObject txtObject, int maxWidth,int maxHeight) {
         MAX_WIDTH=maxWidth;
         MAX_HEIGHT=maxHeight;
         this.text=new java.util.ArrayList<>();
@@ -36,17 +45,17 @@ public class TextObject{
     }
 
     //---------------------------------------------------------------------------------------------------Getters&Setters
-    public ArrayList<String> getText() {
+    private ArrayList<String> getText() {
         return text;
     }
-    public int getTotalWidth() {
+    private int getTotalWidth() {
         return totalWidth;
     }
     private TextObject setTotalWidth(int totalWidth) {
         this.totalWidth = Math.max(totalWidth,getTotalWidth());
         return this;
     }
-    public int getTotalHeight() {
+    int getTotalHeight() {
         return totalHeight;
     }
     private TextObject setTotalHeight() {
@@ -59,30 +68,56 @@ public class TextObject{
     public String get(int index){
         return index<getTotalHeight()?text.get(index):"NO SUCH INDEX";
     }
-    public String poll(){
+    private String poll(){
         return text.remove(0);
     }
     //------------------------------------------------------------------------------------------------------------ADDERS
-
-    public TextObject addText(String text){
+     /**Adds new lines to text by calling addText(String[])-->addSimpleLine()
+      * @param text String to be added, always splits it by "\n" to add line by line
+      * @return this TextObject itself to allow chained calls
+      */
+    TextObject addText(String text){
         return addText(splitTextInLines(text));
     }
-    public TextObject addText(String[] lines){
+
+     /**Adds new lines to text by calling addSimpleLine()
+      * @param lines String[] to be added
+      * @return this TextObject itself to allow chained calls
+      */
+    TextObject addText(String[] lines){
         for (String line : lines) {
             addSimpleLine(line);
         }
         return this;
     }
-    public TextObject addText(TextObject txtObject){
+     /**Appends new lines to text by calling addSimpleLine()
+      * @param txtObject txtObject to be added at the end of this one
+      * @return this TextObject itself to allow chained calls
+      */
+    TextObject addText(TextObject txtObject){
         for (int i = 0; i < txtObject.getTotalHeight(); i++) {
             addSimpleLine(txtObject.get(i));
         }
         return this;
     }
-    public TextObject addGroupMerged(TextObject[] txtCollection){
+      /**Adds new lines to text by appending them vertically
+      * @//TODO: 04/07/2022 Create method to append various TextObjects vertically
+      * @param txtCollection TextObject[] collection to be added
+      * @return this TextObject itself to allow chained calls
+      */
+    TextObject addGroupMerged(TextObject[] txtCollection){
+        //TODO
         return this;
     }
-    public TextObject addGroupAligned(int numberOfColumns, int totalSize, TextObject [] columnsContent) {
+
+     /**Append to this text new lines by merging various textObjects in diferent justified columns
+      * @param numberOfColumns number of desired columns in our pattern
+      * @param totalSize total available space to be divided in columns (count in chars)
+      * @param columnsContent array of TextObjects[] to be merged (it does a resize and wrap logic)
+      *
+      * @return this textObject to allow chain calls.
+      */
+    TextObject addGroupAligned(int numberOfColumns, int totalSize, TextObject [] columnsContent) {
         int charLimit = (numberOfColumns > 1 ? (totalSize / numberOfColumns) : totalSize) - numberOfColumns;
         int totalLines = 0;
         for (TextObject textColumn : columnsContent) {
@@ -114,6 +149,10 @@ public class TextObject{
 
     //===================   LINE_MANIPULATION   ===================\\
     //REAL ADD_LINE METHOD, IT WRAPS IN 2 LINES IF IT EXCEEDS MAX_WIDTH
+     /**Main Add Line Method, It Checks That Size Fits On Specified Width
+      * if not it splits line by wrap() method. After check adds line/s by addSafe()
+      * @param line text to be added, not necessary an oneliner string
+      */
     private void addSimpleLine(String line) {
         int sizeCounter;
         sizeCounter=countValidCharacters(line);
@@ -126,15 +165,28 @@ public class TextObject{
             addSafe(line);
         }
     }
-    //Only method that can add a new element to text attribute
+
+     /**Only method that can add a new element to text attribute
+      * @param line oneliner String to be added
+      */
     private void addSafe(String line){
         this.text.add(line.replaceAll(NEW_LINE,""));
         setTotalHeight();
     }
+
+     /**Only method that can add a new element to text attribute
+      * @param index position where to add it (doesn't overwrite)
+      * @param line oneliner String to be added
+      */
     private void addSafe(int index,String line){
         this.text.add(index,line.replaceAll(NEW_LINE,""));
         setTotalHeight();
     }
+
+     /**Method to count characters that will be printed, it doesn't count scape characters nor colors or styles tags.
+      * @param line line to count
+      * @return integer value of char count
+      */
     private int countValidCharacters(String line){
         int colourCount=0;
         int charCount=0;
@@ -146,43 +198,67 @@ public class TextObject{
         }
         return charCount-(colourCount*6);
     }
-    private String[] wrapLine(String line,int limit) {
 
-        var wordList = line.replace(BLANK_SPACE+BLANK_SPACE,"__").split(BLANK_SPACE);
-        StringBuilder line1=new StringBuilder();
-        StringBuilder line2=new StringBuilder();
-        int spaceCounter=0;
-        int charCounter= 0;
+     /**Recursive method that checks line size. If its bigger than limit it splits the String recursively
+      * until all resulting lines fits on specified limit char size
+      * @param line text to analyze
+      * @param limit maximum chars width
+      * @// TODO: 04/07/2022 Implement capacity to check if there is too much blank space and allow to trim it
+      * @return String[] array with all resulting strings
+      */
+    private String[] wrapLine(String line,int limit) {
+        String[] result;
+
+        var wordList = line.replace(BLANK_SPACE + BLANK_SPACE, "__").split(BLANK_SPACE);
+        StringBuilder line1 = new StringBuilder();
+        StringBuilder line2 = new StringBuilder();
+//        int spaceCounter = 0;   OLD APROX TO TRIM A LINE IF IT EXCEEDS A LITTLE AND HAVE A LOT OF WHITESPACE
+        int charCounter = 0;
         for (String word : wordList) {
-            if (java.util.Objects.equals(word, "__")) spaceCounter++;
+//            if (java.util.Objects.equals(word, "__")) spaceCounter++;
             charCounter += countValidCharacters(word) + (java.util.Objects.equals(word, "__") ? 0 : 1);
             if (charCounter <= limit) line1.append(" ").append(word.replace("__", "  "));
             else line2.append(" ").append(word.replace("__", "  "));
         }
-        if(charCounter>limit*2){
-            var auxList= wrapLine(line2.toString(),limit);
-            var resVal= new String[auxList.length+1];
-            resVal[0]=line1.toString();
+        if (charCounter > limit * 2) {
+            var auxList = wrapLine(line2.toString(), limit);
+            var resVal = new String[auxList.length + 1];
+            resVal[0] = line1.toString();
             System.arraycopy(auxList, 0, resVal, 1, auxList.length);
-            return resVal;
-        }else return new String[]{line1.toString(),line2.toString()};
+            result = resVal;
+        } else {
+            result = new String[]{line1.toString(), line2.toString()};
+        }
+        return result;
     }
-    private String fillLine(String line){
-        return fillLine(line,MAX_WIDTH);
-    }
+     /**Method to fill available right space of a string with blank spaces
+      * @param line oneliner text String to be modified
+      * @param width desired width
+      * @return resulting String
+      */
     private String fillLine(String line,int width){
         return line+(BLANK_SPACE.repeat(Math.max(width-countValidCharacters(line), 0)));
     }
-    private String lineToRight(String line) {
-        return lineToRight(line,MAX_WIDTH);
-    }
+    private String fillLine(String line){
+         return fillLine(line,MAX_WIDTH);
+     }
+    /**Method to align text on right by adding blank spaces at start of the string
+      * @param line oneliner text String to be modified
+      * @param width desired width
+      * @return resulting String
+      */
     private String lineToRight(String line,int width) {
         int count=width-countValidCharacters(line);
         return (count>0?BLANK_SPACE.repeat(count):"" )+line;
     }
-    private String centerLine(String line){
-        return centerLine(line,MAX_WIDTH);
-    }
+    private String lineToRight(String line) {
+         return lineToRight(line,MAX_WIDTH);
+     }
+     /**Method to center string by adding blank spaces both sides
+      * @param line oneliner text String to be modified
+      * @param width desired width
+      * @return resulting String
+      */
     private String centerLine(String line,int width){
         int leftSpace,rightSpace,remainSpace;
         remainSpace = width - countValidCharacters(line);
@@ -190,17 +266,40 @@ public class TextObject{
         rightSpace = (remainSpace % 2 == 0) ? leftSpace : leftSpace + 1;
         return (BLANK_SPACE.repeat(leftSpace))+line+(BLANK_SPACE.repeat(rightSpace));
     }
+    private String centerLine(String line){
+         return centerLine(line,MAX_WIDTH);
+     }
+
+     /**Adds color and reset labels on this line
+     * @param s String line to modify
+     * @param color CColors enum value
+     * @return modified String
+     */
     private String colorizeLine(String s, CColors color) {
         return color+s+ TextStyle.RESET;
     }
+     /**Adds Styles and reset labels on this line
+      * @param s String line to modify
+      * @param style TextStyle enum value
+      * @return modified String
+      */
     private String stylizeLine(String s, TextStyle style){
      return style+s+ TextStyle.RESET;
     }
 
+    /**Sets a Background color to full line and resets style at end
+     * @param s String text line to modify
+     * @param bgColor desired Background color from BgColors enum
+     * @return modified String
+     */
     private String setLineBackground(String s, BgColors bgColor) {
         return bgColor+s+TextStyle.RESET;
     }
 
+    /**Quit all Color, Style and BG modifiers
+     * @param line text to modify
+     * @return text without those characters
+     */
     private String removeStyleAndColorLine(String line){
         var textParts=line.split(String.valueOf(COLOR_CHAR));
         for (int i = 1; i < textParts.length; i++) {
@@ -222,12 +321,21 @@ public class TextObject{
     }
 
 
-
     //----------------------------------------------------------------------------------------------------PUBLIC_METHODS
-    public TextObject getResizedText(int newWidth,int newHeight){
+     /**Method that creates a new TextObject with the current content of this one but with a diferent sizes
+      * @param newWidth new desired width in characters
+      * @param newHeight new desired height in lines
+      * @// TODO: 04/07/2022 test method and check if deals with hard wrapping
+      * @return new TextObject
+      */
+    TextObject getResizedText(int newWidth,int newHeight){
             return new TextObject(this,newWidth,newHeight);
     }
-    public TextObject alignTextMiddle(){
+      /**Method to align current text at center vertically by adding necessary blank space lines at top and bottom.
+      * It fills all MAX_HEIGHT
+      * @return this TextObject to allow chain calls.
+      */
+    TextObject alignTextMiddle(){
         int remainingLines= MAX_HEIGHT - getTotalHeight();
         int num;
         if (remainingLines>1){
@@ -239,7 +347,11 @@ public class TextObject{
         }
         return this;
     }
-    public TextObject alignTextTop(){
+     /**Method to align current text at top vertically by adding necessary blank space lines at bottom.
+      * It fills all MAX_HEIGHT
+      * @return this TextObject to allow chain calls.
+      */
+    TextObject alignTextTop(){
         if(getTotalHeight()<MAX_HEIGHT){
             int missingLines=MAX_HEIGHT-getTotalHeight();
             for (int i = 0; i < missingLines; i++) {
@@ -248,19 +360,37 @@ public class TextObject{
         }
         return this;
     }
-    public TextObject alignTextRight(){
+     /**Method to align current text at right horizontally by adding necessary blank space chars at left.
+      * It fills all MAX_WIDTH
+      * @return this TextObject to allow chain calls.
+      */
+    TextObject alignTextRight(){
         for (int i = 0; i < totalHeight; i++) {
             text.set(i,lineToRight(text.get(i)));
         }
         return this;
     }
-    public TextObject alignTextCenter(){
+     /**Method to align current text at center horizontally by adding necessary blank space chars at left and right.
+      * It fills all MAX_WIDTH
+      * @return this TextObject to allow chain calls.
+      */
+    TextObject alignTextCenter(){
         for (int i = 0; i < totalHeight; i++) {
             text.set(i,centerLine(text.get(i)));
         }
         return this;
     }
-    public TextObject colorizeAllText(CColors ... colors){
+
+     /**Method that sets a color/s for all current text
+      * @param colors optional parameter,
+      *               if present it assigns the only CColor enum value to all text and a RESET character at the end.
+      *               if there are more than one CColor value,
+      *               it applies color each line by repeating the pattern (colorA,colorB,colorC --> A,B,C,A,B,C,A..)
+      *               Otherwise it peeks a random color for each line.
+      * @see ColorFactory
+      * @return this TextObject allow chain call.
+      */
+    TextObject colorizeAllText(CColors ... colors){
         switch (colors.length){
             case 0->{
                 for (int i = 0; i <totalHeight ; i++) {
@@ -284,13 +414,25 @@ public class TextObject{
         }
         return this;
     }
-    public TextObject stylizeAllText(TextStyle style){
+     /**Method that sets a style for all current text
+      * @param style sets same style tag for all text and a RESET character at end of last line in text
+      * @see ColorFactory
+      * @return this TextObject allow chain call.
+      */
+    TextObject stylizeAllText(TextStyle style){
         int lastIndex=text.size()-1;
         text.set(0,style+text.get(0));
         text.set(lastIndex,text.get(lastIndex)+TextStyle.RESET);
         return this;
     }
-    public TextObject setAllTextBackground(BgColors bg){
+
+     /**Method that sets a background for all current text
+      * @param bg sets same Background tag for all text
+      *              and a RESET character at end of each line in text to avoid printing more than MAX_WIDTH
+      * @see ColorFactory
+      * @return this TextObject allow chain call.
+      */
+    TextObject setAllTextBackground(BgColors bg){
         for (int i = 0; i <totalHeight ; i++) {
             text.set(i,setLineBackground(text.get(i),bg));
         }
@@ -302,7 +444,14 @@ public class TextObject{
     @Override
     public String toString() {
         final var sb = new StringBuilder();
-        for(String line:text)sb.append(line).append(NEW_LINE);
+        for(String line:text)sb.append(NEW_LINE).append(line);
         return sb.toString();
     }
-}
+
+     public TextObject fillAllLines() {
+        for (String line:text){
+            fillLine(line);
+        }
+        return this;
+     }
+ }
