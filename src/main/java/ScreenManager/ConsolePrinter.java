@@ -40,31 +40,42 @@ public class ConsolePrinter {
             return this.label;
         }}
     private final int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
-    private final String GAME_NAME="AmazingFighter";
+    private final String GAME_NAME="S.OUT.Battle";
     private final String HEADER="=".repeat(LIMIT_X)+"\n"
             +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X);
-    private final String GAME_LOGO= """
-                  |XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|
-                  |X____ _____                          _____ __                    X|
-                  |X___ / ___/__  ______  ___  _____   / ___// /_____  ________     X|
-                  |X__  \\__ \\/ / / / __ \\/ _ \\/ ___/   \\__ \\/ __/ __ \\/ ___/ _ \\    X|
-                  |X_  ___/ / /_/ / /_/ /  __/ /      ___/ / /_/ /_/ / /  /  __/    X|
-                  |X__/____/\\__,_/ .___/\\___/_/ ____ /____/\\__/\\____/_/   \\___/ ____X|
-                  |X__________  /_/ ________________________________________________X|
-                  |X_____________________________________COOLEST_STUFF_IN_TOWN______X|
-                  |XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|"""; //GAME NAME LOGO
-    private final String TEAM_LOGO= """
-   ______               __ ______
-  / ____/____   ____   / //_  __/___   ____ _ ____ ___
- / /    / __ \\ / __ \\ / /  / /  / _ \\ / __ `// __ `__ \\
-/ /___ / /_/ // /_/ // /  / /  /  __// /_/ // / / / / /
-\\____/ \\____/ \\____//_/  /_/   \\___/ \\__,_//_/ /_/ /_/"""; //TEAM NAME LOGO
+
+    final String GAME_LOGO= """
+                                                                                      ,,
+            .M""\"bgd                      mm       `7MM""\"Yp,          mm     mm   `7MM
+            ,MI    "Y                      MM         MM    Yb          MM     MM     MM
+            `MMb.      ,pW"Wq.`7MM  `7MM mmMMmm       MM    dP  ,6"Yb.mmMMmm mmMMmm   MM  .gP"Ya
+              `YMMNq. 6W'   `Wb MM    MM   MM         MM""\"bg. 8)   MM  MM     MM     MM ,M'   Yb
+            .     `MM 8M     M8 MM    MM   MM         MM    `Y  ,pm9MM  MM     MM     MM 8M""\"""\"
+            Mb     dM YA.   ,A9 MM    MM   MM    d8b  MM    ,9 8M   MM  MM     MM     MM YM.    ,
+            P"Ybmmd"   `Ybmd9'  `Mbod"YML. `Mbmo Y8P.JMMmmmd9  `Moo9^Yo.`Mbmo  `Mbmo.JMML.`Mbmmd'"""; //GAME NAME LOGO
+    final String TEAM_LOGO= """
+                __  __           __ _       __
+               / / / /__  ____ _/ /| |     / /___ __   _____
+              / /_/ / _ \\/ __ `/ __/ | /| / / __ `/ | / / _ \\
+             / __  /  __/ /_/ / /_ | |/ |/ / /_/ /| |/ /  __/
+            /_/ /_/\\___/\\__,_/\\__/ |__/|__/\\__,_/ |___/\\___/ 		 _  __   __  _ _/_ _
+            														/_///_'_\\/_'/ // _\\  ...
+            													   /
+            														"""; //TEAM NAME LOGO
     private final BufferedReader in;
+    private final FileWriter logWriter;
+    private ArrayList<TextObject> printQueue;
 
 
     //---------------------------------------------------------------------------   CONSTRUCTOR
     public ConsolePrinter() {
         this.in= new BufferedReader(new InputStreamReader(System.in));
+
+        try {
+            this.logWriter= new java.io.FileWriter("data/consolePrinter_log.txt");
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //---------------------------------------------------------------------------   PUBLIC METHODS
