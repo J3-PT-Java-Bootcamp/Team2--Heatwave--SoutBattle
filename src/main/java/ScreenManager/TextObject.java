@@ -14,8 +14,9 @@ public class TextObject{
         MAX_WIDTH=maxWidth;
         MAX_HEIGHT=maxHeight;
         this.text=new java.util.ArrayList<>();
-//        setTotalWidth(0);
-//        addText(text);
+        this.totalWidth=0;
+        this.setTotalHeight();
+        addText(text);
     }
     public TextObject(int maxWidth,int maxHeight){
         MAX_WIDTH=maxWidth;
@@ -127,11 +128,11 @@ public class TextObject{
     }
     //Only method that can add a new element to text attribute
     private void addSafe(String line){
-        this.text.add(fillLine(line.replaceAll(NEW_LINE,"")));
+        this.text.add(line.replaceAll(NEW_LINE,""));
         setTotalHeight();
     }
     private void addSafe(int index,String line){
-        this.text.add(index,fillLine(line.replaceAll(NEW_LINE,"")));
+        this.text.add(index,line.replaceAll(NEW_LINE,""));
         setTotalHeight();
     }
     private int countValidCharacters(String line){
@@ -187,7 +188,27 @@ public class TextObject{
         remainSpace = width - countValidCharacters(line);
         leftSpace = remainSpace / 2;
         rightSpace = (remainSpace % 2 == 0) ? leftSpace : leftSpace + 1;
-        return " ".repeat(leftSpace)+line+" ".repeat(rightSpace);
+        return (BLANK_SPACE.repeat(leftSpace))+line+(BLANK_SPACE.repeat(rightSpace));
+    }
+    private String colorizeLine(String s, CColors color) {
+        return color+s+ TextStyle.RESET;
+    }
+    private String stylizeLine(String s, TextStyle style){
+     return style+s+ TextStyle.RESET;
+    }
+
+    private String setLineBackground(String s, BgColors bgColor) {
+        return bgColor+s+TextStyle.RESET;
+    }
+
+    private String removeStyleAndColorLine(String line){
+        var textParts=line.split(String.valueOf(COLOR_CHAR));
+        for (int i = 1; i < textParts.length; i++) {
+            textParts[i]=textParts[i].substring(COLOR_LABEL_CHAR_SIZE-1);
+        }
+        var sb= new StringBuilder();
+        for(String part:textParts)sb.append(part);
+        return  sb.toString();
     }
 
     //===================   TEXT_MANIPULATION   ===================
@@ -239,6 +260,48 @@ public class TextObject{
         }
         return this;
     }
+    public TextObject colorizeAllText(CColors ... colors){
+        switch (colors.length){
+            case 0->{
+                for (int i = 0; i <totalHeight ; i++) {
+                    text.set(i,colorizeLine(text.get(i),ColorFactory.getRandomColor()));
+                }
+            }
+            case 1->{
+                int lastIndex=text.size()-1;
+                text.set(0,colors[0]+text.get(0));
+                text.set(lastIndex,text.get(lastIndex)+TextStyle.RESET);
+            }
+            default -> {
+                int colorCount=0;
+                for (int i = 0; i < totalHeight; i++) {
+                    text.set(i,colorizeLine(text.get(i),colors[colorCount]));
+                    colorCount++;
+                    if(colorCount>=colors.length)colorCount=0;
+                }
+
+            }
+        }
+        return this;
+    }
+    public TextObject stylizeAllText(TextStyle style){
+        int lastIndex=text.size()-1;
+        text.set(0,style+text.get(0));
+        text.set(lastIndex,text.get(lastIndex)+TextStyle.RESET);
+        return this;
+    }
+    public TextObject setAllTextBackground(BgColors bg){
+        for (int i = 0; i <totalHeight ; i++) {
+            text.set(i,setLineBackground(text.get(i),bg));
+        }
+        return this;
+    }
 
 
+    @Override
+    public String toString() {
+        final var sb = new StringBuilder();
+        for(String line:text)sb.append(line).append(NEW_LINE);
+        return sb.toString();
+    }
 }
