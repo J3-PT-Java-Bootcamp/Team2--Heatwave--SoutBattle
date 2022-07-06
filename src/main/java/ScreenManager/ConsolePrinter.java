@@ -1,5 +1,8 @@
 package ScreenManager;
 
+import ScreenManager.TextObjects.DynamicLine;
+import ScreenManager.TextObjects.TextObject;
+
 import java.io.*;
 import java.util.ArrayList;
 import static ScreenManager.ColorFactory.*;
@@ -48,7 +51,7 @@ public class ConsolePrinter {
     private final TextObject HEADER=new TextObject("=".repeat(LIMIT_X)+"\n"
             +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X),LIMIT_X,LIMIT_Y/2);
 
-    private final TextObject GAME_LOGO= new ScreenManager.TextObject("""
+    private final TextObject GAME_LOGO= new TextObject("""
                                                                             ,,
     .M""\"bgd                      mm       `7MM""\"Yp,          mm     mm   `7MM
   ,MI    "Y                      MM         MM    Yb          MM     MM     MM
@@ -57,7 +60,7 @@ public class ConsolePrinter {
             .     `MM 8M     M8 MM    MM   MM         MM    `Y  ,pm9MM  MM     MM     MM 8M""\"""\"
             Mb     dM YA.   ,A9 MM    MM   MM    d8b  MM    ,9 8M   MM  MM     MM     MM YM.    ,
             P"Ybmmd"   `Ybmd9'  `Mbod"YML. `Mbmo Y8P.JMMmmmd9  `Moo9^Yo.`Mbmo  `Mbmo.JMML.`Mbmmd'""",LIMIT_X, LIMIT_Y),
-            TEAM_LOGO= new ScreenManager.TextObject( """
+            TEAM_LOGO= new TextObject( """
                 __  __           __ _       __
                / / / /__  ____ _/ /| |     / /___ __   _____
               / /_/ / _ \\/ __ `/ __/ | /| / / __ `/ | / / _ \\
@@ -66,8 +69,8 @@ public class ConsolePrinter {
             														/_///_'_\\/_'/ // _\\  ...
             													   /
             														""",LIMIT_X,LIMIT_Y),
-            SCREEN_RECT= new ScreenManager.TextObject("X".repeat(LIMIT_X) + "\n"
-                    + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y-4)
+            SCREEN_RECT= new TextObject("X".repeat(LIMIT_X) + "\n"
+                    + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y)
                     + "X".repeat(LIMIT_X),LIMIT_X,LIMIT_Y),
             EMPTY_LINE=new TextObject(BLANK_SPACE.repeat(LIMIT_X-1),LIMIT_X,1);
     private final BufferedReader in;
@@ -213,7 +216,15 @@ public class ConsolePrinter {
             default -> throw new IllegalStateException("Unexpected value: " + scroll);
         }
     }
-
+    private void printAnimation(){
+        if(printQueue.get(0)instanceof DynamicLine)printAnimation((DynamicLine) pollNext());
+    }
+    private void printAnimation(DynamicLine dynLine){
+            do {
+                System.out.print(DELETE_CURRENT_LINE+dynLine.poll());
+                waitFor(dynLine.getDelta());
+            } while (dynLine.hasText());
+    }
     private void lineSplitQueue() {
         var newQueue= new ArrayList<TextObject>();
         TextObject currentTxtObj;
@@ -235,7 +246,7 @@ public class ConsolePrinter {
     public void sendToQueue(TextObject txtObj){
         this.printQueue.add(txtObj);
     }
-    public void sendToQueue(TextObject txtObj,int emptyLinesBfr){
+    public void sendToQueue(TextObject txtObj, int emptyLinesBfr){
         for (int i = 0; i < emptyLinesBfr; i++) {
             printQueue.add(EMPTY_LINE);
         }

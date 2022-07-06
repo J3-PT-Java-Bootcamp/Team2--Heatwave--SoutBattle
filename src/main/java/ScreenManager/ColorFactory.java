@@ -1,6 +1,6 @@
 package ScreenManager;
 
-import java.util.Random;
+import java.util.*;
 
 public class ColorFactory {
 
@@ -134,15 +134,26 @@ public class ColorFactory {
         var color= CColors.values()[startVal];
         var charList=line.toCharArray();
         var sb= new StringBuilder();
-        for(char ch: charList) {
-            if (ch!=BLANK_SPACE_CH) {
-
-                sb.append(color);
-                color=getNextRainbowColor(color);
+        for (int i = 0; i < charList.length; i++) {
+            char ch = charList[i];
+            if (ch != BLANK_SPACE_CH) {
+                if (ch==COLOR_CHAR)i+=COLOR_LABEL_CHAR_SIZE-1;
+                else {
+                    sb.append(color);
+                    color = getNextRainbowColor(color);
+                }
             }
             sb.append(ch);
         }
         return sb.append(TextStyle.RESET).toString();
+    }
+
+    public static boolean isASpecialCharacter(char ch){
+        return ch==NEW_LINE_CH || ch==DELETE_CURRENT_LINE ||ch==COLOR_CHAR;
+    }
+
+    public static boolean containsSpecialCharacters(String str){
+        return str.contains(NEW_LINE)||str.contains(DELETE_CURRENT_LINE+"")||str.contains(COLOR_CHAR+"[");
     }
 
 }
