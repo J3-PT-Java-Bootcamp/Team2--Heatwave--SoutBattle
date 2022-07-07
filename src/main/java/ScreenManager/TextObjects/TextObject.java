@@ -18,17 +18,22 @@ import static ScreenManager.ColorFactory.*;
  * @since v0.1
  */
 public class TextObject {
+
+    public enum Scroll{NO,BLOCK,LINE,TYPEWRITER}
+    private final Scroll scroll;
     protected final ArrayList<String> text;
     protected final int MAX_WIDTH;
     private final int MAX_HEIGHT;
     private int totalWidth, totalHeight;
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public TextObject(int maxWidth, int maxHeight) {
+    public TextObject(TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+        this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new java.util.ArrayList<>();
     }
-    public TextObject(String text, int maxWidth, int maxHeight) {
+    public TextObject(String text, TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+        this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new java.util.ArrayList<>();
@@ -36,18 +41,26 @@ public class TextObject {
         this.setTotalHeight();
         addText(text);
     }
-    public TextObject(String[] textLines, int maxWidth, int maxHeight) {
+    public TextObject(TextObject.Scroll scroll, String[] textLines, int maxWidth, int maxHeight) {
+        this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new ArrayList<>(java.util.List.of(textLines));
     }
-    public TextObject(TextObject txtObject, int maxWidth, int maxHeight) {
+    public TextObject(TextObject txtObject, TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+        this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new java.util.ArrayList<>();
         addText(txtObject);
     }
     //---------------------------------------------------------------------------------------------------Getters&Setters
+
+
+    public Scroll getScroll() {
+        return scroll;
+    }
+
     public ArrayList<String> getText() {
         return text;
     }
@@ -59,7 +72,8 @@ public class TextObject {
         return this;
     }
     public int getTotalHeight() {
-        return totalHeight;
+        setTotalHeight();
+        return this.totalHeight;
     }
     private TextObject setTotalHeight() {
         this.totalHeight = getText().size();
@@ -71,7 +85,7 @@ public class TextObject {
     public String get(int index) {
         return index < getTotalHeight() ? text.get(index) : "NO SUCH INDEX";
     }
-    protected String poll() {
+    public String poll() {
         return text.remove(0);
     }
     //------------------------------------------------------------------------------------------------------------ADDERS
@@ -205,7 +219,7 @@ public class TextObject {
      *
      * @return integer value of char count
      */
-    private int countValidCharacters(String line) {
+    public int countValidCharacters(String line) {
         int colourCount = 0;
         int charCount = 0;
         var chArray = line.toCharArray();
@@ -263,7 +277,7 @@ public class TextObject {
     private String fillLine(String line, int width) {
         return line + (BLANK_SPACE.repeat(Math.max(width - countValidCharacters(line), 0)));
     }
-    private String fillLine(String line) {
+    String fillLine(String line) {
         return fillLine(line, MAX_WIDTH);
     }
     /**
@@ -359,6 +373,7 @@ public class TextObject {
     private String[] splitTextInLines(String text) {
         return text.split(NEW_LINE);
     }
+
     //----------------------------------------------------------------------------------------------------PUBLIC_METHODS
     /**
      * Method that creates a new TextObject with the current content of this one but with a diferent sizes
@@ -371,7 +386,7 @@ public class TextObject {
      * @// TODO: 04/07/2022 test method and check if deals with hard wrapping
      */
     TextObject getResizedText(int newWidth, int newHeight) {
-        return new TextObject(this, newWidth, newHeight);
+        return new TextObject(this, scroll, newWidth, newHeight);
     }
     /**
      * Method to align current text at center vertically by adding necessary blank space lines at top and bottom.
@@ -510,7 +525,10 @@ public class TextObject {
     @Override
     public String toString() {
         final var sb = new StringBuilder();
-        for (String line : text) sb.append(NEW_LINE).append(line);
+        for (int i = 0; i < getTotalHeight(); i++) {
+            String line = text.get(i);
+            sb.append(NEW_LINE).append(line);
+        }
         return sb.toString();
     }
 
@@ -519,5 +537,14 @@ public class TextObject {
             fillLine(line);
         }
         return this;
+    }
+
+    public String print() {
+        return toString();
+    }
+
+    public String printLine(int index) {
+        if(hasText()) return text.remove(index);
+        return "";
     }
 }

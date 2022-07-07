@@ -5,6 +5,10 @@ public class GameManager {
     public GameManager() {
         printer= new ScreenManager.ConsolePrinter();
     }
+    void testPrinter(){
+        printer.test();
+
+    }
     void startGame() throws Exception {
         printer.splashScreen();
         startMenu(printer);

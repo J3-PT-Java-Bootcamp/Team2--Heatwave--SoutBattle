@@ -2,15 +2,15 @@ package ScreenManager.TextObjects;
 
 public class DynamicLine extends ScreenManager.TextObjects.TextObject {
 
-    int speed;//in frames per second
+    int delay;//milliseconds
     int repeat;
     int duration;
     int currentFrame;
     ScreenManager.TextObjects.Animations.AnimationObject[] animations;
 
-    DynamicLine(int maxWidth, int maxHeight, int speed, int repeat, int duration, ScreenManager.TextObjects.Animations.AnimationObject... animations) {
-        super(maxWidth, maxHeight);
-        setSpeed(speed);
+    DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, ScreenManager.TextObjects.Animations.AnimationObject... animations) {
+        super(Scroll.LINE, maxWidth, maxHeight);
+        setDelay(delay);
         setRepeat(repeat);
         this.animations=animations;
         this.currentFrame=0;
@@ -18,7 +18,7 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     }
 
     protected int calculateFrames(int duration){
-        return speed*duration;
+        return delay *duration;
     }
 
     protected void constructAnimation(){
@@ -28,12 +28,9 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     }
 
 
-    public int getDelta() {
-        return 1000/speed;
-    }
 
-    private DynamicLine setSpeed(int speed) {
-        this.speed = speed;
+    private DynamicLine setDelay(int delay) {
+        this.delay = delay;
         return this;
     }
 

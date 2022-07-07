@@ -1,7 +1,8 @@
 package ScreenManager;
 
-import ScreenManager.TextObjects.DynamicLine;
-import ScreenManager.TextObjects.TextObject;
+import ScreenManager.ColorFactory.BgColors;
+import ScreenManager.TextObjects.*;
+import ScreenManager.TextObjects.TextObject.Scroll;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,8 +14,13 @@ import static ScreenManager.ColorFactory.*;
 public class ConsolePrinter {
 
 
+    public void test() {
+        printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,1,2,"","")
+                .setTitle("_TEST_").setFrameColor(ScreenManager.ColorFactory.BgColors.BLUE).setBgColor(BgColors.RED).addText("THIS IS A TEST").alignTextCenter().alignTextMiddle());
+        startPrint();
+    }
+
     //---------------------------------------------------------------------------------------------------------CONSTANTS
-    private enum Scroll{NO,BLOCK,LINE}
     public enum Menu{
         PLAY("Play Game"),
         NEW_PARTY("Create New Party"),
@@ -49,9 +55,9 @@ public class ConsolePrinter {
     private final int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
     private final String GAME_NAME="S.OUT.Battle";
     private final TextObject HEADER=new TextObject("=".repeat(LIMIT_X)+"\n"
-            +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X),LIMIT_X,LIMIT_Y/2);
+            +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X), Scroll.NO, LIMIT_X,LIMIT_Y/2);
 
-    private final TextObject GAME_LOGO= new TextObject("""
+    public final TextObject GAME_LOGO= new TextObject("""
                                                                             ,,
     .M""\"bgd                      mm       `7MM""\"Yp,          mm     mm   `7MM
   ,MI    "Y                      MM         MM    Yb          MM     MM     MM
@@ -59,8 +65,8 @@ public class ConsolePrinter {
               `YMMNq. 6W'   `Wb MM    MM   MM         MM""\"bg. 8)   MM  MM     MM     MM ,M'   Yb
             .     `MM 8M     M8 MM    MM   MM         MM    `Y  ,pm9MM  MM     MM     MM 8M""\"""\"
             Mb     dM YA.   ,A9 MM    MM   MM    d8b  MM    ,9 8M   MM  MM     MM     MM YM.    ,
-            P"Ybmmd"   `Ybmd9'  `Mbod"YML. `Mbmo Y8P.JMMmmmd9  `Moo9^Yo.`Mbmo  `Mbmo.JMML.`Mbmmd'""",LIMIT_X, LIMIT_Y),
-            TEAM_LOGO= new TextObject( """
+            P"Ybmmd"   `Ybmd9'  `Mbod"YML. `Mbmo Y8P.JMMmmmd9  `Moo9^Yo.`Mbmo  `Mbmo.JMML.`Mbmmd'""", Scroll.BLOCK, LIMIT_X, LIMIT_Y);
+    public final TextObject TEAM_LOGO= new TextObject( """
                 __  __           __ _       __
                / / / /__  ____ _/ /| |     / /___ __   _____
               / /_/ / _ \\/ __ `/ __/ | /| / / __ `/ | / / _ \\
@@ -68,11 +74,11 @@ public class ConsolePrinter {
             /_/ /_/\\___/\\__,_/\\__/ |__/|__/\\__,_/ |___/\\___/ 		 _  __   __  _ _/_ _
             														/_///_'_\\/_'/ // _\\  ...
             													   /
-            														""",LIMIT_X,LIMIT_Y),
-            SCREEN_RECT= new TextObject("X".repeat(LIMIT_X) + "\n"
+            														""", Scroll.BLOCK,LIMIT_X,LIMIT_Y);
+    public final TextObject SCREEN_RECT= new TextObject("X".repeat(LIMIT_X) + "\n"
                     + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y)
-                    + "X".repeat(LIMIT_X),LIMIT_X,LIMIT_Y),
-            EMPTY_LINE=new TextObject(BLANK_SPACE.repeat(LIMIT_X-1),LIMIT_X,1);
+                    + "X".repeat(LIMIT_X), Scroll.BLOCK, LIMIT_X,LIMIT_Y);
+    public final TextObject EMPTY_LINE=new TextObject(BLANK_SPACE.repeat(LIMIT_X-1), Scroll.NO, LIMIT_X,1);
     private final BufferedReader in;
     private final FileWriter logWriter;
     private ArrayList<TextObject> printQueue;
@@ -101,7 +107,7 @@ public class ConsolePrinter {
                 .stylizeAllText(TextStyle.BOLD));
         sendToQueue(GAME_LOGO.alignTextCenter().colorizeAllText().stylizeAllText(TextStyle.BOLD).alignTextMiddle(),2);
         this.printSpeed =2;
-        startPrint(Scroll.BLOCK);
+        startPrint();
         waitFor(1000);
     }
     /** Shows Square with the screen size to allow User to resize console,
@@ -109,9 +115,9 @@ public class ConsolePrinter {
      */
     public void calibrateScreen() throws Exception {
       sendToQueue(SCREEN_RECT.setAllTextBackground(BgColors.BRIGHT_WHITE));
-      sendToQueue((new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), LIMIT_X,2)
-              .addText(CColors.CYAN +"Press Enter TWICE when done"+TextStyle.RESET).alignTextCenter()));
-      startPrint(Scroll.BLOCK);
+      sendToQueue(new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), TextObject.Scroll.NO, LIMIT_X,2)
+              .addText(ScreenManager.ColorFactory.CColors.CYAN +"Press Enter TWICE when done"+ ScreenManager.ColorFactory.TextStyle.RESET).alignTextCenter());
+      startPrint();
       in.skip(2);
 
     }
@@ -119,22 +125,27 @@ public class ConsolePrinter {
     public Menu showMenu(boolean showError) {
         if(showError) {
             var str= CColors.BRIGHT_RED + "ERR_   Input not recognized" + TextStyle.RESET;
-            int availableSpace=(int)((LIMIT_X-(str.length()-(3*COLOR_LABEL_CHAR_SIZE)))/2);
+            int availableSpace=((LIMIT_X-(str.length()-(3*COLOR_LABEL_CHAR_SIZE)))/2);
             str= BLANK_SPACE.repeat(availableSpace)+str+BLANK_SPACE.repeat(availableSpace);
             System.out.print(str);
             waitFor(600);
-            System.out.print(DELETE_CURRENT_LINE + CColors.BRIGHT_GREEN.toString()+(BLANK_SPACE.repeat(availableSpace))+" TRY AGAIN "+TextStyle.RESET );
+            System.out.print(DELETE_CURRENT_LINE + CColors.BRIGHT_GREEN.toString()+(BLANK_SPACE.repeat(availableSpace))
+                    +" TRY AGAIN "+TextStyle.RESET );
             waitFor(500);
             System.out.print(DELETE_CURRENT_LINE + BLANK_SPACE.repeat(availableSpace) );
 
         }else {
 
             clearScreen();
-            var numberTextObject = new TextObject(LIMIT_X / 2, LIMIT_Y - (HEADER.getTotalHeight() + 1));
-            var titleTextObject = new TextObject(HEADER, LIMIT_X, HEADER.getTotalHeight() + 1);
-            var nameTextObject = new TextObject(LIMIT_X / 2, LIMIT_Y - (HEADER.getTotalHeight() + 1));
+            var numberTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
+                    ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
-            titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------").addText(EMPTY_LINE).alignTextCenter();
+            var titleTextObject = new TextObject(HEADER, Scroll.NO, LIMIT_X, HEADER.getTotalHeight() + 1);
+            var nameTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
+                    ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
+
+            titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------")
+                    .addText(EMPTY_LINE).alignTextCenter();
             sendToQueue(titleTextObject);
             for (int i = 0; i < Menu.values().length; i++) {
                 numberTextObject.addText(i + " -->");
@@ -142,13 +153,12 @@ public class ConsolePrinter {
             }
             numberTextObject.alignTextRight();
             nameTextObject.fillAllLines();
-            var finalTxtObj = new TextObject(LIMIT_X, LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
+            var finalTxtObj = new TextObject(Scroll.NO, LIMIT_X
+                    , LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
-//            if (showError)
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
-            sendToQueue(new TextObject("Enter a number to continue",  LIMIT_X, 1).alignTextCenter());
-//       sendToPrint(textToTop(centerText(strBuilderAux.append(outputText).toString(),LIMIT_X),LIMIT_Y));
-            startPrint(Scroll.NO);
+            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter());
+            startPrint();
 
         }
         int inputNumber;
@@ -197,23 +207,51 @@ public class ConsolePrinter {
     }
 
     //---------------------------------------------------------------------------   CONSOLE MANAGER
-    public void startPrint(Scroll scroll){
-        switch (scroll) {
-            case NO -> System.out.print(mergeQueue());
-            case BLOCK -> {
-                while (!printQueue.isEmpty()){
-                    System.out.print(pollNext());
-                    waitFor(1000/ printSpeed);
+    public void startPrint(){
+        var sb=new StringBuilder();
+        while(!printQueue.isEmpty()) {
+            var txtObj=pollNext();
+            switch (txtObj.getScroll()) {
+                case NO -> {
+                    if(queueContainsScroll(Scroll.NO)) sb.append(txtObj.print()).append(NEW_LINE);
+                    else System.out.print(sb.append(txtObj.print()));
+                }
+                case BLOCK -> {
+                    System.out.print(txtObj.print());
+                    waitFor(1000 / printSpeed);
+                }
+                case LINE -> {
+                    int counter=0;
+                    while (txtObj.hasText()) {
+                        System.out.print(txtObj.printLine(counter));
+                        counter++;
+                        waitFor(1000 / printSpeed);
+                    }
+                }
+                case TYPEWRITER -> {
+                    int counter=0;
+                    if (txtObj.hasText()) {
+                        do {
+                            String line = txtObj.printLine(counter);
+                            for (int i = 0; i < line.length(); i++) {
+                                var currentChar = line.charAt(i);
+                                if (currentChar == COLOR_CHAR) {
+                                    int j = Integer.valueOf(i);
+                                    i += COLOR_LABEL_CHAR_SIZE - 1;
+                                    var format = line.substring(j, i);
+                                    System.out.print(format);
+                                } else if (isASpecialCharacter(currentChar) || currentChar == BLANK_SPACE_CH) {
+                                    int j = Integer.valueOf(i);
+                                    while (i < line.length() - 1 && (isASpecialCharacter(line.charAt(i + 1)) || line.charAt(i + 1) == BLANK_SPACE_CH))
+                                        i++;
+                                    System.out.print(line.substring(j, i));
+                                }
+                            }
+                            System.out.print(NEW_LINE);
+                        } while (txtObj.hasText());
+                    }
                 }
             }
-            case LINE -> {
-                lineSplitQueue();
-                while (!printQueue.isEmpty()){
-                    System.out.print(pollNext());
-                    waitFor(1000/ printSpeed);
-                }
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + scroll);
         }
     }
     private void printAnimation(){
@@ -222,7 +260,7 @@ public class ConsolePrinter {
     private void printAnimation(DynamicLine dynLine){
             do {
                 System.out.print(DELETE_CURRENT_LINE+dynLine.poll());
-                waitFor(dynLine.getDelta());
+//                waitFor(dynLine.getDelta());
             } while (dynLine.hasText());
     }
     private void lineSplitQueue() {
@@ -231,7 +269,7 @@ public class ConsolePrinter {
         while (!printQueue.isEmpty()) {
             currentTxtObj = pollNext();
             for (int j = 0; j < currentTxtObj.getTotalHeight() ; j++) {
-                newQueue.add(new TextObject(currentTxtObj.get(j),LIMIT_X,1));
+                newQueue.add(new TextObject(currentTxtObj.get(j), Scroll.LINE, LIMIT_X,1));
             }
         }
         printQueue=newQueue;
@@ -265,7 +303,7 @@ public class ConsolePrinter {
     /** Sends new lines to fill screen and clear last output
      */
     private void clearScreen() {
-        sendToQueue(new TextObject(EMPTY_LINE,LIMIT_X,LIMIT_Y).alignTextTop());
+        sendToQueue(new TextObject(EMPTY_LINE, Scroll.BLOCK, LIMIT_X,LIMIT_Y).alignTextTop());
     }
 
 
@@ -282,6 +320,13 @@ public class ConsolePrinter {
 
     private TextObject pollNext(){
         return printQueue.remove(0);
+    }
+
+    private boolean queueContainsScroll(Scroll scroll){
+        for(TextObject txtObj: printQueue){
+            if(txtObj.getScroll().equals(scroll))return true;
+        }
+        return false;
     }
 
     static class Party {//TODO as separated class, only here while not implemented
