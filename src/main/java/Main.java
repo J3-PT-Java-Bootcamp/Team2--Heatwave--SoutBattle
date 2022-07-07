@@ -1,14 +1,15 @@
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         testPrinter();
 
     }
 
-    private static void testPrinter() throws Exception {
+    private static void testPrinter() {
         var game = new GameManager();
-        game.startGame();
+//        game.startGame();
+        game.testPrinter();
     }
 
 

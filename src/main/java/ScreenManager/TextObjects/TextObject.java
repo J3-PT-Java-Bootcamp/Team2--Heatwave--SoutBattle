@@ -228,7 +228,7 @@ public class TextObject {
             if (ch == COLOR_CHAR) colourCount++;
             if (ch == NEW_LINE_CH) charCount--;
         }
-        return charCount - (colourCount * 6);
+        return charCount - (colourCount * COLOR_CHAR);
     }
     /**
      * Recursive method that checks line size. If its bigger than limit it splits the String recursively
@@ -385,7 +385,7 @@ public class TextObject {
      *
      * @// TODO: 04/07/2022 test method and check if deals with hard wrapping
      */
-    TextObject getResizedText(int newWidth, int newHeight) {
+    public TextObject getResizedText(int newWidth, int newHeight) {
         return new TextObject(this, scroll, newWidth, newHeight);
     }
     /**

@@ -13,11 +13,11 @@ public class WindowObject extends TextObject{
     Point margin;
     String[] pattern;
     String title;
-    BgColors bgColor;
     String[] horizontalPattern;
     String[] verticalPattern;
     int windowWidth,windowHeight;
-    private BgColors frameColor;
+    private BgColors frameColor,bgColor;
+    private CColors txtColor,titleColor;
 
     WindowObject(int maxWidth, int maxHeight, Point padding, Point borderSize, Point margin, String ... pattern){
         super(Scroll.BLOCK, maxWidth-((padding.x+borderSize.x+margin.x)*2),
@@ -54,6 +54,7 @@ public class WindowObject extends TextObject{
                 }
                 sb.append(TextStyle.RESET);
                 if(starts && bgColor!=null)sb.append(bgColor);
+                if(starts&&txtColor!=null)sb.append(txtColor);
             }
             if(!starts&&margin.x>0)sb.append(BLANK_SPACE.repeat(margin.x));
             if(!starts)sb.append(TextStyle.RESET).append(NEW_LINE);
@@ -70,7 +71,8 @@ public class WindowObject extends TextObject{
                     int fillLeft= windowWidth-(margin.x*2)-title.length();
                     int fillRight= ((fillLeft % 2) == 0) ? (fillLeft / 2) : ((fillLeft / 2) + 1);
                     fillLeft/=2;
-                    sb.append(pattern[i].repeat(fillLeft)).append(title).append(pattern[i].repeat(fillRight));
+                    sb.append(pattern[i].repeat(fillLeft)).append(titleColor!=null?titleColor:"").append(TextStyle.BOLD).append(title).append(TextStyle.RESET)
+                            .append(frameColor!=null?frameColor:"").append(pattern[i].repeat(fillRight));
                 }else {
                     sb.append(pattern[starts ? i : borderSize.y - i-1].repeat(windowWidth-(margin.x*2)));
                 }
@@ -105,7 +107,14 @@ public class WindowObject extends TextObject{
         this.bgColor = bgColor;
         return this;
     }
-
+    public WindowObject setTxtColor(CColors color){
+        this.txtColor=color;
+        return this;
+    }
+    public WindowObject setTitleColor(CColors color){
+        this.titleColor=color;
+        return this;
+    }
 
     public WindowObject setFrameColor(BgColors frameColor) {
         this.frameColor = frameColor;

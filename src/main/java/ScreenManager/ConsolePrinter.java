@@ -15,8 +15,13 @@ public class ConsolePrinter {
 
 
     public void test() {
-        printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,1,2,"","")
-                .setTitle("_TEST_").setFrameColor(ScreenManager.ColorFactory.BgColors.BLUE).setBgColor(BgColors.RED).addText("THIS IS A TEST").alignTextCenter().alignTextMiddle());
+        this.printSpeed=6;
+        printQueue.add(new ScreenManager.TextObjects.TextObject("TESTING A TYPE WRITER SCROLL ", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y).alignTextCenter());
+        printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,2,2)
+                .setTitle("_TEST_").setFrameColor(ScreenManager.ColorFactory.BgColors.BLUE).setBgColor(BgColors.RED)
+                .setTitleColor(CColors.BRIGHT_WHITE).setTxtColor(CColors.BLACK)
+                .addText("THIS IS A MAIN WINDOW TEST\n\n\n With a multiline long long long text to be displayed in the center of the window, let's see if it wraps lines CORRECTLY")
+                .alignTextCenter().alignTextMiddle());
         startPrint();
     }
 
@@ -236,16 +241,21 @@ public class ConsolePrinter {
                             for (int i = 0; i < line.length(); i++) {
                                 var currentChar = line.charAt(i);
                                 if (currentChar == COLOR_CHAR) {
-                                    int j = Integer.valueOf(i);
+                                    int j = i;
                                     i += COLOR_LABEL_CHAR_SIZE - 1;
                                     var format = line.substring(j, i);
                                     System.out.print(format);
                                 } else if (isASpecialCharacter(currentChar) || currentChar == BLANK_SPACE_CH) {
-                                    int j = Integer.valueOf(i);
-                                    while (i < line.length() - 1 && (isASpecialCharacter(line.charAt(i + 1)) || line.charAt(i + 1) == BLANK_SPACE_CH))
+                                    int j = i;
+                                    while (i < line.length() - 1 && (isASpecialCharacter(line.charAt(i + 1)) || line.charAt(i + 1) == BLANK_SPACE_CH)) {
                                         i++;
-                                    System.out.print(line.substring(j, i));
+                                    }
+                                    i++;
+                                    if(i<line.length())System.out.print(line.substring(j, i+1));
+                                }else{
+                                    System.out.print(currentChar);
                                 }
+                                waitFor(1000/printSpeed);
                             }
                             System.out.print(NEW_LINE);
                         } while (txtObj.hasText());
