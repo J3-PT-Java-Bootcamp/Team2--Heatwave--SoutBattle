@@ -22,8 +22,8 @@ public class TextObject {
     public enum Scroll{NO,BLOCK,LINE,TYPEWRITER}
     private final Scroll scroll;
     protected final ArrayList<String> text;
-    protected final int MAX_WIDTH;
-    private final int MAX_HEIGHT;
+    protected final int MAX_WIDTH, MAX_HEIGHT;
+    private int printSpeed;
     private int totalWidth, totalHeight;
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public TextObject(TextObject.Scroll scroll, int maxWidth, int maxHeight) {
@@ -46,6 +46,7 @@ public class TextObject {
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new ArrayList<>(java.util.List.of(textLines));
+        this.printSpeed=2;
     }
     public TextObject(TextObject txtObject, TextObject.Scroll scroll, int maxWidth, int maxHeight) {
         this.scroll = scroll;
@@ -56,6 +57,17 @@ public class TextObject {
     }
     //---------------------------------------------------------------------------------------------------Getters&Setters
 
+
+    public int getPrintSpeed() {
+        if(printSpeed>0)return printSpeed;
+        setPrintSpeed(1);
+        return printSpeed;
+    }
+
+    public TextObject setPrintSpeed(int printSpeed) {
+        this.printSpeed = printSpeed;
+        return this;
+    }
 
     public Scroll getScroll() {
         return scroll;
@@ -226,9 +238,9 @@ public class TextObject {
         for (char ch : chArray) {
             charCount++;
             if (ch == COLOR_CHAR) colourCount++;
-            if (ch == NEW_LINE_CH) charCount--;
+            if (ch == NEW_LINE_CH||ch ==DELETE_CURRENT_LINE  ) charCount--;
         }
-        return charCount - (colourCount * COLOR_CHAR);
+        return charCount - (colourCount * COLOR_LABEL_CHAR_SIZE);
     }
     /**
      * Recursive method that checks line size. If its bigger than limit it splits the String recursively

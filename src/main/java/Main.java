@@ -8,8 +8,12 @@ public class Main {
 
     private static void testPrinter() {
         var game = new GameManager();
-//        game.startGame();
-        game.testPrinter();
+        try {
+            game.startGame();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+//        game.testPrinter();
     }
 
 

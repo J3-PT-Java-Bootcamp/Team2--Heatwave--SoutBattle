@@ -15,17 +15,16 @@ public class ConsolePrinter {
 
 
     public void test() {
-        this.printSpeed=6;
-        printQueue.add(new ScreenManager.TextObjects.TextObject("TESTING A TYPE WRITER SCROLL ", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y).alignTextCenter());
+        printQueue.add(new TextObject("TESTING A TYPE WRITER SCROLL "
+                ,Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y).alignTextCenter().setPrintSpeed(6));
         printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,2,2)
                 .setTitle("_TEST_").setFrameColor(ScreenManager.ColorFactory.BgColors.BLUE).setBgColor(BgColors.RED)
                 .setTitleColor(CColors.BRIGHT_WHITE).setTxtColor(CColors.BLACK)
                 .addText("THIS IS A MAIN WINDOW TEST\n\n\n With a multiline long long long text to be displayed in the center of the window, let's see if it wraps lines CORRECTLY")
-                .alignTextCenter().alignTextMiddle());
+                .alignTextCenter().alignTextMiddle().setPrintSpeed(1));
         startPrint();
-        printSpeed=1;
         printQueue.add(new DynamicLine(LIMIT_X,LIMIT_Y,500,2,2)
-                .addText("This").addText("is").addText("a").addText("dynamic").addText("line").alignTextCenter());
+                .addText("This").addText("is").addText("a").addText("dynamic").addText("line").alignTextCenter().setPrintSpeed(2));
         startPrint();
     }
 
@@ -91,12 +90,10 @@ public class ConsolePrinter {
     private final BufferedReader in;
     private final FileWriter logWriter;
     private ArrayList<TextObject> printQueue;
-    private int printSpeed;
 
     //---------------------------------------------------------------------------   CONSTRUCTOR
     public ConsolePrinter() {
         this.in= new BufferedReader(new InputStreamReader(System.in));
-        this.printSpeed =1;
         this.printQueue=new java.util.ArrayList<>();
         try {
             this.logWriter= new java.io.FileWriter("data/consolePrinter_log.txt");
@@ -113,9 +110,9 @@ public class ConsolePrinter {
         clearScreen();
         sendToQueue(TEAM_LOGO
                 .colorizeAllText(CColors.BRIGHT_RED,CColors.RED,CColors.RED,  CColors.YELLOW, CColors.BRIGHT_YELLOW)
-                .stylizeAllText(TextStyle.BOLD));
+                .stylizeAllText(TextStyle.BOLD).setPrintSpeed(1));
         sendToQueue(GAME_LOGO.alignTextCenter().colorizeAllText().stylizeAllText(TextStyle.BOLD).alignTextMiddle(),2);
-        this.printSpeed =2;
+
         startPrint();
         waitFor(1000);
     }
@@ -124,7 +121,7 @@ public class ConsolePrinter {
      */
     public void calibrateScreen() throws Exception {
       sendToQueue(SCREEN_RECT.setAllTextBackground(BgColors.BRIGHT_WHITE));
-      sendToQueue(new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), TextObject.Scroll.NO, LIMIT_X,2)
+      sendToQueue(new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), TextObject.Scroll.NO, LIMIT_X,4)
               .addText(ScreenManager.ColorFactory.CColors.CYAN +"Press Enter TWICE when done"+ ScreenManager.ColorFactory.TextStyle.RESET).alignTextCenter());
       startPrint();
       in.skip(2);
@@ -166,7 +163,7 @@ public class ConsolePrinter {
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
-            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter());
+            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter().setPrintSpeed(6));
             startPrint();
 
         }
@@ -227,13 +224,13 @@ public class ConsolePrinter {
                 }
                 case BLOCK -> {
                     System.out.print(txtObj.print());
-                    waitFor(1000 / printSpeed);
+                    waitFor(1000 / txtObj.getPrintSpeed());
                 }
                 case LINE -> {
                     int counter=0;
                     while (txtObj.hasText()) {
                         System.out.print(txtObj.print());
-                        waitFor(1000 / printSpeed);
+                        waitFor(1000 / txtObj.getPrintSpeed());
                         counter++;
                     }
                 }
@@ -259,7 +256,7 @@ public class ConsolePrinter {
                                 }else{
                                     System.out.print(currentChar);
                                 }
-                                waitFor(1000/printSpeed);
+                                waitFor(1000/txtObj.getPrintSpeed());
                             }
                             System.out.print(NEW_LINE);
                         } while (txtObj.hasText());
