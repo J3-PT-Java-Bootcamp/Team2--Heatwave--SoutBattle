@@ -1,4 +1,6 @@
 package ScreenManager.TextObjects;
+import ScreenManager.TextObjects.Animations.*;
+
 import static ScreenManager.ColorFactory.*;
 
 public class DynamicLine extends ScreenManager.TextObjects.TextObject {
@@ -7,9 +9,9 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     int repeat;
     int duration;
     int currentFrame;
-    ScreenManager.TextObjects.Animations.AnimationObject[] animations;
+    AnimationObject[] animations;
 
-    public DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, ScreenManager.TextObjects.Animations.AnimationObject... animations) {
+    public DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, AnimationObject... animations) {
         super(Scroll.LINE, maxWidth, maxHeight);
         setDelay(delay);
         setRepeat(repeat);
@@ -19,11 +21,11 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     }
 
     protected int calculateFrames(int duration){
-        return delay *duration;
+        return delay*duration;
     }
 
     protected void constructAnimation(){
-        for (ScreenManager.TextObjects.Animations.AnimationObject anim : animations){
+        for (AnimationObject anim : animations){
             anim.animate(this,calculateFrames(duration),MAX_WIDTH);
         }
     }
