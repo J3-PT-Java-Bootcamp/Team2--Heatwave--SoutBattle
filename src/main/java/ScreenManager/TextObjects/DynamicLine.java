@@ -1,4 +1,5 @@
 package ScreenManager.TextObjects;
+import static ScreenManager.ColorFactory.*;
 
 public class DynamicLine extends ScreenManager.TextObjects.TextObject {
 
@@ -8,7 +9,7 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     int currentFrame;
     ScreenManager.TextObjects.Animations.AnimationObject[] animations;
 
-    DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, ScreenManager.TextObjects.Animations.AnimationObject... animations) {
+    public DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, ScreenManager.TextObjects.Animations.AnimationObject... animations) {
         super(Scroll.LINE, maxWidth, maxHeight);
         setDelay(delay);
         setRepeat(repeat);
@@ -51,5 +52,9 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     public String poll() {
         currentFrame++;
         return super.poll();
+    }
+    @Override
+    public String print(){
+        return DELETE_CURRENT_LINE + poll();
     }
 }

@@ -23,6 +23,10 @@ public class ConsolePrinter {
                 .addText("THIS IS A MAIN WINDOW TEST\n\n\n With a multiline long long long text to be displayed in the center of the window, let's see if it wraps lines CORRECTLY")
                 .alignTextCenter().alignTextMiddle());
         startPrint();
+        printSpeed=1;
+        printQueue.add(new DynamicLine(LIMIT_X,LIMIT_Y,500,2,2)
+                .addText("This").addText("is").addText("a").addText("dynamic").addText("line").alignTextCenter());
+        startPrint();
     }
 
     //---------------------------------------------------------------------------------------------------------CONSTANTS
@@ -228,9 +232,9 @@ public class ConsolePrinter {
                 case LINE -> {
                     int counter=0;
                     while (txtObj.hasText()) {
-                        System.out.print(txtObj.printLine(counter));
-                        counter++;
+                        System.out.print(txtObj.print());
                         waitFor(1000 / printSpeed);
+                        counter++;
                     }
                 }
                 case TYPEWRITER -> {
