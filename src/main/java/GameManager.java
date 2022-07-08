@@ -1,19 +1,36 @@
 import ScreenManager.*;
+import ScreenManager.ConsolePrinter.Party;
+import com.google.gson.Gson;
+
+import java.io.*;
 public class GameManager {
-    public final ScreenManager.ConsolePrinter printer;
+    private final ConsolePrinter printer;
+    private String[] graveyard;
+    private Party[] parties;
+    private Party playerParty,enemyParty;
+    private GameData gameData;
+    Gson gson;
+    private String userName;
 
+//-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public GameManager() {
-        printer= new ScreenManager.ConsolePrinter();
-    }
-    void testPrinter(){
-        printer.test();
-
-    }
-    void startGame() throws Exception {
+        gson = new Gson();
+        printer= new ConsolePrinter();
         printer.splashScreen();
+        try {
+            loadData();
+        } catch (Exception e) {
+            this.gameData=new GameData();
+            this.userName= printer.askUserName();
+        }
+    }
+
+//-------------------------------------------------------------------------------------------------------------GAME_FLOW
+
+    void startGame() throws Exception {
         startMenu(printer);
     }
-    private void startMenu(ScreenManager.ConsolePrinter printer) throws Exception {
+    private void startMenu(ConsolePrinter printer) throws Exception {
         switch (printer.showMenu(false)){
             case PLAY ->
                     System.out.println("LETS PLAY");
@@ -25,11 +42,21 @@ public class GameManager {
                 printer.calibrateScreen();
                 startMenu(printer);
             }
-            case CLEAR_DATA -> System.out.println("DELETE ALL");//TODO CLEAR DATA
-            case EXIT -> System.exit(0);
+            case CLEAR_DATA -> clearAllData();
+            case EXIT -> closeGame();
             default -> System.out.println("FATAL ERROR!_ This should never happen");
         }
     }
+
+    private void closeGame() throws Exception {
+        if(printer.confirmationNeeded("Do you want to close game?")) {
+            saveData();
+            System.exit(0);
+        }else{
+            startMenu(printer);
+        }
+    }
+
     private void playGame(){
 //        //TODO implement all dependencies
 //        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Party[]{new ScreenManager.ConsolePrinter.Party(new String[]{"a","b"})});
@@ -48,11 +75,46 @@ public class GameManager {
 //        }while(playerParty.hasAliveCharacters()&&enemyParty.hasAliveCharacters());
 //        gameOver();
     }
-    private void loadData(){}
-    private void saveData(){}
     private void gameOver() throws Exception {
         printer.printGameOver(true);
         startMenu(printer);
 
+    }
+    //-------------------------------------------------------------------------------------------------------LOAD & SAVE
+    private void loadData() throws Exception {
+        var reader = new FileReader("gameData.json");
+        gameData=gson.fromJson(reader,GameData.class);
+        this.userName= gameData.getUserName();
+        this.parties= gameData.getParties();
+        this.graveyard= gameData.getGraveyard();
+
+    }
+    private void saveData(){
+        try {
+            var writer = new FileWriter("gameData.json");
+            writer.write(gson.toJson(updateGameData()));
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private GameData updateGameData() {
+        gameData.setGraveyard(this.graveyard);
+        gameData.setParties(this.parties);
+        gameData.setUserName(this.userName);
+        return gameData;
+    }
+    private void clearAllData() throws Exception {
+        if(printer.confirmationNeeded("Are you sure to clear all saved data? ")){
+            var file=new java.io.File("gameData.json");
+            file.delete();
+        }else {
+            startMenu(printer);
+        }
+    }
+
+
+    void testPrinter(){
+        printer.test();
     }
 }

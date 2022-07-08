@@ -67,7 +67,7 @@ public class WindowObject extends TextObject{
             for (int i = 0; i < borderSize.y; i++) {
                 sb.append(BLANK_SPACE.repeat(margin.x));
                 if(frameColor!=null)sb.append(frameColor);
-                if ((title.length() > 0) && (borderSize.y > 1) && starts && (i == 0)){
+                if (title!=null&&(title.length() > 0) && (borderSize.y > 1) && starts && (i == 0)){
                     int fillLeft= windowWidth-(margin.x*2)-title.length();
                     int fillRight= ((fillLeft % 2) == 0) ? (fillLeft / 2) : ((fillLeft / 2) + 1);
                     fillLeft/=2;

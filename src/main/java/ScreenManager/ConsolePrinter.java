@@ -1,6 +1,7 @@
 package ScreenManager;
 
 import ScreenManager.ColorFactory.BgColors;
+import ScreenManager.ColorFactory.CColors;
 import ScreenManager.TextObjects.*;
 import ScreenManager.TextObjects.TextObject.Scroll;
 
@@ -28,6 +29,7 @@ public class ConsolePrinter {
         startPrint();
     }
 
+
     //---------------------------------------------------------------------------------------------------------CONSTANTS
     public enum Menu{
         PLAY("Play Game"),
@@ -48,8 +50,7 @@ public class ConsolePrinter {
             return this.label;
         }
     }
-    enum Modal{OK("Confirm"),
-        CANCEL("Cancel");
+    enum Modal{CANCEL("Cancel"),OK("Confirm");
         private final String label;
 
         Modal(String label){
@@ -105,8 +106,12 @@ public class ConsolePrinter {
     //---------------------------------------------------------------------------   PUBLIC METHODS
     /**Shows the Team Logo after calibrating console size
      */
-    public void splashScreen() throws Exception {
-        calibrateScreen();
+    public void splashScreen(){
+        try {
+            calibrateScreen();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         clearScreen();
         sendToQueue(TEAM_LOGO
                 .colorizeAllText(CColors.BRIGHT_RED,CColors.RED,CColors.RED,  CColors.YELLOW, CColors.BRIGHT_YELLOW)
@@ -116,13 +121,49 @@ public class ConsolePrinter {
         startPrint();
         waitFor(1000);
     }
+
+    public String askUserName() {
+        sendToQueue(new TextObject("Welcome to " + GAME_NAME, Scroll.TYPEWRITER, LIMIT_X, LIMIT_Y)
+                .addText("Enter your name:").alignTextCenter().alignTextMiddle().setPrintSpeed(6));
+        startPrint();
+        return userNameFromInput();
+    }
+
+    private String userNameFromInput() {
+        String input = "";
+        try {
+            input= in.readLine();
+        } catch (java.io.IOException e) {
+            sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
+                    .alignTextCenter().addText(CColors.BRIGHT_RED+"ERR_ not valid input")
+                    .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).alignTextCenter().setPrintSpeed(1));
+
+            startPrint();
+            return userNameFromInput();
+        }
+        if (input.trim().length()<3){
+            sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
+                    .addText(CColors.BRIGHT_RED+"ERR_ not valid input").alignTextCenter()
+                    .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).setPrintSpeed(1).alignTextCenter());
+            startPrint();
+            return userNameFromInput();
+        }
+        clearScreen();
+        sendToQueue(new TextObject("Nice to meet you "+input, TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+                .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
+        waitFor(1000);
+        return input;
+    }
+
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
      */
     public void calibrateScreen() throws Exception {
-      sendToQueue(SCREEN_RECT.setAllTextBackground(BgColors.BRIGHT_WHITE));
-      sendToQueue(new TextObject(rainbowCharacters("Adjust your console size to fit the rectangle above.",4), TextObject.Scroll.NO, LIMIT_X,4)
-              .addText(ScreenManager.ColorFactory.CColors.CYAN +"Press Enter TWICE when done"+ ScreenManager.ColorFactory.TextStyle.RESET).alignTextCenter());
+//      sendToQueue(SCREEN_RECT.setAllTextBackground(BgColors.BRIGHT_WHITE));
+      sendToQueue(new WindowObject(LIMIT_X,LIMIT_Y+2,1,1).setBgColor(BgColors.CYAN)
+              .setFrameColor(BgColors.BRIGHT_BLACK).setTxtColor(CColors.BRIGHT_WHITE)
+              .addText(TextStyle.BOLD+"Adjust your console size to fit this box.")
+              .addText(TextStyle.BOLD+"Press Enter TWICE when done").alignTextCenter().alignTextMiddle());
       startPrint();
       in.skip(2);
 
@@ -163,7 +204,7 @@ public class ConsolePrinter {
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
-            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter().setPrintSpeed(6));
+            sendToQueue(new TextObject("Enter a number to continue", TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter().setPrintSpeed(6));
             startPrint();
 
         }
@@ -188,6 +229,40 @@ public class ConsolePrinter {
         }
         input = input.replace("\n", "").trim();
         return input;
+    }
+
+    public boolean confirmationNeeded(String message) {
+        clearScreen();
+        printQueue.add(new ScreenManager.TextObjects.WindowObject(LIMIT_X,LIMIT_Y,3,3)
+                .setBgColor(BgColors.BLACK).setFrameColor(BgColors.WHITE).setTxtColor(CColors.BRIGHT_WHITE)
+                .setTitleColor(CColors.BLACK).setTitle("Confirmation Needed")
+                .addText(message).addGroupAligned(2,LIMIT_X/2,
+                        new TextObject[]{
+                            new TextObject(Modal.CANCEL.ordinal()+"- "+Modal.CANCEL,
+                                    Scroll.BLOCK,LIMIT_X/4,1),
+                            new TextObject(Modal.OK.ordinal()+"- "+Modal.OK,
+                                    Scroll.BLOCK,LIMIT_X/4,1)})
+                .alignTextCenter().alignTextMiddle());
+        startPrint();
+        return Modal.values()[ tryToGetInput(Modal.values())]== Modal.OK;
+
+
+
+    }
+
+    private int tryToGetInput(Object[] values) {
+        int inputNumber = -1;
+        try {
+            inputNumber = Integer.parseInt(getInp());
+        } catch (Exception e) {
+            tryToGetInput(values);
+        }
+        if (inputNumber < values.length && inputNumber >= 0) return inputNumber;
+        sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
+                .addText(CColors.BRIGHT_RED+"ERR_ not valid input").alignTextCenter()
+                .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).setPrintSpeed(1).alignTextCenter());
+        startPrint();
+        return tryToGetInput(values);
     }
 
     public Party chooseParty(Party[] parties){
@@ -314,7 +389,7 @@ public class ConsolePrinter {
     /** Sends new lines to fill screen and clear last output
      */
     private void clearScreen() {
-        sendToQueue(new TextObject(EMPTY_LINE, Scroll.BLOCK, LIMIT_X,LIMIT_Y).alignTextTop());
+        sendToQueue(new TextObject(EMPTY_LINE, Scroll.BLOCK, LIMIT_X,LIMIT_Y*2).alignTextTop());
     }
 
 
@@ -340,7 +415,7 @@ public class ConsolePrinter {
         return false;
     }
 
-    static class Party {//TODO as separated class, only here while not implemented
+    public static class Party {//TODO as separated class, only here while not implemented
         String[] fighters;
 
         public Party(String[] fighters) {
