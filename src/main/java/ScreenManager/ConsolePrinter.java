@@ -5,6 +5,7 @@ import ScreenManager.TextObjects.TextObject.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
+//import GameManager.FightReport;
 
 import static ScreenManager.ColorFactory.*;
 import static ScreenManager.PrinterConstants.*;
@@ -13,13 +14,6 @@ import static ScreenManager.PrinterConstants.*;
  *
  */
 public class ConsolePrinter {
-
-
-    public void showMemorial() {
-    }
-
-    public void readMe() {
-    }
 
     private ArrayList<TextObject> printQueue;
 
@@ -50,13 +44,10 @@ public class ConsolePrinter {
     public String askUserName() {
         sendToQueue(new TextObject("Welcome to " + GAME_NAME, Scroll.TYPEWRITER, LIMIT_X, LIMIT_Y)
                 .addText("Enter your name:").alignTextCenter().alignTextMiddle().setPrintSpeed(6));
-        sendToQueue(new ScreenManager.TextObjects.TextObject(CENTER_CARET, Scroll.LINE,LIMIT_X,LIMIT_Y));
+        sendToQueue(new TextObject(CENTER_CARET, Scroll.LINE,LIMIT_X,LIMIT_Y));
         startPrint();
         return userNameFromInput();
     }
-
-
-
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
      */
@@ -65,7 +56,7 @@ public class ConsolePrinter {
       sendToQueue(new WindowObject(LIMIT_X,LIMIT_Y+2,1,1).setBgColor(BgColors.CYAN)
               .setFrameColor(BgColors.BRIGHT_BLACK).setTxtColor(CColors.BRIGHT_WHITE)
               .addText(TextStyle.BOLD+"Adjust your console size to fit this box.")
-              .addText(TextStyle.BOLD+"Press Enter TWICE when done").alignTextCenter().alignTextMiddle()
+              .addText(TextStyle.BOLD+"Press Enter when done").alignTextCenter().alignTextMiddle()
               .addText(CENTER_CARET));
         startPrint();
       var in=newInput();
@@ -96,10 +87,10 @@ public class ConsolePrinter {
             numberTextObject.alignTextRight();
             nameTextObject.fillAllLines();
             var finalTxtObj = new TextObject(Scroll.NO, LIMIT_X
-                    , LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
+                    , LIMIT_Y - (HEADER.getTotalHeight() + 2)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
-            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.NO, LIMIT_X, 1)
+            sendToQueue(new TextObject("Enter a number to continue", TextObject.Scroll.NO, LIMIT_X, 1)
                     .alignTextCenter().setPrintSpeed(6).addText(CENTER_CARET));
             startPrint();
 
@@ -114,6 +105,10 @@ public class ConsolePrinter {
             return Menu.values()[inputNumber];
         }
         return showMenu(true);
+    }
+    public void showMemorial() {
+    }
+    public void readMe() {
     }
     public void newPartyScreen(Party brandNewParty) {
 
@@ -158,27 +153,31 @@ public class ConsolePrinter {
                 .alignTextCenter().alignTextMiddle().addText(CENTER_CARET));
         startPrint();
         return Modal.values()[ getIntFromInput(Modal.values())]== Modal.OK;
-
-
-
-    }
-
-    public Party chooseParty(Party[] parties){
-        return parties[0];
     }
     public Character chooseCharacter(Party party){
         //TODO prints all characters of a party and all the stats and waits until user choose one
 //        (partyToString(party));
         return 'a';
     }
-    public void printFight(){
+    public void printFight(GameManager.FightReport report){
 
     }
     public void printGameOver(Boolean playerWins){
         //TODO print game over screen (model depends on player winning or not)
     }
-    public void printMemorial(String[] graveyard){
-        //TODO prints memorial screen with all dead fighters
+    public void goodBye(String userName) {
+        clearScreen();
+        sendToQueue(new TextObject("Thanks for Playing "+ userName+ ", Good Bye! ",
+                TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y ).alignTextCenter().alignTextMiddle().setPrintSpeed(10));
+        startPrint();
+    }
+
+    public void helloUser(String userName) {
+        clearScreen();
+        sendToQueue(new TextObject("Welcome Back "+userName, Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y)
+                .setPrintSpeed(10).alignTextCenter().alignTextMiddle());
+        startPrint();
+        waitFor(500);
     }
 
     //---------------------------------------------------------------------------   CONSOLE MANAGER
@@ -235,6 +234,7 @@ public class ConsolePrinter {
         }
     }
     private void printAnimation(){
+        //TODO
         if(printQueue.get(0)instanceof DynamicLine)printAnimation((DynamicLine) pollNext());
     }
     private void printAnimation(DynamicLine dynLine){
@@ -339,12 +339,7 @@ public class ConsolePrinter {
         return new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public void goodBye(String userName) {
-        clearScreen();
-        sendToQueue(new TextObject("Thanks for Playing "+ userName+ ", Good Bye! ",
-                ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y ).alignTextCenter().alignTextMiddle().setPrintSpeed(10));
-        startPrint();
-    }
+
 
     public static class Party {//TODO as separated class, only here while not implemented
         String[] fighters;

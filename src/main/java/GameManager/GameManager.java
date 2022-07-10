@@ -1,3 +1,5 @@
+package GameManager;
+
 import ScreenManager.*;
 import ScreenManager.ConsolePrinter.Party;
 import com.google.gson.Gson;
@@ -24,16 +26,25 @@ public class GameManager {
         } catch (Exception e) {
             this.gameData = new GameData();
             this.userName = printer.askUserName();
+            saveData();
+        }
+        if(this.userName==null){
+            this.gameData = new GameData();
+            this.userName = printer.askUserName();
+            saveData();
+        }else {
+            printer.helloUser(userName);
         }
     }
 
 //-------------------------------------------------------------------------------------------------------------GAME_FLOW
 
-    void startGame() throws Exception {
+    public void startGame() throws Exception {
         startMenu(printer);
     }
 
     private void startMenu(ConsolePrinter printer) throws Exception {
+        saveData();
         switch (printer.showMenu(false)){
             case PLAY -> System.out.println("LETS PLAY");
 //                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
@@ -49,7 +60,6 @@ public class GameManager {
 
     private void closeGame() throws Exception {
         if (printer.confirmationNeeded("Do you want to close game?")) {
-            saveData();
             printer.goodBye(userName);
             System.exit(0);
         } else {

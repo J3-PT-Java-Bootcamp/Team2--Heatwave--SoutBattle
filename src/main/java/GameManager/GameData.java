@@ -1,3 +1,5 @@
+package GameManager;
+
 public class GameData {
     private ScreenManager.ConsolePrinter.Party[] parties;
     private String[] graveyard;
