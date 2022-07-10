@@ -1,13 +1,13 @@
 package ScreenManager;
-
-import ScreenManager.ColorFactory.BgColors;
-import ScreenManager.ColorFactory.CColors;
 import ScreenManager.TextObjects.*;
-import ScreenManager.TextObjects.TextObject.Scroll;
+import ScreenManager.TextObjects.TextObject.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import static ScreenManager.ColorFactory.*;
+import static ScreenManager.PrinterConstants.*;
 
 /**
  *
@@ -15,92 +15,17 @@ import static ScreenManager.ColorFactory.*;
 public class ConsolePrinter {
 
 
-    public void test() {
-        printQueue.add(new TextObject("TESTING A TYPE WRITER SCROLL "
-                ,Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y).alignTextCenter().setPrintSpeed(6));
-        printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,2,2)
-                .setTitle("_TEST_").setFrameColor(ScreenManager.ColorFactory.BgColors.BLUE).setBgColor(BgColors.RED)
-                .setTitleColor(CColors.BRIGHT_WHITE).setTxtColor(CColors.BLACK)
-                .addText("THIS IS A MAIN WINDOW TEST\n\n\n With a multiline long long long text to be displayed in the center of the window, let's see if it wraps lines CORRECTLY")
-                .alignTextCenter().alignTextMiddle().setPrintSpeed(1));
-        startPrint();
-        printQueue.add(new DynamicLine(LIMIT_X,LIMIT_Y,500,2,2)
-                .addText("This").addText("is").addText("a").addText("dynamic").addText("line").alignTextCenter().setPrintSpeed(2));
-        startPrint();
+    public void showMemorial() {
     }
 
-
-    //---------------------------------------------------------------------------------------------------------CONSTANTS
-    public enum Menu{
-        PLAY("Play Game"),
-        NEW_PARTY("Create New Party"),
-        ABOUT("Read Me"),
-        MEMORIAL("See Graveyard"),
-        CALIBRATE("Calibrate Screen"),
-        CLEAR_DATA("Clear All Data"),
-        EXIT("Exit Game");
-        private final String label;
-
-        Menu(String label){
-            this.label=label;
-        }
-
-        @Override
-        public String toString() {
-            return this.label;
-        }
+    public void readMe() {
     }
-    enum Modal{CANCEL("Cancel"),OK("Confirm");
-        private final String label;
 
-        Modal(String label){
-            this.label=label;
-        }
-
-        @Override
-        public String toString() {
-            return this.label;
-        }}
-    private final int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
-    private final String GAME_NAME="S.OUT.Battle";
-    private final TextObject HEADER=new TextObject("=".repeat(LIMIT_X)+"\n"
-            +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X), Scroll.NO, LIMIT_X,LIMIT_Y/2);
-
-    public final TextObject GAME_LOGO= new TextObject("""
-                                                                            ,,
-    .M""\"bgd                      mm       `7MM""\"Yp,          mm     mm   `7MM
-  ,MI    "Y                      MM         MM    Yb          MM     MM     MM
-           `MMb.      ,pW"Wq.`7MM  `7MM mmMMmm       MM    dP  ,6"Yb.mmMMmm mmMMmm   MM  .gP"Ya
-              `YMMNq. 6W'   `Wb MM    MM   MM         MM""\"bg. 8)   MM  MM     MM     MM ,M'   Yb
-            .     `MM 8M     M8 MM    MM   MM         MM    `Y  ,pm9MM  MM     MM     MM 8M""\"""\"
-            Mb     dM YA.   ,A9 MM    MM   MM    d8b  MM    ,9 8M   MM  MM     MM     MM YM.    ,
-            P"Ybmmd"   `Ybmd9'  `Mbod"YML. `Mbmo Y8P.JMMmmmd9  `Moo9^Yo.`Mbmo  `Mbmo.JMML.`Mbmmd'""", Scroll.BLOCK, LIMIT_X, LIMIT_Y);
-    public final TextObject TEAM_LOGO= new TextObject( """
-                __  __           __ _       __
-               / / / /__  ____ _/ /| |     / /___ __   _____
-              / /_/ / _ \\/ __ `/ __/ | /| / / __ `/ | / / _ \\
-             / __  /  __/ /_/ / /_ | |/ |/ / /_/ /| |/ /  __/
-            /_/ /_/\\___/\\__,_/\\__/ |__/|__/\\__,_/ |___/\\___/ 		 _  __   __  _ _/_ _
-            														/_///_'_\\/_'/ // _\\  ...
-            													   /
-            														""", Scroll.BLOCK,LIMIT_X,LIMIT_Y);
-    public final TextObject SCREEN_RECT= new TextObject("X".repeat(LIMIT_X) + "\n"
-                    + ("Y" + " ".repeat(LIMIT_X-2) + "Y\n").repeat(LIMIT_Y)
-                    + "X".repeat(LIMIT_X), Scroll.BLOCK, LIMIT_X,LIMIT_Y);
-    public final TextObject EMPTY_LINE=new TextObject(BLANK_SPACE.repeat(LIMIT_X-1), Scroll.NO, LIMIT_X,1);
-    private final BufferedReader in;
-    private final FileWriter logWriter;
     private ArrayList<TextObject> printQueue;
 
     //---------------------------------------------------------------------------   CONSTRUCTOR
     public ConsolePrinter() {
-        this.in= new BufferedReader(new InputStreamReader(System.in));
         this.printQueue=new java.util.ArrayList<>();
-        try {
-            this.logWriter= new java.io.FileWriter("data/consolePrinter_log.txt");
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     //---------------------------------------------------------------------------   PUBLIC METHODS
@@ -116,7 +41,7 @@ public class ConsolePrinter {
         sendToQueue(TEAM_LOGO
                 .colorizeAllText(CColors.BRIGHT_RED,CColors.RED,CColors.RED,  CColors.YELLOW, CColors.BRIGHT_YELLOW)
                 .stylizeAllText(TextStyle.BOLD).setPrintSpeed(1));
-        sendToQueue(GAME_LOGO.alignTextCenter().colorizeAllText().stylizeAllText(TextStyle.BOLD).alignTextMiddle(),2);
+        sendToQueue(GAME_LOGO.alignTextCenter().colorizeAllText().stylizeAllText(TextStyle.BOLD),2);
 
         startPrint();
         waitFor(1000);
@@ -125,35 +50,12 @@ public class ConsolePrinter {
     public String askUserName() {
         sendToQueue(new TextObject("Welcome to " + GAME_NAME, Scroll.TYPEWRITER, LIMIT_X, LIMIT_Y)
                 .addText("Enter your name:").alignTextCenter().alignTextMiddle().setPrintSpeed(6));
+        sendToQueue(new ScreenManager.TextObjects.TextObject(CENTER_CARET, Scroll.LINE,LIMIT_X,LIMIT_Y));
         startPrint();
         return userNameFromInput();
     }
 
-    private String userNameFromInput() {
-        String input = "";
-        try {
-            input= in.readLine();
-        } catch (java.io.IOException e) {
-            sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
-                    .alignTextCenter().addText(CColors.BRIGHT_RED+"ERR_ not valid input")
-                    .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).alignTextCenter().setPrintSpeed(1));
 
-            startPrint();
-            return userNameFromInput();
-        }
-        if (input.trim().length()<3){
-            sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
-                    .addText(CColors.BRIGHT_RED+"ERR_ not valid input").alignTextCenter()
-                    .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).setPrintSpeed(1).alignTextCenter());
-            startPrint();
-            return userNameFromInput();
-        }
-        clearScreen();
-        sendToQueue(new TextObject("Nice to meet you "+input, TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
-                .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
-        waitFor(1000);
-        return input;
-    }
 
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
@@ -163,24 +65,17 @@ public class ConsolePrinter {
       sendToQueue(new WindowObject(LIMIT_X,LIMIT_Y+2,1,1).setBgColor(BgColors.CYAN)
               .setFrameColor(BgColors.BRIGHT_BLACK).setTxtColor(CColors.BRIGHT_WHITE)
               .addText(TextStyle.BOLD+"Adjust your console size to fit this box.")
-              .addText(TextStyle.BOLD+"Press Enter TWICE when done").alignTextCenter().alignTextMiddle());
-      startPrint();
-      in.skip(2);
+              .addText(TextStyle.BOLD+"Press Enter TWICE when done").alignTextCenter().alignTextMiddle()
+              .addText(CENTER_CARET));
+        startPrint();
+      var in=newInput();
+      in.readLine();
 
     }
 
     public Menu showMenu(boolean showError) {
         if(showError) {
-            var str= CColors.BRIGHT_RED + "ERR_   Input not recognized" + TextStyle.RESET;
-            int availableSpace=((LIMIT_X-(str.length()-(3*COLOR_LABEL_CHAR_SIZE)))/2);
-            str= BLANK_SPACE.repeat(availableSpace)+str+BLANK_SPACE.repeat(availableSpace);
-            System.out.print(str);
-            waitFor(600);
-            System.out.print(DELETE_CURRENT_LINE + CColors.BRIGHT_GREEN.toString()+(BLANK_SPACE.repeat(availableSpace))
-                    +" TRY AGAIN "+TextStyle.RESET );
-            waitFor(500);
-            System.out.print(DELETE_CURRENT_LINE + BLANK_SPACE.repeat(availableSpace) );
-
+           showErrorLine();
         }else {
 
             clearScreen();
@@ -204,7 +99,8 @@ public class ConsolePrinter {
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
-            sendToQueue(new TextObject("Enter a number to continue", TextObject.Scroll.TYPEWRITER, LIMIT_X, 1).alignTextCenter().setPrintSpeed(6));
+            sendToQueue(new TextObject("Enter a number to continue", ScreenManager.TextObjects.TextObject.Scroll.NO, LIMIT_X, 1)
+                    .alignTextCenter().setPrintSpeed(6).addText(CENTER_CARET));
             startPrint();
 
         }
@@ -219,18 +115,35 @@ public class ConsolePrinter {
         }
         return showMenu(true);
     }
+    public void newPartyScreen(Party brandNewParty) {
 
-    private String getInp() {
-        String input;
-        try {
-            input = in.readLine();
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
+        Optional<Party> party = Optional.ofNullable(brandNewParty);
+        if(!party.isPresent()){
+            //TODO ask for party name
+        }else{
+            //TODO print random fighters result
         }
-        input = input.replace("\n", "").trim();
-        return input;
     }
-
+    public Party chooseParty(ArrayList<Party> parties){
+        int col=(int) Math.ceil(parties.size()/10.0);
+        TextObject[] txtObjs= new TextObject[col];
+        for (int i = 0; i < txtObjs.length; i++) {
+            txtObjs[i]= new TextObject(TextObject.Scroll.BLOCK,
+                    (int) Math.floor(LIMIT_X / col), (int) Math.floor(LIMIT_Y * 0.8));
+        }
+        int objIndex=0;
+        for (int i = 0; i < parties.size(); i++) {
+            txtObjs[i/10].addText(">"+i+" - "+parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
+        }
+        var finalTxtObj=new TextObject(TextObject.Scroll.BLOCK,
+                LIMIT_X , LIMIT_Y );
+        if(txtObjs.length>1) finalTxtObj.addGroupAligned(txtObjs.length,LIMIT_X,txtObjs);
+        else finalTxtObj.addText(txtObjs[0]);
+        sendToQueue(finalTxtObj);
+        sendToQueue(new TextObject("Select a party to play", Scroll.BLOCK,LIMIT_X,LIMIT_Y).alignTextCenter());
+        startPrint();
+        return parties.get(getIntFromInput(parties.toArray()));
+    }
     public boolean confirmationNeeded(String message) {
         clearScreen();
         printQueue.add(new ScreenManager.TextObjects.WindowObject(LIMIT_X,LIMIT_Y,3,3)
@@ -238,31 +151,16 @@ public class ConsolePrinter {
                 .setTitleColor(CColors.BLACK).setTitle("Confirmation Needed")
                 .addText(message).addGroupAligned(2,LIMIT_X/2,
                         new TextObject[]{
-                            new TextObject(Modal.CANCEL.ordinal()+"- "+Modal.CANCEL,
+                            new TextObject(Modal.CANCEL.ordinal()+"- "+ Modal.CANCEL,
                                     Scroll.BLOCK,LIMIT_X/4,1),
-                            new TextObject(Modal.OK.ordinal()+"- "+Modal.OK,
+                            new TextObject(Modal.OK.ordinal()+"- "+ Modal.OK,
                                     Scroll.BLOCK,LIMIT_X/4,1)})
-                .alignTextCenter().alignTextMiddle());
+                .alignTextCenter().alignTextMiddle().addText(CENTER_CARET));
         startPrint();
-        return Modal.values()[ tryToGetInput(Modal.values())]== Modal.OK;
+        return Modal.values()[ getIntFromInput(Modal.values())]== Modal.OK;
 
 
 
-    }
-
-    private int tryToGetInput(Object[] values) {
-        int inputNumber = -1;
-        try {
-            inputNumber = Integer.parseInt(getInp());
-        } catch (Exception e) {
-            tryToGetInput(values);
-        }
-        if (inputNumber < values.length && inputNumber >= 0) return inputNumber;
-        sendToQueue(new DynamicLine(LIMIT_X, 2, 1,1,1)
-                .addText(CColors.BRIGHT_RED+"ERR_ not valid input").alignTextCenter()
-                .addText(DELETE_CURRENT_LINE+TextStyle.RESET.toString()).setPrintSpeed(1).alignTextCenter());
-        startPrint();
-        return tryToGetInput(values);
     }
 
     public Party chooseParty(Party[] parties){
@@ -283,10 +181,6 @@ public class ConsolePrinter {
         //TODO prints memorial screen with all dead fighters
     }
 
-    public Modal showModal(String message, String captureInput){
-        return ConsolePrinter.Modal.OK;
-    }
-
     //---------------------------------------------------------------------------   CONSOLE MANAGER
     public void startPrint(){
         var sb=new StringBuilder();
@@ -304,7 +198,7 @@ public class ConsolePrinter {
                 case LINE -> {
                     int counter=0;
                     while (txtObj.hasText()) {
-                        System.out.print(txtObj.print());
+                        System.out.print(txtObj.poll());
                         waitFor(1000 / txtObj.getPrintSpeed());
                         counter++;
                     }
@@ -349,24 +243,6 @@ public class ConsolePrinter {
 //                waitFor(dynLine.getDelta());
             } while (dynLine.hasText());
     }
-    private void lineSplitQueue() {
-        var newQueue= new ArrayList<TextObject>();
-        TextObject currentTxtObj;
-        while (!printQueue.isEmpty()) {
-            currentTxtObj = pollNext();
-            for (int j = 0; j < currentTxtObj.getTotalHeight() ; j++) {
-                newQueue.add(new TextObject(currentTxtObj.get(j), Scroll.LINE, LIMIT_X,1));
-            }
-        }
-        printQueue=newQueue;
-    }
-
-    private String mergeQueue() {
-        var sb= new StringBuilder();
-        while (!printQueue.isEmpty()) sb.append(pollNext());
-        return sb.toString();
-    }
-
     public void sendToQueue(TextObject txtObj){
         this.printQueue.add(txtObj);
     }
@@ -391,19 +267,6 @@ public class ConsolePrinter {
     private void clearScreen() {
         sendToQueue(new TextObject(EMPTY_LINE, Scroll.BLOCK, LIMIT_X,LIMIT_Y*2).alignTextTop());
     }
-
-
-    /**Prints the text grouped in blocks with specified delay
-     * @param splitText text array to print, split by blocks
-     * @param blocksPerSecond number of blocks to be printed in 1000ms
-     */
-    private void scrollText(String[] splitText,int blocksPerSecond){
-        for (String s : splitText) {
-            waitFor(1000 / blocksPerSecond);
-            System.out.println(s);
-        }
-    }
-
     private TextObject pollNext(){
         return printQueue.remove(0);
     }
@@ -415,11 +278,83 @@ public class ConsolePrinter {
         return false;
     }
 
+    //-----------------------------------------------------------------------------------------------------INPUT_METHODS
+    private void showErrorLine() {
+        var line= new DynamicLine(LIMIT_X,1,1,0,2);
+        line.addText(CColors.BRIGHT_RED + "ERR_   Input not recognized" + TextStyle.RESET);
+        line.addText( CColors.BRIGHT_GREEN.toString()+" TRY AGAIN "+TextStyle.RESET).alignTextCenter();
+        line.addText(CENTER_CARET);
+        sendToQueue(line);
+        startPrint();
+    }
+    private String userNameFromInput() {
+        String input = "";
+        try {
+            input= newInput().readLine();
+        } catch (Exception e) {
+            showErrorLine();
+            return userNameFromInput();
+        }
+        if (input.trim().length()<3||!isValidString(input.trim())){
+            showErrorLine();
+            return userNameFromInput();
+        }
+        clearScreen();
+        sendToQueue(new TextObject("Nice to meet you "+input, TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+                .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
+        waitFor(1000);
+        return input;
+    }
+    private String getInp() {
+        String input;
+        var in=newInput();
+        try {
+            input = in.readLine();
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+        input = input.replace("\n", "").trim();
+        return input;
+    }
+    private int getIntFromInput(Object[] values) {
+        int inputNumber = -1;
+        try {
+            inputNumber = Integer.parseInt(getInp());
+        } catch (Exception e) {
+            showErrorLine();
+            getIntFromInput(values);
+        }
+        if (inputNumber < values.length && inputNumber >= 0) return inputNumber;
+        showErrorLine();
+//        startPrint();
+        return getIntFromInput(values);
+    }
+    private boolean isValidString(String str){
+        var chars= str.toCharArray();
+        for (char c:chars) if(!Character.isAlphabetic(c))return false;
+        return true;
+
+    }
+    private BufferedReader newInput(){
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    public void goodBye(String userName) {
+        clearScreen();
+        sendToQueue(new TextObject("Thanks for Playing "+ userName+ ", Good Bye! ",
+                ScreenManager.TextObjects.TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y ).alignTextCenter().alignTextMiddle().setPrintSpeed(10));
+        startPrint();
+    }
+
     public static class Party {//TODO as separated class, only here while not implemented
         String[] fighters;
 
-        public Party(String[] fighters) {
-            this.fighters = fighters;
+        public Party() {
+//            this.fighters = fighters;
+        }
+
+        private String getName() {
+            return "myParty";
         }
     }
 }

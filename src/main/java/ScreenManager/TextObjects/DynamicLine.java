@@ -53,7 +53,7 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
     @Override
     public String poll() {
         currentFrame++;
-        return super.poll();
+        return DELETE_CURRENT_LINE+text.remove(0);
     }
     @Override
     public String print(){

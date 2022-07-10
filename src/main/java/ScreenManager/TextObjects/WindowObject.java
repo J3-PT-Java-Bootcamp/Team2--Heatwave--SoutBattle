@@ -129,6 +129,7 @@ public class WindowObject extends TextObject{
                     .append(fillLine(poll())).append(generateBorder(true,false));
         }
         sb.append(generateBorder(false,false));
+        sb.append(BLANK_SPACE.repeat(windowWidth / 2));
         return sb.toString();
     }
 
