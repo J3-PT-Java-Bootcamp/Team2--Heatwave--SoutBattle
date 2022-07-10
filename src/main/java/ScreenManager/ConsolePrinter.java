@@ -1,5 +1,7 @@
 package ScreenManager;
 import ScreenManager.TextObjects.*;
+import ScreenManager.TextObjects.Animations.ReverseTranslateAnimation;
+import ScreenManager.TextObjects.Animations.TranslateAnimation;
 import ScreenManager.TextObjects.TextObject.*;
 
 import java.io.*;
@@ -107,8 +109,20 @@ public class ConsolePrinter {
         return showMenu(true);
     }
     public void showMemorial() {
+        DynamicLine obj2=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new ReverseTranslateAnimation());
+        obj2.addText("--==xX@");
+        obj2.constructAnimation();
+        sendToQueue(obj2);
+        startPrint();
     }
     public void readMe() {
+        DynamicLine obj=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new TranslateAnimation());
+        obj.addText("--==xX@");
+        obj.constructAnimation();
+        sendToQueue(obj);
+        startPrint();
+
+
     }
     public void newPartyScreen(Party brandNewParty) {
 

@@ -24,9 +24,9 @@ public class DynamicLine extends ScreenManager.TextObjects.TextObject {
         return delay*duration;
     }
 
-    protected void constructAnimation(){
+    public void constructAnimation(){
         for (AnimationObject anim : animations){
-            anim.animate(this,calculateFrames(duration),MAX_WIDTH);
+            anim.animate(this,20,MAX_WIDTH);
         }
     }
 
