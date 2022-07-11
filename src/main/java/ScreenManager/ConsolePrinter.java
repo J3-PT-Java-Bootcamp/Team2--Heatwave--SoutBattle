@@ -109,18 +109,23 @@ public class ConsolePrinter {
         return showMenu(true);
     }
     public void showMemorial() {
-        DynamicLine obj2=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new ReverseTranslateAnimation());
-        obj2.addText("--==xX@");
-        obj2.constructAnimation();
-        sendToQueue(obj2);
-        startPrint();
-    }
-    public void readMe() {
-        DynamicLine obj=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new TranslateAnimation());
+        DynamicLine obj=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new TranslateAnimation(),new ReverseTranslateAnimation());
         obj.addText("--==xX@");
         obj.constructAnimation();
         sendToQueue(obj);
         startPrint();
+    }
+    public void readMe() {
+        sendToQueue(GAME_OVER);
+        sendToQueue(FIGHT_TITLE);
+        sendToQueue(YOU_WIN);
+        sendToQueue(CANDLES);
+        sendToQueue(CASTLE);
+        sendToQueue(TOMB);
+        sendToQueue(CROIX);
+        sendToQueue(IN_MEMORIAM);
+        sendToQueue(WARRIOR_IMG);
+        sendToQueue(WIZARD_IMG);
 
 
     }

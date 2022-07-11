@@ -8,8 +8,7 @@ public class TranslateAnimation extends AnimationObject {
     @Override
     public TextObject animate(TextObject object, int frames, int max_width) {
             var text = String.valueOf(object.get(0));
-//            object.getText().clear();
-        int distance= max_width-text.length();
+        int distance= max_width-object.countValidCharacters(text);
         int frameDist= distance/frames;
         int rest= distance%frames;
             for (int j = 0; j < frames; j++) {
