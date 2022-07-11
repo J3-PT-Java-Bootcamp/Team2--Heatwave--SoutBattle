@@ -13,7 +13,7 @@ public class GameManager {
         switch (printer.showMenu(false)){
             case PLAY ->
                     System.out.println("LETS PLAY");
-//                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
+//                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Characters.Party(new String[]{"fighter1","fighter2"}));
             case NEW_PARTY -> System.out.println("TODO - CREATE A NEW PARTY SCREEN");//TODO CREATE A NEW TEAM SCREEN
             case ABOUT -> System.out.println("This is the Read Me & instructions");//TODO CREATE A README SCREEN
             case MEMORIAL -> System.out.println("IN MEMORIAM");//TODO CREATE MEMORIAL
@@ -28,11 +28,11 @@ public class GameManager {
     }
     private void playGame(){
 //        //TODO implement all dependencies
-//        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Party[]{new ScreenManager.ConsolePrinter.Party(new String[]{"a","b"})});
+//        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Characters.Party[]{new ScreenManager.ConsolePrinter.Characters.Party(new String[]{"a","b"})});
 //        if(this.playerParty.missingCharacters()){
 //            this.playerParty.recruitCharacters(printer);
 //        }
-//        Character playerFighter,enemyFighter;
+//        Characters.Character playerFighter,enemyFighter;
 //        FightLog fightLog = new FightLog();//Special class where to save all fight data to send it to printer
 //        do {
 //            playerFighter=printer.chooseCharacter(playerParty);//waits until user chooses a fighter

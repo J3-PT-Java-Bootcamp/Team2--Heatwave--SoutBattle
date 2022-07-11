@@ -1,6 +1,8 @@
+import Characters.Character;
+
 public class Main {
     public static void main(String[] args) throws Exception {
-       // testPrinter();
+        //testPrinter();
         Character.hurt();
         Character.heal();
         Character.die();

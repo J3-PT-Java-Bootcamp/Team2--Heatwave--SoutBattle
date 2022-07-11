@@ -10,7 +10,7 @@ public class ConsolePrinter {
     //---------------------------------------------------------------------------ATTRIBUTES
     public enum Menu{
         PLAY("Play Game"),
-        NEW_PARTY("Create New Party"),
+        NEW_PARTY("Create New Characters.Party"),
         ABOUT("Read Me"),
         MEMORIAL("See Graveyard"),
         CALIBRATE("Calibrate Screen"),

@@ -1,7 +1,11 @@
+package Characters;
+
 public class Wizard extends Character {
 
     private int mana;
     private int intelligence;
+
+
 
     public Wizard(int id, String name, int hp, boolean isAlive) {
         super(id, name, hp, isAlive);

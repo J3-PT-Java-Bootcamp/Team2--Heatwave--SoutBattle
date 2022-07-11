@@ -1,3 +1,5 @@
+package Characters;
+
 public class Warrior extends Character {
 
     private int stamina;
