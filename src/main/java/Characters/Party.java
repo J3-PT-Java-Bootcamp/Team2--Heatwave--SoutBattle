@@ -56,12 +56,8 @@ public class Party {
     ArrayList<TextObject> fighters = new ArrayList<>();
 
         for (int i = 0; i <characterList.size() ; i++) {
-            fighters.add(characterList.get(i).toTextObject());
+            txt.addText(characterList.get(i).toTextObject());
         }
-        txt.addGroupAligned(characterList.size(),
-                LIMIT_X,
-                (TextObject[]) fighters.toArray()
-        );
 
         return txt;
     }

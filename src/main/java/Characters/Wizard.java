@@ -24,7 +24,7 @@ public class Wizard extends Character {
     }
 
     public Wizard(ArrayList<Character> partyList, Random rand) {
-        super(Faker.instance().gameOfThrones().character(),rand.nextInt(50,100),partyList, WARRIOR_IMG);
+        super(Faker.instance().gameOfThrones().character(),rand.nextInt(50,100),partyList, WIZARD_IMG);
         this.intelligence= rand.nextInt(1,50);
         this.MAX_MANA= rand.nextInt(10,50);
         this.mana= MAX_MANA;
