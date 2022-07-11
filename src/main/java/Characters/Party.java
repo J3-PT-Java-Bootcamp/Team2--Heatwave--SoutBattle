@@ -1,8 +1,7 @@
 package Characters;
-
 import java.util.ArrayList;
 
-public class Party {
+public class Party{
     private ArrayList<Character> characterList;
     private final int MAX_FIGHTERS = 5 ;
 
