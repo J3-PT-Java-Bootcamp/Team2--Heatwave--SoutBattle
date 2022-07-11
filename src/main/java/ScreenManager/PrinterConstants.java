@@ -131,4 +131,9 @@ _/`\\  |-|  /`\\_
               (|+ | +|)
               \\ /=\\ /
               /`---'\\""",TextObject.Scroll.BLOCK,20,10).alignTextCenter().alignTextMiddle();
+
+
+    public final static int MAX_FIGHTERS = 5;
+
+
 }

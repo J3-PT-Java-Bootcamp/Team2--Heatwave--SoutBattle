@@ -1,7 +1,7 @@
 package GameManager;
 
+import Characters.Party;
 import ScreenManager.ConsolePrinter;
-import ScreenManager.ConsolePrinter.Party;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -68,9 +68,9 @@ public class GameManager {
         }
     }
     private void createNewParty() {
-        printer.newPartyScreen(null);
+   /*     printer.newPartyScreen(null);
         var brandNewParty=new Party();
-        printer.newPartyScreen(brandNewParty);
+        printer.newPartyScreen(brandNewParty);*/
     }
 
     private void playGame(){

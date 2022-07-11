@@ -1,18 +1,20 @@
 package GameManager;
 
+import Characters.Party;
+
 public class GameData {
-    private ScreenManager.ConsolePrinter.Party[] parties;
+    private Party[] parties;
     private String[] graveyard;
     private String userName;
 
     GameData() {
     }
 
-    protected ScreenManager.ConsolePrinter.Party[] getParties() {
+    protected Party[] getParties() {
         return parties;
     }
 
-    public GameData setParties(ScreenManager.ConsolePrinter.Party[] parties) {
+    public GameData setParties(Party[] parties) {
         this.parties = parties;
         return this;
     }

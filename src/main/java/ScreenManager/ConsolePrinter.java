@@ -1,4 +1,6 @@
 package ScreenManager;
+import Characters.Party;
+import Characters.Warrior;
 import ScreenManager.TextObjects.*;
 import ScreenManager.TextObjects.Animations.ReverseTranslateAnimation;
 import ScreenManager.TextObjects.Animations.TranslateAnimation;
@@ -109,11 +111,15 @@ public class ConsolePrinter {
         return showMenu(true);
     }
     public void showMemorial() {
-        DynamicLine obj=new DynamicLine(LIMIT_X,LIMIT_Y,2,1,1,new TranslateAnimation(),new ReverseTranslateAnimation());
-        obj.addText("--==xX@");
-        obj.constructAnimation();
-        sendToQueue(obj);
+
+        Warrior trufa = new Warrior("Trufa",7, new ArrayList<>(),30, 10);
+        sendToQueue(trufa.toTextObject());
+       
+        Party team1 = new Party("Equipo1");
+        sendToQueue(team1.getCharacter(0).toTextObject());
+
         startPrint();
+
     }
     public void readMe() {
         sendToQueue(GAME_OVER);
@@ -147,7 +153,7 @@ public class ConsolePrinter {
         }
         int objIndex=0;
         for (int i = 0; i < parties.size(); i++) {
-            txtObjs[i/10].addText(">"+i+" - "+parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
+            //txtObjs[i/10].addText(">"+i+" - "+parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
         }
         var finalTxtObj=new TextObject(TextObject.Scroll.BLOCK,
                 LIMIT_X , LIMIT_Y );
@@ -360,15 +366,4 @@ public class ConsolePrinter {
 
 
 
-    public static class Party {//TODO as separated class, only here while not implemented
-        String[] fighters;
-
-        public Party() {
-//            this.fighters = fighters;
-        }
-
-        private String getName() {
-            return "myParty";
-        }
-    }
 }
