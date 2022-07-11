@@ -1,10 +1,11 @@
 package GameManager;
 
-import ScreenManager.*;
+import ScreenManager.ConsolePrinter;
 import ScreenManager.ConsolePrinter.Party;
 import com.google.gson.Gson;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.EmptyStackException;
 
 public class GameManager {
