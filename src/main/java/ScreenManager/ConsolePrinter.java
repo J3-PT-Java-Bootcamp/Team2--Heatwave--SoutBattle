@@ -112,9 +112,9 @@ public class ConsolePrinter {
     }
     public void showMemorial() {
 
-      /*  Warrior trufa = new Warrior("Trufa",7, new ArrayList<>(),30, 10);
+       Warrior trufa = new Warrior("Trufa",123, new ArrayList<>(),30, 10);
         sendToQueue(trufa.toTextObject());
-*/
+
         Party team1 = new Party("Equipo1");
         sendToQueue(team1.toTextObject());
 

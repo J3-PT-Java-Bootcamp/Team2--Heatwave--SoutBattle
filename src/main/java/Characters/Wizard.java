@@ -48,7 +48,7 @@ public class Wizard extends Character {
 
     @Override
     TextObject getAttributes(TextObject textObj) {
-          return textObj.addText("Mana:"+this.mana+"/"+this.MAX_MANA).addText("Intelligence"+this.intelligence);
+          return textObj.addText("Intelligence: "+this.intelligence).addText("HP:"+this.getHp()+"/"+getMAX_HP()+" "+"Mana:"+this.mana+"/"+this.MAX_MANA);
         
     }
 }

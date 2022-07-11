@@ -59,8 +59,11 @@ public abstract class Character {
         this.hp = hp;
     }
 
+    public int getMAX_HP() {
+        return MAX_HP;
+    }
 
-    //STARTS METHODS CHARACTER
+//STARTS METHODS CHARACTER
 
     // DIE
     public void die() {
@@ -112,7 +115,7 @@ public abstract class Character {
 
     public TextObject toTextObject() {
       TextObject textObj= new TextObject(this.image, TextObject.Scroll.BLOCK,LIMIT_X / MAX_FIGHTERS, LIMIT_Y);
-textObj.addText(this instanceof Warrior? "WARRIOR" : "WIZARD").addText(this.name).addText("HP: "+this.hp+"/"+this.MAX_HP);
+textObj.addText(this instanceof Warrior? "WARRIOR" : "WIZARD").addText(this.name);
 
         return getAttributes(textObj);
 

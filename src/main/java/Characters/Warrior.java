@@ -52,6 +52,6 @@ public class Warrior extends Character {
 
     @Override
     TextObject getAttributes(TextObject textObj) {
-        return textObj.addText("Stamina:"+this.stamina+"/"+this.MAX_STAMINA).addText("Strength: "+this.strength);
+        return textObj.addText("Strength: "+this.strength).addText("HP: "+this.getHp()+"/"+getMAX_HP()+" "+"Stmna:"+this.stamina+"/"+this.MAX_STAMINA);
     }
 }
