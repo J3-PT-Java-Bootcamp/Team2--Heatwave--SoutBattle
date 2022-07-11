@@ -1,13 +1,16 @@
 package Characters;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 public class Warrior extends Character {
 
     private int stamina;
     private int strength;
 
 
-    public Warrior(int id, String name, int hp, boolean isAlive) {
-        super(id, name, hp, isAlive);
+    public Warrior(String name, int hp, ArrayList<Character> partyList) {
+        super(name, hp, partyList);
     }
 
     public int getStamina() {

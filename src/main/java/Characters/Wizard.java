@@ -1,5 +1,7 @@
 package Characters;
 
+import java.util.ArrayList;
+
 public class Wizard extends Character {
 
     private int mana;
@@ -7,8 +9,8 @@ public class Wizard extends Character {
 
 
 
-    public Wizard(int id, String name, int hp, boolean isAlive) {
-        super(id, name, hp, isAlive);
+    public Wizard(String name, int hp, ArrayList<Character> partyList) {
+        super(name, hp, partyList);
     }
 
     public int getMana() {
