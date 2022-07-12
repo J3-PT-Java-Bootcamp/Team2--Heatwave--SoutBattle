@@ -72,10 +72,10 @@ public class Warrior extends Character {
     }
 
     @Override
-    public void attack(java.lang.Character target, FightRound round) {
+    public void attack(Character target, FightRound round) {
 
         if (stamina>=5){
-            heavyAttack();
+            heavyAttack(target);
         }else if (stamina<5){
 
             weakAttack();
@@ -83,13 +83,13 @@ public class Warrior extends Character {
     }
 //WARRIOR ATTACKS
     private void weakAttack() {
-       /*Fighter*/ stamina+1;
+       /*Fighter*/ stamina+=1;
        /*Target*/ damage= strength/2;
 
     }
 
     private void heavyAttack(Character target) {
-      /*Fighter*/  stamina - 5;
+      /*Fighter*/  stamina -= 5;
       /*Target*/ damage=strength/*Fighter*/;
 
     }

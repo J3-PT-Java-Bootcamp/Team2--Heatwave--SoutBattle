@@ -147,7 +147,6 @@ public abstract class Character implements Attacker  {
     abstract TextObject getFixAttribute(TextObject txtObj);
 
 
-
 }
 
 

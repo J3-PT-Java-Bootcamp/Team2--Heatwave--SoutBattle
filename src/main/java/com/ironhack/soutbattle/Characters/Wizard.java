@@ -69,7 +69,7 @@ public class Wizard extends Character {
     }
 
     @Override
-    public void attack(java.lang.Character target, FightRound round) {
+    public void attack(Character target, FightRound round) {
         if (mana>=5){
             throwFireball();
         }else if (mana<5){
@@ -79,13 +79,13 @@ public class Wizard extends Character {
         }
 
     private void throwStaffHit() {
-        /*Fighter*/ mana+1;
+        /*Fighter*/ mana+=1;
         /*Target*/ damage=-2;
 
     }
 
     private void throwFireball() {
-        /*Fighter*/ mana-5;
+        /*Fighter*/ mana-=5;
         /*Target*/ damage= intelligence;
 
     }
