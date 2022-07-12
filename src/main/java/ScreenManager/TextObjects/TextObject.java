@@ -168,7 +168,7 @@ public class TextObject {
         int charLimit = (numberOfColumns > 1 ? (totalSize / numberOfColumns) : totalSize) - numberOfColumns;
         int totalLines = 0;
         for (TextObject textColumn : columnsContent) {
-            if (textColumn.getTotalWidth() > charLimit) textColumn = textColumn.getResizedText(charLimit, MAX_HEIGHT);
+            textColumn.alignTextMiddle();
             totalLines = Math.max(totalLines, textColumn.getTotalHeight());
         }
         for (int j = 0; j < totalLines; j++) {
@@ -181,9 +181,6 @@ public class TextObject {
                     currentVal = BLANK_SPACE.repeat(charLimit);
                 }
                 strBuilder.append(BLANK_SPACE).append(currentVal);
-//                if (countValidCharacters(currentVal) < charLimit) {
-//                    strBuilder.append(" ".repeat(charLimit - countValidCharacters(columnsContent[i].get(j))));
-//                }
             }
             addText(strBuilder.toString());
         }

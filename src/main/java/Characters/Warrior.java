@@ -3,9 +3,7 @@ package Characters;
 import ScreenManager.TextObjects.TextObject;
 import net.datafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
 
 import static ScreenManager.ColorFactory.*;
 import static ScreenManager.PrinterConstants.*;
@@ -18,13 +16,14 @@ public class Warrior extends Character {
     private final int MAX_STAMINA;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Warrior(String name, int hp, ArrayList<Character> partyList, int stamina, int strength ) {
+
+    public Warrior(String name, int hp, Characters.Party partyList, int stamina, int strength,boolean isAlive ) {
         super(name, hp, partyList, WARRIOR_IMG);
         this.stamina=stamina;
         this.MAX_STAMINA= stamina;
         this.strength=strength;
     }
-    public Warrior(ArrayList<Character> partyList, Random rand) {
+    public Warrior(Characters.Party partyList, Random rand) {
         super(Faker.instance().gameOfThrones().character(),rand.nextInt(100,200),partyList, WARRIOR_IMG);
         this.strength= rand.nextInt(1,10);
         this.MAX_STAMINA= rand.nextInt(10,50);
@@ -70,4 +69,8 @@ public class Warrior extends Character {
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Strength: "+strength);
     }
+//    @Override
+//    String saveCharacter(com.google.gson.Gson gson) {
+//        return getCharacterType()+"/#/"+gson.toJson(this);
+//    }
 }

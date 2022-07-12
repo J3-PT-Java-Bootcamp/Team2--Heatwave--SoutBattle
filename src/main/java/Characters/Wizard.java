@@ -1,9 +1,9 @@
 package Characters;
 
 import ScreenManager.TextObjects.TextObject;
+import com.google.gson.Gson;
 import net.datafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import static ScreenManager.ColorFactory.*;
@@ -16,18 +16,23 @@ public class Wizard extends Character {
     private int intelligence;
     private final int MAX_MANA;
 //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Wizard(String name, int hp, ArrayList<Character> partyList, int mana, int intelligence ) {
+    public Wizard(){
+        super();
+        MAX_MANA=0;
+    }
+    public Wizard(String name, int hp, Characters.Party partyList, int mana, int intelligence ) {
         super(name, hp, partyList, WARRIOR_IMG);
         this.mana=mana;
         this.MAX_MANA= mana;
         this.intelligence=intelligence;
     }
-    public Wizard(ArrayList<Character> partyList, Random rand) {
+    public Wizard(Characters.Party partyList, Random rand) {
         super(Faker.instance().witcher().character(),rand.nextInt(50,100),partyList, WIZARD_IMG);
         this.intelligence= rand.nextInt(1,50);
         this.MAX_MANA= rand.nextInt(10,50);
         this.mana= MAX_MANA;
     }
+
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
     public int getMana() {
         return mana;
@@ -66,4 +71,9 @@ public class Wizard extends Character {
     ScreenManager.TextObjects.TextObject getFixAttribute(ScreenManager.TextObjects.TextObject txtObj) {
         return txtObj.addText("Intelligence: "+intelligence);
     }
+
+//    @Override
+//    String saveCharacter(com.google.gson.Gson gson) {
+//        return getCharacterType()+"/#/"+gson.toJson(this);
+//    }
 }

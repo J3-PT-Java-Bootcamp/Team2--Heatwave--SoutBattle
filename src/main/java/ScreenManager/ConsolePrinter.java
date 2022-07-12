@@ -78,22 +78,22 @@ public class ConsolePrinter {
                     ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
             var titleTextObject = new TextObject(HEADER, Scroll.NO, LIMIT_X, HEADER.getTotalHeight() + 1);
-            var nameTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
+            var nameTextObject = new TextObject(Scroll.NO, LIMIT_X /3
                     ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
             titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------")
                     .addText(EMPTY_LINE).alignTextCenter();
             sendToQueue(titleTextObject);
             for (int i = 0; i < Menu.values().length; i++) {
-                numberTextObject.addText(i + " -->");
+                numberTextObject.addText(BLANK_SPACE.repeat((LIMIT_X/2)-10)+i + " -->");
                 nameTextObject.addText(Menu.values()[i].toString());
             }
-            numberTextObject.alignTextRight();
-            nameTextObject.fillAllLines();
+//            numberTextObject.alignTextRight();
+//            nameTextObject.fillAllLines();
             var finalTxtObj = new TextObject(Scroll.NO, LIMIT_X
                     , LIMIT_Y - (HEADER.getTotalHeight() + 2)).addGroupAligned(2,
-                    LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
-            sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
+                    LIMIT_X, new TextObject[]{numberTextObject.alignTextRight(), nameTextObject.fillAllLines()});
+            sendToQueue(finalTxtObj.addText(EMPTY_LINE).colorizeAllText());
             sendToQueue(new TextObject("Enter a number to continue", TextObject.Scroll.NO, LIMIT_X, 1)
                     .alignTextCenter().setPrintSpeed(6).addText(CENTER_CARET));
             startPrint();
@@ -112,7 +112,7 @@ public class ConsolePrinter {
     }
     public void showMemorial() {
 
-       Warrior trufa = new Warrior("Trufa",123, new ArrayList<>(),30, 10);
+       Warrior trufa = new Warrior("Trufa",123, null,30, 10,false);
         sendToQueue(trufa.toTextObject());
 
         Party team1 = new Party("Equipo1", true);
@@ -154,7 +154,7 @@ public class ConsolePrinter {
         }
         int objIndex=0;
         for (int i = 0; i < parties.size(); i++) {
-            //txtObjs[i/10].addText(">"+i+" - "+parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
+            txtObjs[i/10].addText(">"+i+" - "+parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
         }
         var finalTxtObj=new TextObject(TextObject.Scroll.BLOCK,
                 LIMIT_X , LIMIT_Y );
@@ -180,10 +180,18 @@ public class ConsolePrinter {
         startPrint();
         return Modal.values()[ getIntFromInput(Modal.values())]== Modal.OK;
     }
-    public Character chooseCharacter(Party party){
-        //TODO prints all characters of a party and all the stats and waits until user choose one
+    public Characters.Character chooseCharacter(Characters.Party party){
+        sendToQueue(party.toTextObject());
+        var txtObjArr= new ScreenManager.TextObjects.TextObject[MAX_FIGHTERS];
+        for (int i = 0; i < MAX_FIGHTERS; i++) {
+            txtObjArr[i]= new TextObject("-"+i+"-", ScreenManager.TextObjects.TextObject.Scroll.NO,(LIMIT_X/MAX_FIGHTERS)-1,2).alignTextCenter().alignTextTop();
+
+        }
+        sendToQueue(new ScreenManager.TextObjects.TextObject(ScreenManager.TextObjects.TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
+                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,txtObjArr));
+        startPrint();
 //        (partyToString(party));
-        return 'a';
+        return null;
     }
     public void printFight(FightReport report){
 

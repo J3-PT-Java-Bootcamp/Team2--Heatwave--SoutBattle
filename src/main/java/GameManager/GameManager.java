@@ -3,6 +3,8 @@ package GameManager;
 import Characters.Party;
 import ScreenManager.ConsolePrinter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,16 +13,19 @@ import java.util.EmptyStackException;
 
 public class GameManager {
     private final ConsolePrinter printer;
-    private java.util.ArrayList<String> graveyard;
+    private static ArrayList<Characters.Character> graveyard;
     private ArrayList<Characters.Party> parties;
     private Party playerParty, enemyParty;
+    private Characters.Character currentPlayer,currentEnemy;
     private GameData gameData;
     Gson gson;
     private String userName;
 
     //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public GameManager() {
-        gson = new Gson();
+        gson = new GsonBuilder().create();
+        this.parties=new ArrayList<>();
+        graveyard=new java.util.ArrayList<>();
         printer = new ConsolePrinter(this);
         printer.splashScreen();
         try {
@@ -28,8 +33,6 @@ public class GameManager {
         } catch (Exception e) {
             this.gameData = new GameData();
             this.userName = printer.askUserName();
-            this.parties=new ArrayList<>();
-            this.graveyard=new java.util.ArrayList<>();
             saveData();
         }
         if(this.userName==null){
@@ -43,6 +46,10 @@ public class GameManager {
         }
     }
 
+    public static void addToGraveyard(Characters.Character character) {
+        graveyard.add(character);
+    }
+
 //-------------------------------------------------------------------------------------------------------------GAME_FLOW
 
     public void startGame() throws Exception {
@@ -52,7 +59,7 @@ public class GameManager {
     private void startMenu(ConsolePrinter printer) throws Exception {
         saveData();
         switch (printer.showMenu(false)){
-            case PLAY -> System.out.println("LETS PLAY");
+            case PLAY ->playGame();
 //                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
             case NEW_PARTY -> createNewParty();
             case ABOUT -> printer.readMe();
@@ -78,8 +85,14 @@ public class GameManager {
     }
 
     private void playGame(){
-        //TODO implement all dependencies
-//        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Party[]{new ScreenManager.ConsolePrinter.Party(new String[]{"a","b"})});
+        this.playerParty=printer.chooseParty(parties);
+        this.enemyParty=new Party(net.datafaker.Faker.instance().rockBand().name(),false);
+//        while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
+            currentPlayer=printer.chooseCharacter(playerParty);
+             currentEnemy=enemyParty.getRandomLiveCharacter();
+//        }
+
+
 //        if(this.playerParty.missingCharacters()){
 //            this.playerParty.recruitCharacters(printer);
 //        }
@@ -103,42 +116,45 @@ public class GameManager {
 
     //-------------------------------------------------------------------------------------------------------LOAD & SAVE
     private void loadData() throws Exception {
-        var reader = new FileReader("gameData.json");
-        gameData = gson.fromJson(reader, GameData.class);
-        this.userName = gameData.getUserName();
-        this.parties = new java.util.ArrayList<>(java.util.Arrays.asList(gameData.getParties()));
-        this.graveyard =  new java.util.ArrayList<>(java.util.Arrays.asList(gameData.getGraveyard()));
+        var reader = new FileReader("gameData.txt");
+        this.gameData=gson.fromJson(reader,GameData.class);
+        this.userName=gameData.userName;
+        this.parties=gameData.deserializeParties();
+        this.graveyard=gameData.deserializeGraveyard();
+
+
     }
 
     public void saveData() {
-        if (this.userName != null) {
-            try {
-                var writer = new FileWriter("gameData.json");
-                writer.write(gson.toJson(updateGameData()));
-                writer.close();
-            } catch (java.io.IOException e) {
-                throw new RuntimeException(e);
-            }
+
+        try {
+            var writer = new FileWriter("gameData.txt");
+            updateGameData();
+            writer.write(gson.toJson(gameData));
+
+            writer.close();
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     private GameData updateGameData() {
-        return gameData.setGraveyard(this.graveyard).setParties(this.parties).setUserName(this.userName);
+        return gameData.serializeGraveyard(this.graveyard).serializeParties(this.parties).setUserName(this.userName);
     }
 
     private void clearAllData() throws Exception {
         if (printer.confirmationNeeded("Are you sure to clear all saved data? ")) {
             this.userName = null;
-            this.parties = null;
-            this.graveyard = null;
-            var file = new java.io.File("gameData.json");
+            this.parties = new ArrayList<>();
+            graveyard = new java.util.ArrayList<>();
+            this.gameData=new GameData();
+            var file = new java.io.File("gameData.txt");
             if (file.delete()) {
                 System.out.println("File deleted successfully");
             } else {
                 System.out.println("Failed to delete the file, trying to let it in blank");
-                var writer = new FileWriter(file);
-                writer.write("");
-                writer.close();
+                saveData();
             }
             throw new EmptyStackException();
         }

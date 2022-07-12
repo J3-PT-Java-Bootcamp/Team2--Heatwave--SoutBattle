@@ -1,11 +1,9 @@
 package Characters;
 
 import ScreenManager.ColorFactory.TextStyle;
-import ScreenManager.TextObjects.DynamicLine;
 import ScreenManager.TextObjects.TextObject;
-import org.w3c.dom.Text;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static ScreenManager.ColorFactory.*;
@@ -17,28 +15,31 @@ public abstract class Character {
     private UUID id;
     private String name;
     private int hp;
-    private ArrayList<Character> partyList;
     private final int MAX_HP;
-
+    private boolean isAlive;
     private TextObject image;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Character(String name, int hp, ArrayList<Character> partyList, TextObject image) {
+    public Character(){
+        MAX_HP=0;
+    }
+    public Character(String name, int hp, Characters.Party party, TextObject image) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.hp = hp;
-        this.partyList = partyList;
         this.MAX_HP = hp;
         this.image=image;
+        this.isAlive=true;
     }
 
-    public Character(UUID id, String name, int hp, ArrayList<Character> partyList, TextObject image) {
+    public Character(UUID id, String name, int hp, Characters.Party party, TextObject image,Boolean isAlive) {
         this.id = id;
         this.name = name;
         this.hp = hp;
-        this.partyList = partyList;
         this.MAX_HP = hp;
         this.image=image;
+        this.isAlive=isAlive;
+
 
     }
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
@@ -65,43 +66,42 @@ public abstract class Character {
     public int getMAX_HP() {
         return MAX_HP;
     }
+    public TextObject getImage(){
+        if(isAlive) return image;
+        return (int)(Math.random()*10)%2==0?TOMB:CROIX;
+    }
 
 //--------------------------------------------------------------------------------------------STARTS METHODS CHARACTER
 
     // DIE
     public void die() {
-        partyList.remove(this);
+        this.isAlive=false;
+        sendToGraveyard();
 
-        sentToGraveyard();
-
-        System.out.println("is death?");
+//        System.out.println("is death?");
     }
 
-    private void sentToGraveyard() {
-        //TODO
-
+    private void sendToGraveyard() {
+        GameManager.GameManager.addToGraveyard(this);
     }
 
     // HEAL
     public void heal() {
-
         hp = MAX_HP;
-
     }
 
     //HURT
     public void hurt(int damage) {
         hp = hp - damage;
-        if (!isalive()) {
+        if (!isCharacterAlive()) {
             die();
         }
-        System.out.println("Are you hurt??");
     }
 
     public void deleteFromParty() {
         System.out.println("Go home!");
     }
-    public boolean isalive() {
+    public boolean isCharacterAlive() {
 
        /* if (hp<=0) return false;
         return true;*/
@@ -110,7 +110,7 @@ public abstract class Character {
     }
     //------------------------------------------------------------------------------------------------------------PRINT
     public TextObject toTextObject() {
-      TextObject resVal= new TextObject(this.image,
+      TextObject resVal= new TextObject(this.getImage(),
               TextObject.Scroll.BLOCK,
               (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
               LIMIT_Y);
@@ -125,11 +125,16 @@ public abstract class Character {
 
     }
     private String printCharacterType() {
-        return TextStyle.BOLD + (this instanceof Characters.Warrior ? "WARRIOR" : "WIZARD") + TextStyle.RESET;
+        return TextStyle.BOLD + getCharacterType() + TextStyle.RESET;
     }
 
+    public String getCharacterType() {
+        return ((this instanceof Characters.Warrior )? "WARRIOR" : "WIZARD");
+    }
+
+
     public TextObject toFightTxtObj(){
-        TextObject resVal= new TextObject(this.image,
+        TextObject resVal= new TextObject(this.getImage(),
                 TextObject.Scroll.BLOCK,
                 (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
                 LIMIT_Y);
