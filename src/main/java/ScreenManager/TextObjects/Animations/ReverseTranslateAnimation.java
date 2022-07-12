@@ -5,7 +5,13 @@ import static ScreenManager.ColorFactory.BLANK_SPACE;
 public class ReverseTranslateAnimation extends AnimationObject {
     @Override
     public ScreenManager.TextObjects.TextObject animate(ScreenManager.TextObjects.TextObject object, int frames, int max_width) {
-            var text = String.valueOf(object.get(0));
+        String text = null;
+        try {
+            text = String.valueOf(object.get(0));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+            //TODO HANDLE
+        }
         int distance= max_width-object.countValidCharacters(text);
         object.getText().set(0,BLANK_SPACE.repeat(distance)+text);
         int frameDist= distance/frames;

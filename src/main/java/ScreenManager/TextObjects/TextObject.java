@@ -94,8 +94,9 @@ public class TextObject {
     public boolean hasText() {
         return getTotalHeight() > 0;
     }
-    public String get(int index) {
-        return index < getTotalHeight() ? text.get(index) : "NO SUCH INDEX";
+    public String get(int index) throws Exception {
+    if(index < getTotalHeight())return text.get(index);
+    throw new Exception();
     }
     public String poll() {
         return text.remove(0);
@@ -133,7 +134,11 @@ public class TextObject {
      */
     public TextObject addText(TextObject txtObject) {
         for (int i = 0; i < txtObject.getTotalHeight(); i++) {
-            addSimpleLine(txtObject.get(i));
+            try {
+                addSimpleLine(txtObject.get(i));
+            }catch (Exception e){
+                return this;
+            }
         }
         return this;
     }
@@ -256,16 +261,16 @@ public class TextObject {
     private String[] wrapLine(String line, int limit) {
         String[] result;
 
-        var wordList = line.replace(BLANK_SPACE + BLANK_SPACE, "__").split(BLANK_SPACE);
+        var wordList = line.replace(BLANK_SPACE + BLANK_SPACE, "€€").split(BLANK_SPACE);
         StringBuilder line1 = new StringBuilder();
         StringBuilder line2 = new StringBuilder();
 //        int spaceCounter = 0;   OLD APROX TO TRIM A LINE IF IT EXCEEDS A LITTLE AND HAVE A LOT OF WHITESPACE
         int charCounter = 0;
         for (String word : wordList) {
 //            if (java.util.Objects.equals(word, "__")) spaceCounter++;
-            charCounter += countValidCharacters(word) + (java.util.Objects.equals(word, "__") ? 0 : 1);
-            if (charCounter <= limit) line1.append(" ").append(word.replace("__", "  "));
-            else line2.append(" ").append(word.replace("__", "  "));
+            charCounter += countValidCharacters(word) + (java.util.Objects.equals(word, "€€") ? 0 : 1);
+            if (charCounter <= limit) line1.append(" ").append(word.replace("€€", "  "));
+            else line2.append(" ").append(word.replace("€€", "  "));
         }
         if (charCounter > limit * 2) {
             var auxList = wrapLine(line2.toString(), limit);

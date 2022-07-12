@@ -6,12 +6,13 @@ import com.google.gson.Gson;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 
 public class GameManager {
     private final ConsolePrinter printer;
-    private String[] graveyard;
-    private Party[] parties;
+    private java.util.ArrayList<String> graveyard;
+    private ArrayList<Characters.Party> parties;
     private Party playerParty, enemyParty;
     private GameData gameData;
     Gson gson;
@@ -20,18 +21,22 @@ public class GameManager {
     //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public GameManager() {
         gson = new Gson();
-        printer = new ConsolePrinter();
+        printer = new ConsolePrinter(this);
         printer.splashScreen();
         try {
             loadData();
         } catch (Exception e) {
             this.gameData = new GameData();
             this.userName = printer.askUserName();
+            this.parties=new ArrayList<>();
+            this.graveyard=new java.util.ArrayList<>();
             saveData();
         }
         if(this.userName==null){
             this.gameData = new GameData();
             this.userName = printer.askUserName();
+            printer.welcomeNewUser();
+
             saveData();
         }else {
             printer.helloUser(userName);
@@ -67,14 +72,13 @@ public class GameManager {
             startMenu(printer);
         }
     }
-    private void createNewParty() {
-   /*     printer.newPartyScreen(null);
-        var brandNewParty=new Party();
-        printer.newPartyScreen(brandNewParty);*/
+    public void createNewParty() {
+        this.parties.add(new Party(printer.newPartyScreen(), true));
+        playGame();
     }
 
     private void playGame(){
-//        //TODO implement all dependencies
+        //TODO implement all dependencies
 //        this.playerParty=printer.chooseParty(new ScreenManager.ConsolePrinter.Party[]{new ScreenManager.ConsolePrinter.Party(new String[]{"a","b"})});
 //        if(this.playerParty.missingCharacters()){
 //            this.playerParty.recruitCharacters(printer);
@@ -102,11 +106,11 @@ public class GameManager {
         var reader = new FileReader("gameData.json");
         gameData = gson.fromJson(reader, GameData.class);
         this.userName = gameData.getUserName();
-        this.parties = gameData.getParties();
-        this.graveyard = gameData.getGraveyard();
+        this.parties = new java.util.ArrayList<>(java.util.Arrays.asList(gameData.getParties()));
+        this.graveyard =  new java.util.ArrayList<>(java.util.Arrays.asList(gameData.getGraveyard()));
     }
 
-    private void saveData() {
+    public void saveData() {
         if (this.userName != null) {
             try {
                 var writer = new FileWriter("gameData.json");
@@ -116,14 +120,10 @@ public class GameManager {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     private GameData updateGameData() {
-        gameData.setGraveyard(this.graveyard);
-        gameData.setParties(this.parties);
-        gameData.setUserName(this.userName);
-        return gameData;
+        return gameData.setGraveyard(this.graveyard).setParties(this.parties).setUserName(this.userName);
     }
 
     private void clearAllData() throws Exception {
@@ -142,5 +142,9 @@ public class GameManager {
             }
             throw new EmptyStackException();
         }
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

@@ -14,8 +14,8 @@ public class GameData {
         return parties;
     }
 
-    public GameData setParties(Party[] parties) {
-        this.parties = parties;
+    public GameData setParties(java.util.ArrayList<Party> parties) {
+        this.parties = parties.toArray(new Party[0]);
         return this;
     }
 
@@ -23,8 +23,8 @@ public class GameData {
         return graveyard;
     }
 
-    public GameData setGraveyard(String[] graveyard) {
-        this.graveyard = graveyard;
+    public GameData setGraveyard(java.util.ArrayList<String> graveyard) {
+        this.graveyard = graveyard.toArray(new String[0]);
         return this;
     }
 

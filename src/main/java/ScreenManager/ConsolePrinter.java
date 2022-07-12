@@ -1,14 +1,12 @@
 package ScreenManager;
 import Characters.Party;
 import Characters.Warrior;
+import GameManager.*;
 import ScreenManager.TextObjects.*;
-import ScreenManager.TextObjects.Animations.ReverseTranslateAnimation;
-import ScreenManager.TextObjects.Animations.TranslateAnimation;
 import ScreenManager.TextObjects.TextObject.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Optional;
 //import GameManager.FightReport;
 
 import static ScreenManager.ColorFactory.*;
@@ -20,9 +18,11 @@ import static ScreenManager.PrinterConstants.*;
 public class ConsolePrinter {
 
     private ArrayList<TextObject> printQueue;
+    private GameManager game;
 
     //---------------------------------------------------------------------------   CONSTRUCTOR
-    public ConsolePrinter() {
+    public ConsolePrinter(GameManager game) {
+        this.game = game;
         this.printQueue=new java.util.ArrayList<>();
     }
 
@@ -50,7 +50,7 @@ public class ConsolePrinter {
                 .addText("Enter your name:").alignTextCenter().alignTextMiddle().setPrintSpeed(6));
         sendToQueue(new TextObject(CENTER_CARET, Scroll.LINE,LIMIT_X,LIMIT_Y));
         startPrint();
-        return userNameFromInput();
+        return getNameFromInput();
     }
     /** Shows Square with the screen size to allow User to resize console,
      *  waits until user confirm
@@ -115,7 +115,7 @@ public class ConsolePrinter {
        Warrior trufa = new Warrior("Trufa",123, new ArrayList<>(),30, 10);
         sendToQueue(trufa.toTextObject());
 
-        Party team1 = new Party("Equipo1");
+        Party team1 = new Party("Equipo1", true);
         sendToQueue(team1.toTextObject());
 
         startPrint();
@@ -135,14 +135,15 @@ public class ConsolePrinter {
 
 
     }
-    public void newPartyScreen(Party brandNewParty) {
-
-        Optional<Party> party = Optional.ofNullable(brandNewParty);
-        if(!party.isPresent()){
-            //TODO ask for party name
-        }else{
-            //TODO print random fighters result
-        }
+    public String newPartyScreen() {
+            sendToQueue(new WindowObject(LIMIT_X,LIMIT_Y,2,10)
+                    .setBgColor(ScreenManager.ColorFactory.BgColors.BLACK)
+                    .setFrameColor(ScreenManager.ColorFactory.BgColors.BRIGHT_BLACK)
+                    .setTitleColor(ScreenManager.ColorFactory.CColors.BRIGHT_CYAN)
+                    .setTitle("NEW PARTY").setTxtColor(ScreenManager.ColorFactory.CColors.BRIGHT_WHITE)
+                    .addText("Enter a name for your new Party: ").alignTextCenter().alignTextMiddle());
+            startPrint();
+            return getNameFromInput();
     }
     public Party chooseParty(ArrayList<Party> parties){
         int col=(int) Math.ceil(parties.size()/10.0);
@@ -184,7 +185,7 @@ public class ConsolePrinter {
 //        (partyToString(party));
         return 'a';
     }
-    public void printFight(GameManager.FightReport report){
+    public void printFight(FightReport report){
 
     }
     public void printGameOver(Boolean playerWins){
@@ -312,24 +313,28 @@ public class ConsolePrinter {
         sendToQueue(line);
         startPrint();
     }
-    private String userNameFromInput() {
+    public String getNameFromInput() {
         String input = "";
         try {
             input= newInput().readLine();
         } catch (Exception e) {
             showErrorLine();
-            return userNameFromInput();
+            return getNameFromInput();
         }
         if (input.trim().length()<3||!isValidString(input.trim())){
             showErrorLine();
-            return userNameFromInput();
+            return getNameFromInput();
         }
         clearScreen();
-        sendToQueue(new TextObject("Nice to meet you "+input, TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
-                .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
-        waitFor(1000);
         return input;
     }
+
+    public void welcomeNewUser() {
+        sendToQueue(new ScreenManager.TextObjects.TextObject("Nice to meet you "+ game.getUserName(), ScreenManager.TextObjects.TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+                .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
+        waitFor(1000);
+    }
+
     private String getInp() {
         String input;
         var in=newInput();
