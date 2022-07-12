@@ -4,14 +4,12 @@ import com.ironhack.soutbattle.GameManager.FightRound;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import net.datafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
-import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.LIMIT_Y;
 
-public class Wizard extends Character {
+public class Wizard extends GameCharacter {
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
     private int mana;
     private int intelligence;
@@ -72,7 +70,7 @@ public class Wizard extends Character {
     }
 //--------------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
-    public void attack(Character target, FightRound round) {
+    public void attack(GameCharacter target, FightRound round) {
         if (mana>=5){
             throwFireball();
         }else if (mana<5){

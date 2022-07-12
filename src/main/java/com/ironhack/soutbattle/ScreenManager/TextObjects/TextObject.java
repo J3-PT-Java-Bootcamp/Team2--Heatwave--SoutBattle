@@ -3,8 +3,10 @@ package com.ironhack.soutbattle.ScreenManager.TextObjects;
 import com.ironhack.soutbattle.ScreenManager.ColorFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+
 
 /**
  * TextObject class:
@@ -19,20 +21,23 @@ import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
  */
 public class TextObject {
 
-    public enum Scroll{NO,BLOCK,LINE,TYPEWRITER}
+    public enum Scroll {NO, BLOCK, LINE, TYPEWRITER}
+
     private final Scroll scroll;
     protected final ArrayList<String> text;
     protected final int MAX_WIDTH, MAX_HEIGHT;
     private int printSpeed;
     private int totalWidth, totalHeight;
+
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public TextObject(TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+    public TextObject(Scroll scroll, int maxWidth, int maxHeight) {
         this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
         this.text = new java.util.ArrayList<>();
     }
-    public TextObject(String text, TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+
+    public TextObject(String text, Scroll scroll, int maxWidth, int maxHeight) {
         this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
@@ -41,14 +46,16 @@ public class TextObject {
         this.setTotalHeight();
         addText(text);
     }
-    public TextObject(TextObject.Scroll scroll, String[] textLines, int maxWidth, int maxHeight) {
+
+    public TextObject(Scroll scroll, String[] textLines, int maxWidth, int maxHeight) {
         this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
-        this.text = new ArrayList<>(java.util.List.of(textLines));
-        this.printSpeed=2;
+        this.text = new ArrayList<>(List.of(textLines));
+        this.printSpeed = 2;
     }
-    public TextObject(TextObject txtObject, TextObject.Scroll scroll, int maxWidth, int maxHeight) {
+
+    public TextObject(TextObject txtObject, Scroll scroll, int maxWidth, int maxHeight) {
         this.scroll = scroll;
         MAX_WIDTH = maxWidth;
         MAX_HEIGHT = maxHeight;
@@ -59,7 +66,7 @@ public class TextObject {
 
 
     public int getPrintSpeed() {
-        if(printSpeed>0)return printSpeed;
+        if (printSpeed > 0) return printSpeed;
         setPrintSpeed(1);
         return printSpeed;
     }
@@ -76,32 +83,40 @@ public class TextObject {
     public ArrayList<String> getText() {
         return text;
     }
+
     private int getTotalWidth() {
         return totalWidth;
     }
+
     private TextObject setTotalWidth(int totalWidth) {
         this.totalWidth = Math.max(totalWidth, getTotalWidth());
         return this;
     }
+
     public int getTotalHeight() {
         setTotalHeight();
         return this.totalHeight;
     }
+
     private TextObject setTotalHeight() {
         this.totalHeight = getText().size();
         return this;
     }
+
     public boolean hasText() {
         return getTotalHeight() > 0;
     }
+
     public String get(int index) throws Exception {
-    if(index < getTotalHeight())return text.get(index);
-    throw new Exception();
+        if (index < getTotalHeight()) return text.get(index);
+        throw new Exception();
     }
+
     public String poll() {
         return text.remove(0);
     }
     //------------------------------------------------------------------------------------------------------------ADDERS
+
     /**
      * Adds new lines to text by calling addText(String[])-->addSimpleLine()
      *
@@ -112,6 +127,7 @@ public class TextObject {
     public TextObject addText(String text) {
         return addText(splitTextInLines(text));
     }
+
     /**
      * Adds new lines to text by calling addSimpleLine()
      *
@@ -125,6 +141,7 @@ public class TextObject {
         }
         return this;
     }
+
     /**
      * Appends new lines to text by calling addSimpleLine()
      *
@@ -136,12 +153,13 @@ public class TextObject {
         for (int i = 0; i < txtObject.getTotalHeight(); i++) {
             try {
                 addSimpleLine(txtObject.get(i));
-            }catch (Exception e){
+            } catch (Exception e) {
                 return this;
             }
         }
         return this;
     }
+
     /**
      * Adds new lines to text by appending them vertically
      *
@@ -155,6 +173,7 @@ public class TextObject {
         //TODO
         return this;
     }
+
     /**
      * Append to this text new lines by merging various textObjects in diferent justified columns
      *
@@ -190,6 +209,7 @@ public class TextObject {
 
     //===================   LINE_MANIPULATION   ===================\\
     //REAL ADD_LINE METHOD, IT WRAPS IN 2 LINES IF IT EXCEEDS MAX_WIDTH
+
     /**
      * com.ironhack.soutbattle.Main Add Line Method, It Checks That Size Fits On Specified Width
      * if not it splits line by wrap() method. After check adds line/s by addSafe()
@@ -207,6 +227,7 @@ public class TextObject {
             addSafe(line);
         }
     }
+
     /**
      * Only method that can add a new element to text attribute
      *
@@ -216,6 +237,7 @@ public class TextObject {
         this.text.add(line.replaceAll(NEW_LINE, ""));
         setTotalHeight();
     }
+
     /**
      * Only method that can add a new element to text attribute
      *
@@ -226,6 +248,7 @@ public class TextObject {
         this.text.add(index, line.replaceAll(NEW_LINE, ""));
         setTotalHeight();
     }
+
     /**
      * Method to count characters that will be printed, it doesn't count scape characters nor colors or styles tags.
      *
@@ -240,10 +263,11 @@ public class TextObject {
         for (char ch : chArray) {
             charCount++;
             if (ch == COLOR_CHAR) colourCount++;
-            if (ch == NEW_LINE_CH||ch ==DELETE_CURRENT_LINE  ) charCount--;
+            if (ch == NEW_LINE_CH || ch == DELETE_CURRENT_LINE) charCount--;
         }
         return charCount - (colourCount * COLOR_LABEL_CHAR_SIZE);
     }
+
     /**
      * Recursive method that checks line size. If its bigger than limit it splits the String recursively
      * until all resulting lines fits on specified limit char size
@@ -280,6 +304,7 @@ public class TextObject {
         }
         return result;
     }
+
     /**
      * Method to fill available right space of a string with blank spaces
      *
@@ -291,9 +316,11 @@ public class TextObject {
     private String fillLine(String line, int width) {
         return line + (BLANK_SPACE.repeat(Math.max(width - countValidCharacters(line), 0)));
     }
+
     String fillLine(String line) {
         return fillLine(line, MAX_WIDTH);
     }
+
     /**
      * Method to align text on right by adding blank spaces at start of the string
      *
@@ -306,9 +333,11 @@ public class TextObject {
         int count = width - countValidCharacters(line);
         return (count > 0 ? BLANK_SPACE.repeat(count) : "") + line;
     }
+
     private String lineToRight(String line) {
         return lineToRight(line, MAX_WIDTH);
     }
+
     /**
      * Method to center string by adding blank spaces both sides
      *
@@ -324,9 +353,11 @@ public class TextObject {
         rightSpace = (remainSpace % 2 == 0) ? leftSpace : leftSpace + 1;
         return (BLANK_SPACE.repeat(leftSpace)) + line + (BLANK_SPACE.repeat(rightSpace));
     }
+
     private String centerLine(String line) {
         return centerLine(line, MAX_WIDTH);
     }
+
     /**
      * Adds color and reset labels on this line
      *
@@ -338,6 +369,7 @@ public class TextObject {
     private String colorizeLine(String s, CColors color) {
         return color + s + TextStyle.RESET;
     }
+
     /**
      * Adds Styles and reset labels on this line
      *
@@ -349,6 +381,7 @@ public class TextObject {
     private String stylizeLine(String s, TextStyle style) {
         return style + s + TextStyle.RESET;
     }
+
     /**
      * Sets a Background color to full line and resets style at end
      *
@@ -360,6 +393,7 @@ public class TextObject {
     private String setLineBackground(String s, BgColors bgColor) {
         return bgColor + s + TextStyle.RESET;
     }
+
     /**
      * Quit all Color, Style and BG modifiers
      *
@@ -377,6 +411,7 @@ public class TextObject {
         return sb.toString();
     }
     //===================   TEXT_MANIPULATION   ===================
+
     /**
      * Splits a multi line string into array of String lines
      *
@@ -389,6 +424,7 @@ public class TextObject {
     }
 
     //----------------------------------------------------------------------------------------------------PUBLIC_METHODS
+
     /**
      * Method that creates a new TextObject with the current content of this one but with a diferent sizes
      *
@@ -402,6 +438,7 @@ public class TextObject {
     public TextObject getResizedText(int newWidth, int newHeight) {
         return new TextObject(this, scroll, newWidth, newHeight);
     }
+
     /**
      * Method to align current text at center vertically by adding necessary blank space lines at top and bottom.
      * It fills all MAX_HEIGHT
@@ -558,7 +595,7 @@ public class TextObject {
     }
 
     public String printLine(int index) {
-        if(hasText()) return text.remove(index);
+        if (hasText()) return text.remove(index);
         return "";
     }
 }

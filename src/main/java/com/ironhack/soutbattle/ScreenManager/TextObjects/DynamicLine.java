@@ -3,7 +3,7 @@ package com.ironhack.soutbattle.ScreenManager.TextObjects;
 
 import com.ironhack.soutbattle.ScreenManager.TextObjects.Animations.AnimationObject;
 
-import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.DELETE_CURRENT_LINE;
 
 public class DynamicLine extends TextObject {
 
@@ -17,21 +17,20 @@ public class DynamicLine extends TextObject {
         super(Scroll.LINE, maxWidth, maxHeight);
         setDelay(delay);
         setRepeat(repeat);
-        this.animations=animations;
-        this.currentFrame=0;
-        this.duration=duration;
+        this.animations = animations;
+        this.currentFrame = 0;
+        this.duration = duration;
     }
 
-    protected int calculateFrames(int duration){
-        return delay*duration;
+    protected int calculateFrames(int duration) {
+        return delay * duration;
     }
 
-    public void constructAnimation(){
-        for (AnimationObject anim : animations){
-            anim.animate(this,20,MAX_WIDTH);
+    public void constructAnimation() {
+        for (AnimationObject anim : animations) {
+            anim.animate(this, 20, MAX_WIDTH);
         }
     }
-
 
 
     private DynamicLine setDelay(int delay) {
@@ -55,10 +54,11 @@ public class DynamicLine extends TextObject {
     @Override
     public String poll() {
         currentFrame++;
-        return DELETE_CURRENT_LINE+text.remove(0);
+        return DELETE_CURRENT_LINE + text.remove(0);
     }
+
     @Override
-    public String print(){
+    public String print() {
         return DELETE_CURRENT_LINE + poll();
     }
 }

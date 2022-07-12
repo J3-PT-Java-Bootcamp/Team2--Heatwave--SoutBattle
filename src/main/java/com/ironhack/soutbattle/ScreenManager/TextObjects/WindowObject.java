@@ -1,8 +1,10 @@
 package com.ironhack.soutbattle.ScreenManager.TextObjects;
 
-import com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.BgColors;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
 
-import java.awt.Point;
+import java.awt.*;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.BLANK_SPACE;
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.NEW_LINE;

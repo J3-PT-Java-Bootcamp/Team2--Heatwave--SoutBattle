@@ -12,10 +12,10 @@ public class FightReport {
     ConsolePrinter printerp;
 
     GameManager game;
-    public FightReport(ConsolePrinter printerp, GameManager game) {
+    public FightReport(ConsolePrinter printer, GameManager game) {
 
         roundsList = new ArrayList<>();
-        this.printerp = printerp;
+        this.printerp = printer;
         this.game = game;
 
     }

@@ -1,7 +1,5 @@
 package com.ironhack.soutbattle.ScreenManager;
 
-import java.util.*;
-
 public class ColorFactory {
 
     public static final char DELETE_CURRENT_LINE='\r';

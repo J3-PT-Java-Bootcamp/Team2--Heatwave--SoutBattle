@@ -13,14 +13,14 @@ public class ReverseTranslateAnimation extends AnimationObject {
             throw new RuntimeException(e);
             //TODO HANDLE
         }
-        int distance= max_width-object.countValidCharacters(text);
-        object.getText().set(0, ColorFactory.BLANK_SPACE.repeat(distance)+text);
-        int frameDist= distance/frames;
-        int rest= distance%frames;
-            for (int j = 1; j <= frames; j++) {
-                object.addText(ColorFactory.BLANK_SPACE.repeat(distance-frameDist*j)+text);
-            }
-            object.addText(text);
+        int distance = max_width - object.countValidCharacters(text);
+        object.getText().set(0, ColorFactory.BLANK_SPACE.repeat(distance) + text);
+        int frameDist = distance / frames;
+        int rest = distance % frames;
+        for (int j = 1; j <= frames; j++) {
+            object.addText(ColorFactory.BLANK_SPACE.repeat(distance - frameDist * j) + text);
+        }
+        object.addText(text);
         return object.setPrintSpeed(10);
     }
 }

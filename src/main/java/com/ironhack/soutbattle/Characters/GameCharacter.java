@@ -1,27 +1,26 @@
 package com.ironhack.soutbattle.Characters;
 
-import com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
-import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.LIMIT_Y;
 
-public abstract class Character implements Attacker  {
+public abstract class GameCharacter implements Attacker  {
     protected int damage;
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
-    private UUID id;
+    private final UUID id;
     private String name;
     private int hp;
     private final int MAX_HP;
     private boolean isAlive;
-    private TextObject image;
+    private final TextObject image;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Character(String name, int hp, com.ironhack.soutbattle.Characters.Party partyList, com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject image) {
+    public GameCharacter(String name, int hp, com.ironhack.soutbattle.Characters.Party partyList, com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject image) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.hp = hp;
@@ -30,7 +29,7 @@ public abstract class Character implements Attacker  {
         this.isAlive=true;
     }
 
-    public Character(UUID id, String name, int hp, ArrayList<Character> partyList, TextObject image) {
+    public GameCharacter(UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image) {
         this.id = id;
         this.name = name;
         this.hp = hp;
@@ -145,7 +144,8 @@ public abstract class Character implements Attacker  {
 
         return getFixAttribute(resVal);
 
-    };
+    }
+
     abstract TextObject getVariableAttributes();
 
     abstract TextObject getAttributes(TextObject textObj);

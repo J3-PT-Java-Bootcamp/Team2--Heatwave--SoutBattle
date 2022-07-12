@@ -4,5 +4,5 @@ import com.ironhack.soutbattle.GameManager.FightRound;
 
 public interface Attacker {
 
-    void attack(Character target, FightRound round);
+    void attack(GameCharacter target, FightRound round);
 }

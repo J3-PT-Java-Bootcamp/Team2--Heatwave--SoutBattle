@@ -1,10 +1,11 @@
 package com.ironhack.soutbattle.GameManager;
 
-import com.ironhack.soutbattle.Characters.Party;
-import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.ironhack.soutbattle.Characters.GameCharacter;
+import com.ironhack.soutbattle.Characters.Party;
+import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
+import net.datafaker.Faker;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,20 +13,20 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 
 public class GameManager {
+    private static ArrayList<GameCharacter> graveyard;
     private final ConsolePrinter printer;
-    private static ArrayList<com.ironhack.soutbattle.Characters.Character> graveyard;
-    private ArrayList<com.ironhack.soutbattle.Characters.Party> parties;
-    private Party playerParty, enemyParty;
-    private com.ironhack.soutbattle.Characters.Character currentPlayer,currentEnemy;
-    private GameData gameData;
     Gson gson;
+    private ArrayList<Party> parties;
+    private Party playerParty, enemyParty;
+    private GameCharacter currentPlayer, currentEnemy;
+    private GameData gameData;
     private String userName;
 
     //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public GameManager() {
         gson = new GsonBuilder().create();
-        this.parties=new ArrayList<>();
-        graveyard=new java.util.ArrayList<>();
+        this.parties = new ArrayList<>();
+        graveyard = new ArrayList<>();
         printer = new ConsolePrinter(this);
         printer.splashScreen();
         try {
@@ -35,19 +36,19 @@ public class GameManager {
             this.userName = printer.askUserName();
             saveData();
         }
-        if(this.userName==null){
+        if (this.userName == null) {
             this.gameData = new GameData();
             this.userName = printer.askUserName();
             printer.welcomeNewUser();
 
             saveData();
-        }else {
+        } else {
             printer.helloUser(userName);
         }
     }
 
-    public static void addToGraveyard(com.ironhack.soutbattle.Characters.Character character) {
-        graveyard.add(character);
+    public static void addToGraveyard(GameCharacter gameCharacter) {
+        graveyard.add(gameCharacter);
     }
 
 //-------------------------------------------------------------------------------------------------------------GAME_FLOW
@@ -58,9 +59,8 @@ public class GameManager {
 
     private void startMenu(ConsolePrinter printer) throws Exception {
         saveData();
-        switch (printer.showMenu(false)){
-            case PLAY ->playGame();
-//                    printer.chooseCharacter(new ScreenManager.ConsolePrinter.Party(new String[]{"fighter1","fighter2"}));
+        switch (printer.showMenu(false)) {
+            case PLAY -> playGame();
             case NEW_PARTY -> createNewParty();
             case ABOUT -> printer.readMe();
             case MEMORIAL -> printer.showMemorial();
@@ -79,24 +79,25 @@ public class GameManager {
             startMenu(printer);
         }
     }
+
     public void createNewParty() {
         this.parties.add(new Party(printer.newPartyScreen(), true));
         playGame();
     }
 
-    private void playGame(){
-        this.playerParty=printer.chooseParty(parties);
-        this.enemyParty=new Party(net.datafaker.Faker.instance().rockBand().name(),false);
+    private void playGame() {
+        this.playerParty = printer.chooseParty(parties);
+        this.enemyParty = new Party(Faker.instance().rockBand().name(), false);
 //        while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-            currentPlayer=printer.chooseCharacter(playerParty);
-             currentEnemy=enemyParty.getRandomLiveCharacter();
+        currentPlayer = printer.chooseCharacter(playerParty);
+        currentEnemy = enemyParty.getRandomLiveCharacter();
 //        }
 
 
 //        if(this.playerParty.missingCharacters()){
 //            this.playerParty.recruitCharacters(printer);
 //        }
-//        Character playerFighter,enemyFighter;
+//        GameCharacter playerFighter,enemyFighter;
 //        FightLog fightLog = new FightLog();//Special class where to save all fight data to send it to printer
 //        do {
 //            playerFighter=printer.chooseCharacter(playerParty);//waits until user chooses a fighter
@@ -108,6 +109,7 @@ public class GameManager {
 //        }while(playerParty.hasAliveCharacters()&&enemyParty.hasAliveCharacters());
 //        gameOver();
     }
+
     private void gameOver() throws Exception {
         printer.printGameOver(true);
         startMenu(printer);
@@ -117,10 +119,10 @@ public class GameManager {
     //-------------------------------------------------------------------------------------------------------LOAD & SAVE
     private void loadData() throws Exception {
         var reader = new FileReader("gameData.txt");
-        this.gameData=gson.fromJson(reader,GameData.class);
-        this.userName=gameData.userName;
-        this.parties=gameData.deserializeParties();
-        this.graveyard=gameData.deserializeGraveyard();
+        this.gameData = gson.fromJson(reader, GameData.class);
+        this.userName = gameData.userName;
+        this.parties = gameData.deserializeParties();
+        graveyard = gameData.deserializeGraveyard();
 
 
     }
@@ -140,15 +142,15 @@ public class GameManager {
     }
 
     private GameData updateGameData() {
-        return gameData.serializeGraveyard(this.graveyard).serializeParties(this.parties).setUserName(this.userName);
+        return gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName);
     }
 
     private void clearAllData() throws Exception {
         if (printer.confirmationNeeded("Are you sure to clear all saved data? ")) {
             this.userName = null;
             this.parties = new ArrayList<>();
-            graveyard = new java.util.ArrayList<>();
-            this.gameData=new GameData();
+            graveyard = new ArrayList<>();
+            this.gameData = new GameData();
             var file = new java.io.File("gameData.txt");
             if (file.delete()) {
                 System.out.println("File deleted successfully");

@@ -76,8 +76,8 @@ aboutApp(){
 
 
 die(){
-	print(character is dead)
-	graveyard.add(character)
+	print(gameCharacter is dead)
+	graveyard.add(gameCharacter)
 	this.party.remove(this)	
 }
 
