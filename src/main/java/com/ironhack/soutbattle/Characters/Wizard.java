@@ -70,7 +70,7 @@ public class Wizard extends Character {
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Intelligence: "+intelligence);
     }
-
+//--------------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
     public void attack(Character target, FightRound round) {
         if (mana>=5){

@@ -72,6 +72,7 @@ public class Warrior extends Character {
         return txtObj.addText("Strength: "+strength);
     }
 
+    //----------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
     public void attack(Character target, FightRound round) {
 
