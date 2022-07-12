@@ -17,18 +17,19 @@ public class Wizard extends Character {
     private int intelligence;
     private final int MAX_MANA;
 //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Wizard(String name, int hp, ArrayList<Character> partyList, int mana, int intelligence ) {
+    public Wizard(String name, int hp, Party partyList, int mana, int intelligence ) {
         super(name, hp, partyList, WARRIOR_IMG);
         this.mana=mana;
         this.MAX_MANA= mana;
         this.intelligence=intelligence;
     }
-    public Wizard(ArrayList<Character> partyList, Random rand) {
+    public Wizard(Party partyList, Random rand) {
         super(Faker.instance().witcher().character(),rand.nextInt(50,100),partyList, WIZARD_IMG);
         this.intelligence= rand.nextInt(1,50);
         this.MAX_MANA= rand.nextInt(10,50);
         this.mana= MAX_MANA;
     }
+
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
     public int getMana() {
         return mana;
@@ -63,6 +64,8 @@ public class Wizard extends Character {
                         + TextStyle.RESET+ (mana >= MAX_MANA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                         +this.mana+ TextStyle.RESET+"/"+this.MAX_MANA);
     }
+
+
     @Override
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Intelligence: "+intelligence);

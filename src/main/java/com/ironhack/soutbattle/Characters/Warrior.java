@@ -18,13 +18,14 @@ public class Warrior extends Character {
     private final int MAX_STAMINA;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Warrior(String name, int hp, ArrayList<Character> partyList, int stamina, int strength ) {
+
+    public Warrior(String name, int hp, Party partyList, int stamina, int strength,boolean isAlive ) {
         super(name, hp, partyList, WARRIOR_IMG);
         this.stamina=stamina;
         this.MAX_STAMINA= stamina;
         this.strength=strength;
     }
-    public Warrior(ArrayList<Character> partyList, Random rand) {
+    public Warrior(Party partyList, Random rand) {
         super(Faker.instance().gameOfThrones().character(),rand.nextInt(100,200),partyList, WARRIOR_IMG);
         this.strength= rand.nextInt(1,10);
         this.MAX_STAMINA= rand.nextInt(10,50);

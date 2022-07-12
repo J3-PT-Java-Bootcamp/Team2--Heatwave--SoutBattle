@@ -16,27 +16,28 @@ public abstract class Character implements Attacker  {
     private UUID id;
     private String name;
     private int hp;
-    private ArrayList<Character> partyList;
     private final int MAX_HP;
+    private boolean isAlive;
     private TextObject image;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Character(String name, int hp, ArrayList<Character> partyList, TextObject image) {
+    public Character(String name, int hp, com.ironhack.soutbattle.Characters.Party partyList, com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject image) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.hp = hp;
-        this.partyList = partyList;
         this.MAX_HP = hp;
         this.image=image;
+        this.isAlive=true;
     }
 
     public Character(UUID id, String name, int hp, ArrayList<Character> partyList, TextObject image) {
         this.id = id;
         this.name = name;
         this.hp = hp;
-        this.partyList = partyList;
         this.MAX_HP = hp;
         this.image=image;
+        this.isAlive=isAlive;
+
 
     }
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
@@ -63,43 +64,42 @@ public abstract class Character implements Attacker  {
     public int getMAX_HP() {
         return MAX_HP;
     }
+    public TextObject getImage(){
+        if(isAlive) return image;
+        return (int)(Math.random()*10)%2==0?TOMB:CROIX;
+    }
 
 //--------------------------------------------------------------------------------------------STARTS METHODS CHARACTER
 
     // DIE
     public void die() {
-        partyList.remove(this);
-
-        sentToGraveyard();
+        this.isAlive=false;
+        sendToGraveyard();
 
         System.out.println("is death?");
     }
 
-    private void sentToGraveyard() {
-        //TODO
-
+    private void sendToGraveyard() {
+        com.ironhack.soutbattle.GameManager.GameManager.addToGraveyard(this);
     }
 
     // HEAL
     public void heal() {
-
         hp = MAX_HP;
-
     }
 
     //HURT
     public void hurt(int damage) {
         hp = hp - damage;
-        if (!isalive()) {
+        if (!isCharacterAlive()) {
             die();
         }
-        System.out.println("Are you hurt??");
     }
 
     public void deleteFromParty() {
         System.out.println("Go home!");
     }
-    public boolean isalive() {
+    public boolean isCharacterAlive() {
 
        /* if (hp<=0) return false;
         return true;*/
@@ -111,7 +111,7 @@ public abstract class Character implements Attacker  {
 
     //------------------------------------------------------------------------------------------------------------PRINT
     public TextObject toTextObject() {
-      TextObject resVal= new TextObject(this.image,
+      TextObject resVal= new TextObject(this.getImage(),
               TextObject.Scroll.BLOCK,
               (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
               LIMIT_Y);
@@ -126,11 +126,16 @@ public abstract class Character implements Attacker  {
 
     }
     private String printCharacterType() {
-        return TextStyle.BOLD + (this instanceof Warrior ? "WARRIOR" : "WIZARD") + TextStyle.RESET;
+        return TextStyle.BOLD + getCharacterType() + TextStyle.RESET;
     }
 
+    public String getCharacterType() {
+        return ((this instanceof com.ironhack.soutbattle.Characters.Warrior )? "WARRIOR" : "WIZARD");
+    }
+
+
     public TextObject toFightTxtObj(){
-        TextObject resVal= new TextObject(this.image,
+        TextObject resVal= new TextObject(this.getImage(),
                 TextObject.Scroll.BLOCK,
                 (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
                 LIMIT_Y);
@@ -145,6 +150,8 @@ public abstract class Character implements Attacker  {
 
     abstract TextObject getAttributes(TextObject textObj);
     abstract TextObject getFixAttribute(TextObject txtObj);
+
+
 
 
 }
