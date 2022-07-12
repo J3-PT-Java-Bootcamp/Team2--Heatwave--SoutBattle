@@ -90,6 +90,5 @@ public class Wizard extends Character {
     private void throwFireball() {
         /*Fighter*/ mana-=5;
         /*Target*/ damage= intelligence;
-
     }
 }
