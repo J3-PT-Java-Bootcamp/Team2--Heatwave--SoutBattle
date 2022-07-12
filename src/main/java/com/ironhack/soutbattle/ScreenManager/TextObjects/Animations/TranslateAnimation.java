@@ -1,8 +1,7 @@
-package ScreenManager.TextObjects.Animations;
+package com.ironhack.soutbattle.ScreenManager.TextObjects.Animations;
 
-import ScreenManager.TextObjects.TextObject;
-
-import static ScreenManager.ColorFactory.BLANK_SPACE;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory;
 
 public class TranslateAnimation extends AnimationObject {
     @Override
@@ -19,7 +18,7 @@ public class TranslateAnimation extends AnimationObject {
         int rest= distance%frames;
             for (int j = 0; j < frames; j++) {
                 try {
-                    object.addText(BLANK_SPACE.repeat(j>=frames-rest?frameDist+1:frameDist)+object.get(j));
+                    object.addText(ColorFactory.BLANK_SPACE.repeat(j>=frames-rest?frameDist+1:frameDist)+object.get(j));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                     //TODO HANDLE

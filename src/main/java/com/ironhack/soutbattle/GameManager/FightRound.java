@@ -1,6 +1,6 @@
-package GameManager;
+package com.ironhack.soutbattle.GameManager;
 
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 public class FightRound {
  TextObject imagePlayer,imageEnemy;

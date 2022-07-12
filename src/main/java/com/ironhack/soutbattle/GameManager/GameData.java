@@ -1,6 +1,6 @@
-package GameManager;
+package com.ironhack.soutbattle.GameManager;
 
-import Characters.Party;
+import com.ironhack.soutbattle.Characters.Party;
 
 public class GameData {
     private Party[] parties;

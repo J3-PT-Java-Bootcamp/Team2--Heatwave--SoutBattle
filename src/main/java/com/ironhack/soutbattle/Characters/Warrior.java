@@ -1,14 +1,14 @@
-package Characters;
+package com.ironhack.soutbattle.Characters;
 
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.GameManager.FightRound;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import net.datafaker.Faker;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
 
-import static ScreenManager.ColorFactory.*;
-import static ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
 
 public class Warrior extends Character {
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
@@ -69,5 +69,28 @@ public class Warrior extends Character {
     @Override
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Strength: "+strength);
+    }
+
+    @Override
+    public void attack(java.lang.Character target, FightRound round) {
+
+        if (stamina>=5){
+            heavyAttack();
+        }else if (stamina<5){
+
+            weakAttack();
+        }
+    }
+//WARRIOR ATTACKS
+    private void weakAttack() {
+       /*Fighter*/ stamina+1;
+       /*Target*/ damage= strength/2;
+
+    }
+
+    private void heavyAttack(Character target) {
+      /*Fighter*/  stamina - 5;
+      /*Target*/ damage=strength/*Fighter*/;
+
     }
 }

@@ -1,10 +1,10 @@
-package ScreenManager.TextObjects;
+package com.ironhack.soutbattle.ScreenManager.TextObjects;
 
-import ScreenManager.ColorFactory;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory;
 
 import java.util.ArrayList;
 
-import static ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
 
 /**
  * TextObject class:
@@ -194,7 +194,7 @@ public class TextObject {
     //===================   LINE_MANIPULATION   ===================\\
     //REAL ADD_LINE METHOD, IT WRAPS IN 2 LINES IF IT EXCEEDS MAX_WIDTH
     /**
-     * Main Add Line Method, It Checks That Size Fits On Specified Width
+     * com.ironhack.soutbattle.Main Add Line Method, It Checks That Size Fits On Specified Width
      * if not it splits line by wrap() method. After check adds line/s by addSafe()
      *
      * @param line text to be added, not necessary an oneliner string

@@ -1,12 +1,11 @@
-package ScreenManager.TextObjects;
+package com.ironhack.soutbattle.ScreenManager.TextObjects;
 
-import ScreenManager.ColorFactory.*;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
 
 import java.awt.Point;
-import java.util.Objects;
 
-import static ScreenManager.ColorFactory.BLANK_SPACE;
-import static ScreenManager.ColorFactory.NEW_LINE;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.BLANK_SPACE;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.NEW_LINE;
 
 public class WindowObject extends TextObject{
     Point borderSize;

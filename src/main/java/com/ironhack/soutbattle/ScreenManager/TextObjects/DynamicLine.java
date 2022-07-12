@@ -1,9 +1,11 @@
-package ScreenManager.TextObjects;
-import ScreenManager.TextObjects.Animations.*;
+package com.ironhack.soutbattle.ScreenManager.TextObjects;
 
-import static ScreenManager.ColorFactory.*;
 
-public class DynamicLine extends ScreenManager.TextObjects.TextObject {
+import com.ironhack.soutbattle.ScreenManager.TextObjects.Animations.AnimationObject;
+
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+
+public class DynamicLine extends TextObject {
 
     int delay;//milliseconds
     int repeat;

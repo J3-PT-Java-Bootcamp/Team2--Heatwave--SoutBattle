@@ -1,4 +1,4 @@
-package ScreenManager;
+package com.ironhack.soutbattle.ScreenManager;
 
 import java.util.*;
 

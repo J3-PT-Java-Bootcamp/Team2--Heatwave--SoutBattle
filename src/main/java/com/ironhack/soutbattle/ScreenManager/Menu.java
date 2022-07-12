@@ -1,4 +1,4 @@
-package ScreenManager;
+package com.ironhack.soutbattle.ScreenManager;
 public enum Menu{
     PLAY("Play Game"),
     NEW_PARTY("Create New Party"),

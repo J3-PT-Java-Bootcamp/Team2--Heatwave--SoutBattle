@@ -1,4 +1,4 @@
-package ScreenManager;
+package com.ironhack.soutbattle.ScreenManager;
 
 public  enum Modal{CANCEL("Cancel"),OK("Confirm");
         private final String label;

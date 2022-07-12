@@ -1,25 +1,23 @@
-package Characters;
+package com.ironhack.soutbattle.Characters;
 
-import ScreenManager.ColorFactory.TextStyle;
-import ScreenManager.TextObjects.DynamicLine;
-import ScreenManager.TextObjects.TextObject;
-import org.w3c.dom.Text;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static ScreenManager.ColorFactory.*;
-import static ScreenManager.PrinterConstants.*;
-import static ScreenManager.PrinterConstants.LIMIT_Y;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.LIMIT_Y;
 
-public abstract class Character {
+public abstract class Character implements Attacker  {
+    protected int damage;
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
     private UUID id;
     private String name;
     private int hp;
     private ArrayList<Character> partyList;
     private final int MAX_HP;
-
     private TextObject image;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
@@ -108,6 +106,9 @@ public abstract class Character {
         // checks if number is less than 0
         return hp > 0;
     }
+
+
+
     //------------------------------------------------------------------------------------------------------------PRINT
     public TextObject toTextObject() {
       TextObject resVal= new TextObject(this.image,
@@ -125,7 +126,7 @@ public abstract class Character {
 
     }
     private String printCharacterType() {
-        return TextStyle.BOLD + (this instanceof Characters.Warrior ? "WARRIOR" : "WIZARD") + TextStyle.RESET;
+        return TextStyle.BOLD + (this instanceof Warrior ? "WARRIOR" : "WIZARD") + TextStyle.RESET;
     }
 
     public TextObject toFightTxtObj(){
@@ -144,7 +145,6 @@ public abstract class Character {
 
     abstract TextObject getAttributes(TextObject textObj);
     abstract TextObject getFixAttribute(TextObject txtObj);
-
 
 
 

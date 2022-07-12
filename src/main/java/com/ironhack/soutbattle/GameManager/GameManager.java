@@ -1,7 +1,7 @@
-package GameManager;
+package com.ironhack.soutbattle.GameManager;
 
-import Characters.Party;
-import ScreenManager.ConsolePrinter;
+import com.ironhack.soutbattle.Characters.Party;
+import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -12,7 +12,7 @@ import java.util.EmptyStackException;
 public class GameManager {
     private final ConsolePrinter printer;
     private java.util.ArrayList<String> graveyard;
-    private ArrayList<Characters.Party> parties;
+    private ArrayList<Party> parties;
     private Party playerParty, enemyParty;
     private GameData gameData;
     Gson gson;

@@ -1,14 +1,15 @@
-package Characters;
+package com.ironhack.soutbattle.Characters;
 
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.GameManager.FightRound;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import net.datafaker.Faker;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static ScreenManager.ColorFactory.*;
-import static ScreenManager.PrinterConstants.*;
-import static ScreenManager.PrinterConstants.LIMIT_Y;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.LIMIT_Y;
 
 public class Wizard extends Character {
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
@@ -43,7 +44,7 @@ public class Wizard extends Character {
     }
     //-------------------------------------------------------------------------------------------------------------PRINT
     @Override
-    ScreenManager.TextObjects.TextObject getVariableAttributes() {
+    TextObject getVariableAttributes() {
         return new TextObject(TextStyle.BOLD+"HP: "+
                 TextStyle.RESET+ (getHp() >= getMAX_HP() / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                 + getHp()+TextStyle.RESET+"/"+getMAX_HP()
@@ -63,7 +64,29 @@ public class Wizard extends Character {
                         +this.mana+ TextStyle.RESET+"/"+this.MAX_MANA);
     }
     @Override
-    ScreenManager.TextObjects.TextObject getFixAttribute(ScreenManager.TextObjects.TextObject txtObj) {
+    TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Intelligence: "+intelligence);
+    }
+
+    @Override
+    public void attack(java.lang.Character target, FightRound round) {
+        if (mana>=5){
+            throwFireball();
+        }else if (mana<5){
+            throwStaffHit();
+        }
+
+        }
+
+    private void throwStaffHit() {
+        /*Fighter*/ mana+1;
+        /*Target*/ damage=-2;
+
+    }
+
+    private void throwFireball() {
+        /*Fighter*/ mana-5;
+        /*Target*/ damage= intelligence;
+
     }
 }

@@ -1,7 +1,7 @@
-package ScreenManager.TextObjects.Animations;
+package com.ironhack.soutbattle.ScreenManager.TextObjects.Animations;
 
-import ScreenManager.ColorFactory;
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 public class RainbowAnimation extends AnimationObject{
     @Override

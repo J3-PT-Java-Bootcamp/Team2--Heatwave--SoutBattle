@@ -1,16 +1,19 @@
-package ScreenManager;
-import Characters.Party;
-import Characters.Warrior;
-import GameManager.*;
-import ScreenManager.TextObjects.*;
-import ScreenManager.TextObjects.TextObject.*;
+package com.ironhack.soutbattle.ScreenManager;
+import com.ironhack.soutbattle.Characters.Party;
+import com.ironhack.soutbattle.Characters.Warrior;
+
+import com.ironhack.soutbattle.GameManager.FightReport;
+import com.ironhack.soutbattle.GameManager.GameManager;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.WindowObject;
 
 import java.io.*;
 import java.util.ArrayList;
 //import GameManager.FightReport;
 
-import static ScreenManager.ColorFactory.*;
-import static ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
 
 /**
  *
@@ -46,9 +49,9 @@ public class ConsolePrinter {
     }
 
     public String askUserName() {
-        sendToQueue(new TextObject("Welcome to " + GAME_NAME, Scroll.TYPEWRITER, LIMIT_X, LIMIT_Y)
+        sendToQueue(new TextObject("Welcome to " + GAME_NAME, TextObject.Scroll.TYPEWRITER, LIMIT_X, LIMIT_Y)
                 .addText("Enter your name:").alignTextCenter().alignTextMiddle().setPrintSpeed(6));
-        sendToQueue(new TextObject(CENTER_CARET, Scroll.LINE,LIMIT_X,LIMIT_Y));
+        sendToQueue(new TextObject(CENTER_CARET, TextObject.Scroll.LINE,LIMIT_X,LIMIT_Y));
         startPrint();
         return getNameFromInput();
     }
@@ -74,11 +77,11 @@ public class ConsolePrinter {
         }else {
 
             clearScreen();
-            var numberTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
+            var numberTextObject = new TextObject(TextObject.Scroll.NO, LIMIT_X / 2
                     ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
-            var titleTextObject = new TextObject(HEADER, Scroll.NO, LIMIT_X, HEADER.getTotalHeight() + 1);
-            var nameTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
+            var titleTextObject = new TextObject(HEADER, TextObject.Scroll.NO, LIMIT_X, HEADER.getTotalHeight() + 1);
+            var nameTextObject = new TextObject(TextObject.Scroll.NO, LIMIT_X / 2
                     ,LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
             titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------")
@@ -90,7 +93,7 @@ public class ConsolePrinter {
             }
             numberTextObject.alignTextRight();
             nameTextObject.fillAllLines();
-            var finalTxtObj = new TextObject(Scroll.NO, LIMIT_X
+            var finalTxtObj = new TextObject(TextObject.Scroll.NO, LIMIT_X
                     , LIMIT_Y - (HEADER.getTotalHeight() + 2)).addGroupAligned(2,
                     LIMIT_X / 2, new TextObject[]{numberTextObject, nameTextObject});
             sendToQueue(finalTxtObj.addText(EMPTY_LINE).alignTextMiddle().colorizeAllText());
@@ -137,10 +140,10 @@ public class ConsolePrinter {
     }
     public String newPartyScreen() {
             sendToQueue(new WindowObject(LIMIT_X,LIMIT_Y,2,10)
-                    .setBgColor(ScreenManager.ColorFactory.BgColors.BLACK)
-                    .setFrameColor(ScreenManager.ColorFactory.BgColors.BRIGHT_BLACK)
-                    .setTitleColor(ScreenManager.ColorFactory.CColors.BRIGHT_CYAN)
-                    .setTitle("NEW PARTY").setTxtColor(ScreenManager.ColorFactory.CColors.BRIGHT_WHITE)
+                    .setBgColor(ColorFactory.BgColors.BLACK)
+                    .setFrameColor(ColorFactory.BgColors.BRIGHT_BLACK)
+                    .setTitleColor(ColorFactory.CColors.BRIGHT_CYAN)
+                    .setTitle("NEW PARTY").setTxtColor(ColorFactory.CColors.BRIGHT_WHITE)
                     .addText("Enter a name for your new Party: ").alignTextCenter().alignTextMiddle());
             startPrint();
             return getNameFromInput();
@@ -161,21 +164,21 @@ public class ConsolePrinter {
         if(txtObjs.length>1) finalTxtObj.addGroupAligned(txtObjs.length,LIMIT_X,txtObjs);
         else finalTxtObj.addText(txtObjs[0]);
         sendToQueue(finalTxtObj);
-        sendToQueue(new TextObject("Select a party to play", Scroll.BLOCK,LIMIT_X,LIMIT_Y).alignTextCenter());
+        sendToQueue(new TextObject("Select a party to play", TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y).alignTextCenter());
         startPrint();
         return parties.get(getIntFromInput(parties.toArray()));
     }
     public boolean confirmationNeeded(String message) {
         clearScreen();
-        printQueue.add(new ScreenManager.TextObjects.WindowObject(LIMIT_X,LIMIT_Y,3,3)
+        printQueue.add(new WindowObject(LIMIT_X,LIMIT_Y,3,3)
                 .setBgColor(BgColors.BLACK).setFrameColor(BgColors.WHITE).setTxtColor(CColors.BRIGHT_WHITE)
                 .setTitleColor(CColors.BLACK).setTitle("Confirmation Needed")
                 .addText(message).addGroupAligned(2,LIMIT_X/2,
                         new TextObject[]{
                             new TextObject(Modal.CANCEL.ordinal()+"- "+ Modal.CANCEL,
-                                    Scroll.BLOCK,LIMIT_X/4,1),
+                                    TextObject.Scroll.BLOCK,LIMIT_X/4,1),
                             new TextObject(Modal.OK.ordinal()+"- "+ Modal.OK,
-                                    Scroll.BLOCK,LIMIT_X/4,1)})
+                                    TextObject.Scroll.BLOCK,LIMIT_X/4,1)})
                 .alignTextCenter().alignTextMiddle().addText(CENTER_CARET));
         startPrint();
         return Modal.values()[ getIntFromInput(Modal.values())]== Modal.OK;
@@ -200,7 +203,7 @@ public class ConsolePrinter {
 
     public void helloUser(String userName) {
         clearScreen();
-        sendToQueue(new TextObject("Welcome Back "+userName, Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y)
+        sendToQueue(new TextObject("Welcome Back "+userName, TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y)
                 .setPrintSpeed(10).alignTextCenter().alignTextMiddle());
         startPrint();
         waitFor(500);
@@ -213,7 +216,7 @@ public class ConsolePrinter {
             var txtObj=pollNext();
             switch (txtObj.getScroll()) {
                 case NO -> {
-                    if(queueContainsScroll(Scroll.NO)) sb.append(txtObj.print()).append(NEW_LINE);
+                    if(queueContainsScroll(TextObject.Scroll.NO)) sb.append(txtObj.print()).append(NEW_LINE);
                     else System.out.print(sb.append(txtObj.print()));
                 }
                 case BLOCK -> {
@@ -291,13 +294,13 @@ public class ConsolePrinter {
     /** Sends new lines to fill screen and clear last output
      */
     private void clearScreen() {
-        sendToQueue(new TextObject(EMPTY_LINE, Scroll.BLOCK, LIMIT_X,LIMIT_Y*2).alignTextTop());
+        sendToQueue(new TextObject(EMPTY_LINE, TextObject.Scroll.BLOCK, LIMIT_X,LIMIT_Y*2).alignTextTop());
     }
     private TextObject pollNext(){
         return printQueue.remove(0);
     }
 
-    private boolean queueContainsScroll(Scroll scroll){
+    private boolean queueContainsScroll(TextObject.Scroll scroll){
         for(TextObject txtObj: printQueue){
             if(txtObj.getScroll().equals(scroll))return true;
         }
@@ -330,7 +333,7 @@ public class ConsolePrinter {
     }
 
     public void welcomeNewUser() {
-        sendToQueue(new ScreenManager.TextObjects.TextObject("Nice to meet you "+ game.getUserName(), ScreenManager.TextObjects.TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+        sendToQueue(new TextObject("Nice to meet you "+ game.getUserName(), TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
                 .setPrintSpeed(1).alignTextCenter().alignTextMiddle());
         waitFor(1000);
     }

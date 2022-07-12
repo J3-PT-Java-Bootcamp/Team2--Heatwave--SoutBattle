@@ -1,9 +1,9 @@
-package Characters;
+package com.ironhack.soutbattle.Characters;
 
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import java.util.ArrayList;
 import java.util.Random;
-import static ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
 
 public class Party {
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES

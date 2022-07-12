@@ -1,7 +1,7 @@
-package GameManager;
+package com.ironhack.soutbattle.GameManager;
 
-import ScreenManager.ConsolePrinter;
-import ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 import java.util.ArrayList;
 
