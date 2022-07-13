@@ -153,30 +153,42 @@ public class ConsolePrinter {
                 .setFrameColor(BgColors.BRIGHT_BLACK)
                 .setTitleColor(CColors.BRIGHT_CYAN)
                 .setTitle("NEW PARTY").setTxtColor(CColors.BRIGHT_WHITE)
-                .addText("Enter a name for your new Party: ").alignTextCenter().alignTextMiddle());
+                .addText("Enter a name for your new Party: ").alignTextCenter().alignTextTop());
         startPrint();
         return getNameFromInput();
     }
 
     public Party chooseParty(ArrayList<Party> parties) {
         int col = (int) Math.ceil(parties.size() / 10.0);
+        int charLimit=  (int) Math.floor(col>2?LIMIT_X / col:LIMIT_X/2);
         TextObject[] txtObjs = new TextObject[col];
         for (int i = 0; i < txtObjs.length; i++) {
+
             txtObjs[i] = new TextObject(Scroll.BLOCK,
-                    (int) Math.floor(LIMIT_X / col), (int) Math.floor(LIMIT_Y * 0.8));
+                 charLimit , 1);
         }
         int objIndex = 0;
         for (int i = 0; i < parties.size(); i++) {
-            txtObjs[i / 10].addText(">" + i + " - " + parties.get(i).getName()).addText(NEW_LINE).alignTextMiddle();
+            String name= parties.get(i).getName();
+            if ( txtObjs[i/10].countValidCharacters(name)>=charLimit-14) {
+                txtObjs[i / 10].addText(" :" + (i >= 10 ? i : " " + i) + " --> "
+                        + name.substring(0, charLimit - 13) + ".. ");
+            }else {
+                txtObjs[i / 10].addText(" :" + (i >= 10 ? i : " " + i) + " --> " + name
+                        + BLANK_SPACE.repeat(charLimit - txtObjs[i/10].countValidCharacters(name)-10));
+            }
         }
-        var finalTxtObj = new TextObject(Scroll.BLOCK,
-                LIMIT_X, LIMIT_Y);
+        var finalTxtObj = new TextObject(HEADER,Scroll.BLOCK,LIMIT_X, LIMIT_Y);
+        finalTxtObj.addText("------- PARTY SELECTION -------")
+                .addText(BLANK_SPACE.repeat(20))
+                .addText(BLANK_SPACE.repeat(20));
         if (txtObjs.length > 1) finalTxtObj.addGroupAligned(txtObjs.length, LIMIT_X, txtObjs);
-        else finalTxtObj.addText(txtObjs[0]);
-        sendToQueue(finalTxtObj);
+        else finalTxtObj.addText(txtObjs[0].alignTextRight()).alignTextCenter();
+        clearScreen();
+        sendToQueue(finalTxtObj.alignTextTop().colorizeAllText().alignTextCenter());
         sendToQueue(new TextObject("Select a party to play", Scroll.BLOCK, LIMIT_X, LIMIT_Y).alignTextCenter());
         startPrint();
-        return parties.get(getIntFromInput(parties.toArray()));
+        return parties.get(getIntFromInput(parties.toArray()));//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
     }
 
     public boolean confirmationNeeded(String message) {
