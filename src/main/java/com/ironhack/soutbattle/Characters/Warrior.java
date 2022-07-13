@@ -60,7 +60,10 @@ public class Warrior extends GameCharacter {
 
     @Override
     public TextObject getVariableAttributes() {
-        return new TextObject("HP:" + getHp() + "/" + getMAX_HP() + "Stmn:" + getStamina() + MAX_STAMINA,
+        return new TextObject(TextStyle.BOLD+"HP: "+
+                TextStyle.RESET+ (getHp() >= getMAX_HP() / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
+                + getHp()+TextStyle.RESET+"/"+getMAX_HP() + "Stmn: "  + TextStyle.RESET + (stamina >= MAX_STAMINA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
+                + this.stamina + TextStyle.RESET + "/" + this.MAX_STAMINA,
                 Scroll.NO,
                 LIMIT_X / 3,
                 LIMIT_Y);
@@ -87,7 +90,7 @@ public class Warrior extends GameCharacter {
             attackName=heavyAttack(target);
         } else if (stamina < 5) {
 
-            attackName=weakAttack();
+            attackName=weakAttack(target);
         }
         if(isPlayer()) round.addAttackReport(this,target,attackName);
         else round.addAttackReport(target,this,attackName);
@@ -95,24 +98,24 @@ public class Warrior extends GameCharacter {
     }
 
     //WARRIOR ATTACKS
-    private String weakAttack(com.ironhack.soutbattle.Characters.GameCharacter target) {
+    private String weakAttack(GameCharacter target) {
         //TODO
         /*Fighter*/
         this.stamina += 1;
         /*Target*/
         damage = this.strength / 2;
         target.hp = target.getHp() - damage;
-        return "Weak Attack";
+        return " attacks!";
     }
 
-    private String heavyAttack(com.ironhack.soutbattle.Characters.GameCharacter target) {
+    private String heavyAttack(GameCharacter target) {
         //TODO
         /*Fighter*/
         this.stamina -= 5;
         /*Target*/
         damage = this.strength/*Fighter*/;
         target.hp = target.getHp() - damage;
-        return "Heavy attack";
+        return "does a Heavy Attack!";
     }
     @Override
     void recoverVarAttribute() {

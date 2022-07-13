@@ -87,7 +87,6 @@ public class GameManager {
     }
     //Executes a play loop until one team wins, if there isn't any party, starts with party creation
     private void playGame() throws Exception {
-        int securityExit=0;
         if(this.parties.size()==0)createNewParty();//If there is no party, first create new party,
                                                     // createNewParty() ---> callsback to playGame()
         else {
@@ -103,20 +102,12 @@ public class GameManager {
                     report.newRound(currentPlayer,currentEnemy);
                     currentPlayer.attack(currentEnemy,report.getCurrentRound());
                     currentEnemy.attack(currentPlayer,report.getCurrentRound());
-                    if (securityExit>10000)break;
-                    securityExit++;
                 }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
                 printer.printFight(report);
+                currentPlayer=null;
+                currentEnemy=null;
+            }
 
-                if (securityExit>10000)break;
-                securityExit++;
-            }
-            if (securityExit>10000) {
-                System.err.println("ERR_FIGHT ROUND COUNTER IS BIGGER THAN 9999\n WE CANNOT MANAGE ALMOST ETERNAL FIGHTS\nABORTING FIGHT...");
-                printer.waitFor(1000);
-                throw new Exception();
-            }
-            securityExit++;
             gameOver();
         }
     }

@@ -4,6 +4,7 @@ import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.Characters.Party;
 import com.ironhack.soutbattle.GameManager.FightReport;
 import com.ironhack.soutbattle.GameManager.GameManager;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.BgColors;
 import com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
@@ -226,12 +227,10 @@ public class ConsolePrinter {
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
                 .addText("---"+party.getName()+"---");
         var txtObjArr = new TextObject[MAX_FIGHTERS];
-        int j=1;
         for (int i = 0; i < MAX_FIGHTERS; i++) {
-            txtObjArr[i] = new TextObject(party.getCharacter(i).isCharacterAlive()?("-" + j + "-"):"RIP ",
+            txtObjArr[i] = new TextObject(party.getCharacter(i).isAlive()?("-" + i+1 + "-"):"RIP ",
                     Scroll.BLOCK, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
                     .alignTextCenter();
-            if (party.getCharacter(i).isCharacterAlive())j++;
 
         }
         fullTxtObj.addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).colorizeAllText()
@@ -240,11 +239,12 @@ public class ConsolePrinter {
                 .addText(BLANK_SPACE).addText(CENTER_CARET);
         sendToQueue(fullTxtObj);
         startPrint();
-//        var aliveFighters = java.util.Arrays.copyOf(party.getCharacterList().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
-        var aliveFighters= party.getAliveFighters();
-        aliveFighters.add(null);
-        int resVal=getIntFromInput(aliveFighters.toArray(new GameCharacter[0]));
+        GameCharacter[] aliveFighters = java.util.Arrays.copyOf(party.getAliveFighters().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
+//        var aliveFighters= party.getAliveFighters();
+//        aliveFighters.add(null);
+        int resVal=getIntFromInput(aliveFighters);
         if (resVal==0) return null;
+        if(!party.getCharacter(resVal-1).isAlive())return chooseCharacter(party);
         return party.getCharacter(resVal-1);
     }
 
@@ -266,29 +266,30 @@ public class ConsolePrinter {
         var charLimit=LIMIT_X/3;
         var resLine= new DynamicLine(LIMIT_X,LIMIT_Y,1,2,100);
         int auxCounter=0;
+        String player= "";
+        String enemy= "";
+        String msg="";
+        msg = "  ";
         for (int i = 0; i < report.totalRounds(); i++) {
-            String player= "";
-            String enemy= "";
-            String msg="";
             //START
             player= report.getRound(i).getPlayerState(0).get(0);
             enemy= report.getRound(i).getEnemyState(0).get(0);
-            msg = " ";
+
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
             //PLAYER ATTACK ANOUNCE
-            msg = report.player.getName().split(" ")[0]+"performs: "+report.getRound(i).getPlayerAttack();
+            msg =  CColors.BLUE+TextStyle.BOLD.toString()+report.player.getName().split(" ")[0]
+                    +" "+report.getRound(i).getPlayerAttack()+TextStyle.RESET;
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
             //Player attack varAttribute discount
             player= report.getRound(i).getPlayerState(1).get(0);
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
             //Enemy damage
             enemy= report.getRound(i).getEnemyState(1).get(0);
-            msg = "";
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
             //enemy announce
-            msg = report.enemy.getName().split(" ")[0]+"performs: "+report.getRound(i).getEnemyAttack();
+            msg = CColors.RED+TextStyle.BOLD.toString()+report.enemy.getName().split(" ")[0]
+                    +" "+report.getRound(i).getEnemyAttack()+TextStyle.RESET+" ";
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
-
             //enemy discount
             enemy= report.getRound(i).getEnemyState(2).get(0);
             resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
@@ -298,16 +299,18 @@ public class ConsolePrinter {
 
 
         }
-        resLine.setPrintSpeed(2);
+        resLine.setPrintSpeed(4);
         resLine.constructAnimation();
         return resLine;
     }
 
     @org.jetbrains.annotations.NotNull
     private String constructResultTextFromRound(int charLimit, com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine resLine, String player, String enemy, String msg) {
+        int count=(charLimit - resLine.countValidCharacters(msg)) / 2;
+        int rest=(charLimit - resLine.countValidCharacters(msg)) %2;
         return  BLANK_SPACE.repeat(charLimit - resLine.countValidCharacters(player))+player
-                + BLANK_SPACE.repeat((charLimit - resLine.countValidCharacters(msg)) / 2) + msg
-                + BLANK_SPACE.repeat((charLimit - resLine.countValidCharacters(msg)) / 2)
+                + BLANK_SPACE.repeat(count) + msg
+                + BLANK_SPACE.repeat(count+rest)
                 + enemy;
     }
 

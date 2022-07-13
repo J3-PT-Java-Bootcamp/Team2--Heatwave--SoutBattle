@@ -50,7 +50,7 @@ public abstract class GameCharacter implements Attacker  {
     }
 
     public int getHp() {
-        return hp;
+        return Math.max(hp, 0);
     }
 
     /**Modifies current HP by adding value (could be negative)
@@ -158,6 +158,10 @@ public abstract class GameCharacter implements Attacker  {
         return this.isPlayer;
     }
     abstract void recoverVarAttribute();
+
+    public boolean isAlive() {
+        return hp>0;
+    }
 }
 
 
