@@ -84,17 +84,18 @@ public class Wizard extends GameCharacter {
         else round.addAttackReport(target,this,attackName);
     }
 
-    private String throwStaffHit() {
-        /*Fighter*/ mana+=1;
+    private String throwStaffHit(com.ironhack.soutbattle.Characters.GameCharacter target) {
+        /*Fighter*/ this.mana+=1;
         /*Target*/ damage=-2;
-
-        return null;
+        target.hp = target.getHp() - damage;
+        return "Threw staff hit";
     }
 
-    private String throwFireball() {
-        /*Fighter*/ mana-=5;
-        /*Target*/ damage= intelligence;
-        return null;
+    private String throwFireball(com.ironhack.soutbattle.Characters.GameCharacter target) {
+        /*Fighter*/ this.mana-=5;
+        /*Target*/ damage= this.intelligence;
+        target.hp = target.getHp() - damage;
+        return "Threw Fireball";
     }
 
     @Override
