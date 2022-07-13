@@ -123,25 +123,37 @@ public class Party {
         return false;
     }
 
-    /**Method to call from GameManager after each game, checks all party fighters (Characters) isAlive value
+    /**
+     * Method to call from GameManager after each game, checks all party fighters (Characters) isAlive value
      * if dead: sends it to graveyard and creates a new random one on its place
      * otherwise: heals its HP and stamina/mana values
+     *
      * @param graveyard the graveyard
+     *
+     * @return
      */
-    public void restoreParty(ArrayList<GameCharacter> graveyard){
-        //TODO Create that method, check each charactar "isAlive" if not, send to graveyard and delete from party/create a new one.
+    public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
+        var resArr = new ArrayList<GameCharacter>();
+        //TODO Create a method, check each character in party "isAlive" value
+        // if True heal() hp and recoverVarAttribute() for mana/Stamina recovery
+        // if not, send to graveyard(by adding them in "resArr" array)
+        //       delete from party & create a new random character in team.
+        graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
+        return graveyard;
     }
 
-    /**Method to be called from GameManager when all members from a Party are dead (so when player lose)
+    /**
+     * Method to be called from GameManager when all members from a Party are dead (so when player lose)
      * it adds all characters to graveyard
+     *
      * @param graveyard ArrayList<GameCharacters> where to save the dead fighters
      *
      * @return Party itself to permit using return value as parameter
      * to the ArrayList.remove() method on GameManager.parties
      */
-    public Party defeatParty(ArrayList<GameCharacter> graveyard){
-        //TODO Create a method that sends ALL characters to graveyard
-        return this;//MUST RETURN PARTY ITSELF TO ALLOW CHAIN CALLS
+    public ArrayList<GameCharacter> defeatParty(ArrayList<GameCharacter> graveyard){
+        graveyard.addAll(this.gameCharacterList);//MUST ADD all characters to send them to graveyard
+        return graveyard;
     }
 
     public ArrayList<GameCharacter> getAliveFighters() {

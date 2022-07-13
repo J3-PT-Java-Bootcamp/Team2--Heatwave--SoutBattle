@@ -39,7 +39,9 @@ public class FightReport {
         roundsList.add(new FightRound(player,enemy));
         return this;
     }
-
+    public FightRound getCurrentRound(){
+        return this.roundsList.get(roundsList.size()-1);
+    }
     public void addAttackReport(GameCharacter player,GameCharacter enemy, String attackName){
         this.roundsList.get(roundsList.size()-1).addAttackReport(player,enemy,attackName);
     }

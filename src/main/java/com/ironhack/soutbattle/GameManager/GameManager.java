@@ -101,34 +101,35 @@ public class GameManager {
             this.playerParty = printer.chooseParty(parties);
             if (this.playerParty==null) throw new GoBackException();
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);
-//        while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-            currentPlayer = printer.chooseCharacter(playerParty);
-            if(currentPlayer==null) throw new GoBackException();
-            currentEnemy = enemyParty.getRandomLiveCharacter();
-            System.out.println(currentPlayer.toFightTxtObj());
-            printer.waitFor(1000);
-//        }
-
-
-//        if(this.playerParty.missingCharacters()){
-//            this.playerParty.recruitCharacters(printer);
-//        }
-//        GameCharacter playerFighter,enemyFighter;
-//        FightLog fightLog = new FightLog();//Special class where to save all fight data to send it to printer
-//        do {
-//            playerFighter=printer.chooseCharacter(playerParty);//waits until user chooses a fighter
-//            enemyFighter=enemyParty.getRandomCharacter();
-//            fightLog.process(playerFighter.attack(enemyFighter),true); //returns fight results ordered
-//            fightLog.process(enemyFighter.attack(playerFighter),false);//boolean isPlayerAttack
-//            printer.printFight(fightLog);
-//
-//        }while(playerParty.hasAliveCharacters()&&enemyParty.hasAliveCharacters());
-//        gameOver();
+            while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
+                currentPlayer = printer.chooseCharacter(playerParty);
+                if(currentPlayer==null) throw new GoBackException();
+                currentEnemy = enemyParty.getRandomLiveCharacter();
+                var report=new FightReport(printer,this,currentPlayer,currentEnemy);
+                do{
+                    report.newRound(currentPlayer,currentEnemy);
+                    currentPlayer.attack(currentEnemy,report.getCurrentRound());
+                    currentEnemy.attack(currentPlayer,report.getCurrentRound());
+                }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
+                printer.printFight(report);
+            }
+            gameOver();
         }
     }
 
     private void gameOver() throws Exception {
-        printer.printGameOver(true);
+        var playerWins= playerParty.hasMembersAlive();
+        printer.printGameOver(playerWins);
+        //TODO Send dead characters to graveyard
+        if (playerWins){
+            playerParty.restoreParty(graveyard);
+            //TODO heal survivors and recruit new characters
+        }else{
+            this.parties.remove(playerParty);
+            this.playerParty=null;
+
+            //Delete party from parties
+        }
         startMenu(printer);
 
     }
