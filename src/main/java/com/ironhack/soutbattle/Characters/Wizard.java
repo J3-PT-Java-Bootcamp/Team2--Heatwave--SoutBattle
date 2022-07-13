@@ -15,14 +15,14 @@ public class Wizard extends GameCharacter {
     private int intelligence;
     private final int MAX_MANA;
 //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Wizard(String name, int hp, Party partyList, int mana, int intelligence ) {
-        super(name, hp, partyList, WARRIOR_IMG);
+    public Wizard(String name, int hp, int mana, int intelligence,boolean isPlayer ) {
+        super(name, hp,  WARRIOR_IMG,isPlayer);
         this.mana=mana;
         this.MAX_MANA= mana;
         this.intelligence=intelligence;
     }
-    public Wizard(Party partyList, Random rand) {
-        super(Faker.instance().witcher().character(),rand.nextInt(50,100),partyList, WIZARD_IMG);
+    public Wizard(Random rand, Boolean isPlayer) {
+        super(Faker.instance().witcher().character(),rand.nextInt(50,100), WIZARD_IMG,isPlayer);
         this.intelligence= rand.nextInt(1,50);
         this.MAX_MANA= rand.nextInt(10,50);
         this.mana= MAX_MANA;
@@ -42,8 +42,11 @@ public class Wizard extends GameCharacter {
         this.intelligence = intelligence;
     }
     //-------------------------------------------------------------------------------------------------------------PRINT
+    /*
+     * Set of methods used by ConsolePrinter to print GameCharacter objects
+     */
     @Override
-    TextObject getVariableAttributes() {
+    public TextObject getVariableAttributes() {
         return new TextObject(TextStyle.BOLD+"HP: "+
                 TextStyle.RESET+ (getHp() >= getMAX_HP() / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                 + getHp()+TextStyle.RESET+"/"+getMAX_HP()

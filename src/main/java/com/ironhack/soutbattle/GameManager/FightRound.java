@@ -1,14 +1,41 @@
 package com.ironhack.soutbattle.GameManager;
 
+import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
-public class FightRound {
- TextObject imagePlayer,imageEnemy;
- String namePlayer, nameEnemy;
- int hpPlayerStart, hpEnemyStart;
- int hpPlayerEnd, hpEnemyEnd;
- String attackNamePlayer, attackNameEnemy;
+import java.util.ArrayList;
 
-    public FightRound() {
+public class FightRound {
+//    final int hp_max
+// int hp_player_start, hp_enemy_start;
+// int hp_player_end, hp_enemy_end;
+// int staminaMana_player_start,staminaMana_enemy_start;
+// String attackName_player, attackName_enemy;
+    private ArrayList<TextObject> playerStates;
+    private ArrayList<TextObject> enemyStates;
+    private String playerAttack,enemyAttack;
+
+    public FightRound(GameCharacter player,GameCharacter enemy) {
+        this.enemyStates=new java.util.ArrayList<>();
+        this.playerStates=new java.util.ArrayList<>();
+        playerStates.add(player.getVariableAttributes());
+        enemyStates.add(enemy.getVariableAttributes());
+    }
+    private void addIndividualAttackReport(boolean isPlayer, TextObject variableAttributes){
+        if (isPlayer) playerStates.add(variableAttributes);
+        else enemyStates.add(variableAttributes);
+
+    }
+    private void addIndividualAttackReport(GameCharacter character){
+        this.addIndividualAttackReport(character.isPlayer(),character.getVariableAttributes());
+    }
+    public void addAttackReport(GameCharacter player,GameCharacter enemy,String AttackName){
+        addIndividualAttackReport(player);
+        addIndividualAttackReport(enemy);
+        if (this.playerAttack==null){
+            this.playerAttack=AttackName;
+        }else {
+            this.enemyAttack=AttackName;
+        }
     }
 }

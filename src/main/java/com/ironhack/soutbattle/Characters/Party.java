@@ -25,11 +25,15 @@ public class Party {
         this.isPlayer = isPlayer;
         gameCharacterList = new ArrayList<>();
         while (!isFull()) {
-            addCharacter(getRandomCharacter());
+            addCharacter(createRandomCharacter());
 
         }
     }
 
+    /**Constructs a Party from a Json raw String[] and its Characters
+     * @see com.ironhack.soutbattle.GameManager.GameData
+     * @param rawData array of Character Json Strings(rawData[0] corresponds to Party.name
+     */
     public Party(String[] rawData) {
 
         this.name = rawData[0];
@@ -41,26 +45,17 @@ public class Party {
 
         }
     }
-
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
-    private GameCharacter getRandomCharacter() {
-
-        Random rand = new Random();
-        return (rand.nextBoolean() ? new Wizard(this, rand) : new Warrior(this, rand));
-    }
 
     public String getName() {
         return this.name;
     }
 
-    private Boolean getPlayer() {
+    private Boolean isPlayer() {
         return isPlayer;
     }
 
-    private Party setPlayer(Boolean player) {
-        isPlayer = player;
-        return this;
-    }
+
 
     public ArrayList<GameCharacter> getCharacterList() {
         return gameCharacterList;
@@ -81,33 +76,12 @@ public class Party {
         return gameCharacterList.size() >= MAX_FIGHTERS;
     }
 
-    //-------------------------------------------------------------------------------------------------------------PRINT
-    public TextObject toTextObject() {
-        var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y);
 
-        ArrayList<TextObject> fighters = new ArrayList<>();
-//
-//        for (int i = 0; i <gameCharacterList.size() ; i++) {
-//            txt.addText(gameCharacterList.get(i).toTextObject());
-//        }
-//
-//        return txt;
-
-        for (int i = 0; i < gameCharacterList.size(); i++) {
-            fighters.add(gameCharacterList.get(i).toTextObject());
-        }
-
-        return txt.addGroupAligned(MAX_FIGHTERS, LIMIT_X, fighters.toArray(new TextObject[0]));
-    }
-
-    public boolean hasMembersAlive() {
-        for (GameCharacter gameCharacter : gameCharacterList) {
-            if (gameCharacter.isCharacterAlive()) return true;
-        }
-        return false;
-    }
-
+    /**Method that returns a random ALIVE character from list
+     * @return random ALIVE character
+     */
     public GameCharacter getRandomLiveCharacter() {
+        assert (this.hasMembersAlive()); //this method should ony be called if it still has alive members
         Random rand = new Random();
         int n = 0;
         do {
@@ -116,11 +90,58 @@ public class Party {
         return gameCharacterList.get(n);
     }
 
+    //-------------------------------------------------------------------------------------------------------------PRINT
+    /**Method that returns all the attributes from its fighters aligned
+     * @return TextObject with all characters from party aligned in columns to be printed
+     */
+    public TextObject toTextObject() {
+        var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y);
 
-//    public String saveParty(Gson gson) {
-//        var sb= new StringBuilder();
-//        sb.append(name);
-//        for(GameCharacter ch: gameCharacterList)sb.append("///"+ch.saveCharacter(gson));
-//        return sb.toString();
-//    }
+        ArrayList<TextObject> fighters = new ArrayList<>();
+        for (int i = 0; i < gameCharacterList.size(); i++) {
+            fighters.add(gameCharacterList.get(i).toTextObject());
+        }
+
+        return txt.addGroupAligned(MAX_FIGHTERS, LIMIT_X, fighters.toArray(new TextObject[0]));
+    }
+
+    //----------------------------------------------------------------------------------------------------PUBLIC_METHODS
+    /**Creates a new Character Randomly
+     * @return new Character
+     */
+    private GameCharacter createRandomCharacter() {
+        Random rand = new Random();
+        return (rand.nextBoolean() ? new Wizard(rand,this.isPlayer) : new Warrior(rand,this.isPlayer));
+    }
+    /**Method to check if it remains any character alive
+     * @return boolean
+     */
+    public boolean hasMembersAlive() {
+        for (GameCharacter gameCharacter : gameCharacterList) {
+            if (gameCharacter.isCharacterAlive()) return true;
+        }
+        return false;
+    }
+
+    /**Method to call from GameManager after each game, checks all party fighters (Characters) isAlive value
+     * if dead: sends it to graveyard and creates a new random one on its place
+     * otherwise: heals its HP and stamina/mana values
+     * @param graveyard the graveyard
+     */
+    public void restoreParty(ArrayList<GameCharacter> graveyard){
+        //TODO Create that method, check each charactar "isAlive" if not, send to graveyard and delete from party/create a new one.
+    }
+
+    /**Method to be called from GameManager when all members from a Party are dead (so when player lose)
+     * it adds all characters to graveyard
+     * @param graveyard ArrayList<GameCharacters> where to save the dead fighters
+     *
+     * @return Party itself to permit using return value as parameter
+     * to the ArrayList.remove() method on GameManager.parties
+     */
+    public Party defeatParty(ArrayList<GameCharacter> graveyard){
+        //TODO Create a method that sends ALL characters to graveyard
+        return this;//MUST RETURN PARTY ITSELF TO ALLOW CHAIN CALLS
+    }
+
 }

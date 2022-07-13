@@ -103,13 +103,13 @@ Y88b   d88P  .d88888b.  888     888      888       888 8888888 888b    888
 /  +  \\
 | ~~~ |
 |R.I.P|
-|_____|"""+TextStyle.RESET, Scroll.BLOCK,LIMIT_X,LIMIT_Y);
+|_____|"""+TextStyle.RESET, Scroll.BLOCK,20,10).alignTextCenter().alignTextMiddle();
     public final static TextObject CROIX= new TextObject(TextStyle.BOLD+"""
    _
  _|R|_
 |_ I _|
   |P|
-  |_|"""+TextStyle.RESET, Scroll.BLOCK,LIMIT_X,LIMIT_Y);
+  |_|"""+TextStyle.RESET, Scroll.BLOCK,20,10).alignTextCenter().alignTextMiddle();
 
     public final static TextObject IN_MEMORIAM= new TextObject(TextStyle.BOLD+"""
                          __ __  __    ___  ___  ____ ___  ___   ___   ____  __  ___  ___  ___

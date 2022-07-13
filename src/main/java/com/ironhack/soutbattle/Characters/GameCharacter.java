@@ -18,9 +18,11 @@ public abstract class GameCharacter implements Attacker  {
     private final int MAX_HP;
     private boolean isAlive;
     private final TextObject image;
+    private final boolean isPlayer;
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public GameCharacter(String name, int hp, com.ironhack.soutbattle.Characters.Party partyList, com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject image) {
+    public GameCharacter(String name, int hp, TextObject image, boolean isPlayer) {
+        this.isPlayer = isPlayer;
         this.id = UUID.randomUUID();
         this.name = name;
         this.hp = hp;
@@ -28,16 +30,15 @@ public abstract class GameCharacter implements Attacker  {
         this.image=image;
         this.isAlive=true;
     }
-
-    public GameCharacter(UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image) {
+    @Deprecated
+    public GameCharacter(java.util.UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image, boolean isAlive, boolean isPlayer) {
         this.id = id;
         this.name = name;
         this.hp = hp;
         this.MAX_HP = hp;
         this.image=image;
         this.isAlive=isAlive;
-
-
+        this.isPlayer = isPlayer;
     }
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
     public UUID getId() {
@@ -48,40 +49,35 @@ public abstract class GameCharacter implements Attacker  {
         return TextStyle.BOLD + name + TextStyle.RESET;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getHp() {
         return hp;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    /**Modifies current HP by adding value (could be negative)
+     * @param hp
+     */
+    public void modifyHp(int hp) {
+        this.hp += hp;
     }
 
     public int getMAX_HP() {
         return MAX_HP;
     }
+
+    /**Method that returns the image to show depending on character isAlive value
+     * @return TextObject with the proper image in ascii
+     */
     public TextObject getImage(){
         if(isAlive) return image;
-        return (int)(Math.random()*10)%2==0?TOMB:CROIX;
+        return ((int)(Math.random()*10)%2==0?TOMB:CROIX).alignTextCenter();
     }
 
 //--------------------------------------------------------------------------------------------STARTS METHODS CHARACTER
 
-    // DIE
+    // DIE method just turns isAlive flag to false, but keeps character in Party until fights end
     public void die() {
         this.isAlive=false;
-        sendToGraveyard();
-
-        System.out.println("is death?");
     }
-
-    private void sendToGraveyard() {
-        com.ironhack.soutbattle.GameManager.GameManager.addToGraveyard(this);
-    }
-
     // HEAL
     public void heal() {
         hp = MAX_HP;
@@ -94,10 +90,11 @@ public abstract class GameCharacter implements Attacker  {
             die();
         }
     }
-
+@Deprecated
+//TODO manage deleting from list and moving to graveyard from Party class on restoreParty() method
     public void deleteFromParty() {
         System.out.println("Go home!");
-    }
+    }//FIXME Delete this method
     public boolean isCharacterAlive() {
 
        /* if (hp<=0) return false;
@@ -109,6 +106,11 @@ public abstract class GameCharacter implements Attacker  {
 
 
     //------------------------------------------------------------------------------------------------------------PRINT
+    /*
+     * Set of methods used by ConsolePrinter to print GameCharacter objects
+     */
+
+
     public TextObject toTextObject() {
       TextObject resVal= new TextObject(this.getImage(),
               TextObject.Scroll.BLOCK,
@@ -146,14 +148,15 @@ public abstract class GameCharacter implements Attacker  {
 
     }
 
-    abstract TextObject getVariableAttributes();
+    public abstract TextObject getVariableAttributes();
 
     abstract TextObject getAttributes(TextObject textObj);
     abstract TextObject getFixAttribute(TextObject txtObj);
 
 
-
-
+    public boolean isPlayer() {
+        return this.isPlayer;
+    }
 }
 
 

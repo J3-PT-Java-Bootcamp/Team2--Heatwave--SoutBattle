@@ -17,15 +17,15 @@ public class Warrior extends GameCharacter {
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
 
-    public Warrior(String name, int hp, Party partyList, int stamina, int strength, boolean isAlive) {
-        super(name, hp, partyList, WARRIOR_IMG);
+    public Warrior(String name, int hp, int stamina, int strength, boolean isPlayer) {
+        super(name, hp,  WARRIOR_IMG,isPlayer);
         this.stamina = stamina;
         this.MAX_STAMINA = stamina;
         this.strength = strength;
     }
 
-    public Warrior(Party partyList, Random rand) {
-        super(Faker.instance().gameOfThrones().character(), rand.nextInt(100, 200), partyList, WARRIOR_IMG);
+    public Warrior(Random rand, boolean isPlayer) {
+        super(Faker.instance().gameOfThrones().character(), rand.nextInt(100, 200),  WARRIOR_IMG,isPlayer);
         this.strength = rand.nextInt(1, 10);
         this.MAX_STAMINA = rand.nextInt(10, 50);
         this.stamina = MAX_STAMINA;
@@ -48,7 +48,10 @@ public class Warrior extends GameCharacter {
         this.strength = strength;
     }
 
-    //------------------------------------------------------------------------------------------------------------PRINT
+    //------------------------------------------------------------------------------------------------------------PRINT    /*
+    //     * Set of methods used by ConsolePrinter to print GameCharacter objects
+    //     */
+
     @Override
     public TextObject toFightTxtObj() {
 
@@ -56,7 +59,7 @@ public class Warrior extends GameCharacter {
     }
 
     @Override
-    TextObject getVariableAttributes() {
+    public TextObject getVariableAttributes() {
         return new TextObject("HP:" + getHp() + "/" + getMAX_HP() + "Stmn:" + getStamina() + MAX_STAMINA,
                 Scroll.NO,
                 LIMIT_X / 3,
