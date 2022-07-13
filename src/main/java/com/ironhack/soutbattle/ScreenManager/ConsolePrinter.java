@@ -186,7 +186,8 @@ public class ConsolePrinter {
         else finalTxtObj.addText(txtObjs[0].alignTextRight()).alignTextCenter();
         clearScreen();
         sendToQueue(finalTxtObj.alignTextTop().colorizeAllText().alignTextCenter());
-        sendToQueue(new TextObject("Select a party to play", Scroll.BLOCK, LIMIT_X, LIMIT_Y).alignTextCenter());
+        sendToQueue(new TextObject("Select a party to play", Scroll.NO, LIMIT_X, LIMIT_Y).alignTextCenter().addText(CENTER_CARET));
+
         startPrint();
         return parties.get(getIntFromInput(parties.toArray()));//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
     }
