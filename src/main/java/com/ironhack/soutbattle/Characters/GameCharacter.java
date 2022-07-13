@@ -14,7 +14,7 @@ public abstract class GameCharacter implements Attacker  {
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
     private final UUID id;
     private String name;
-    private int hp;
+    public int hp;
     private final int MAX_HP;
     private boolean isAlive;
     private final TextObject image;
