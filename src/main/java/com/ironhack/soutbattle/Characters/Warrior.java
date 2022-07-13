@@ -82,29 +82,36 @@ public class Warrior extends GameCharacter {
     //----------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
     public void attack(GameCharacter target, FightRound round) {
-
+        String attackName = null;//TODO Make heavyAttack() y weakAttack() return the attack name string
         if (stamina >= 5) {
-            heavyAttack(target);
+            attackName=heavyAttack(target);
         } else if (stamina < 5) {
 
-            weakAttack();
+            attackName=weakAttack();
         }
+        if(isPlayer()) round.addAttackReport(this,target,attackName);
+        else round.addAttackReport(target,this,attackName);
+
     }
 
     //WARRIOR ATTACKS
-    private void weakAttack() {
+    private String weakAttack() {
+        //TODO
         /*Fighter*/
         stamina += 1;
         /*Target*/
         damage = strength / 2;
 
+        return null;
     }
 
-    private void heavyAttack(GameCharacter target) {
+    private String heavyAttack(com.ironhack.soutbattle.Characters.GameCharacter target) {
+        //TODO
         /*Fighter*/
         stamina -= 5;
         /*Target*/
         damage = strength/*Fighter*/;
 
+        return null;
     }
 }

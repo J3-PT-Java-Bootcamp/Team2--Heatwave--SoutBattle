@@ -74,22 +74,26 @@ public class Wizard extends GameCharacter {
 //--------------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
     public void attack(GameCharacter target, FightRound round) {
+        String attackName = null;//TODO Make throwFireball() y throwStaffHit() return the attack name string
         if (mana>=5){
-            throwFireball();
+            attackName=throwFireball();
         }else if (mana<5){
-            throwStaffHit();
+            attackName=throwStaffHit();
         }
+        if(isPlayer()) round.addAttackReport(this,target,attackName);
+        else round.addAttackReport(target,this,attackName);
+    }
 
-        }
-
-    private void throwStaffHit() {
+    private String throwStaffHit() {
         /*Fighter*/ mana+=1;
         /*Target*/ damage=-2;
 
+        return null;
     }
 
-    private void throwFireball() {
+    private String throwFireball() {
         /*Fighter*/ mana-=5;
         /*Target*/ damage= intelligence;
+        return null;
     }
 }
