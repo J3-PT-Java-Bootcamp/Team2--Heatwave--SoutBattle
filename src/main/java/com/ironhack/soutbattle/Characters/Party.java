@@ -94,7 +94,7 @@ public class Party {
     /**Method that returns all the attributes from its fighters aligned
      * @return TextObject with all characters from party aligned in columns to be printed
      */
-    public TextObject toTextObject() {
+    public TextObject[] toTextObject() {
         var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y);
 
         ArrayList<TextObject> fighters = new ArrayList<>();
@@ -102,7 +102,7 @@ public class Party {
             fighters.add(gameCharacterList.get(i).toTextObject());
         }
 
-        return txt.addGroupAligned(MAX_FIGHTERS, LIMIT_X, fighters.toArray(new TextObject[0]));
+        return fighters.toArray(new TextObject[0]);
     }
 
     //----------------------------------------------------------------------------------------------------PUBLIC_METHODS

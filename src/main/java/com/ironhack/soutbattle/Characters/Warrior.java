@@ -114,4 +114,9 @@ public class Warrior extends GameCharacter {
 
         return null;
     }
+    @Override
+    void recoverVarAttribute() {
+        this.stamina=MAX_STAMINA;
+    }
+
 }

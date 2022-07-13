@@ -123,10 +123,10 @@ public class ConsolePrinter {
     public void showMemorial() {
 
 //       Warrior trufa = new Warrior("Trufa",123, null,30, 10,false);
-//        sendToQueue(trufa.toTextObject());
-
-        Party team1 = new Party("Equipo1", true);
-        sendToQueue(team1.toTextObject());
+////        sendToQueue(trufa.toTextObject());
+//
+//        Party team1 = new Party("Equipo1", true);
+//        sendToQueue(team1.toTextObject());
 
         startPrint();
 
@@ -168,8 +168,10 @@ public class ConsolePrinter {
                  charLimit , 1);
         }
         int objIndex = 0;
-        for (int i = 0; i < parties.size(); i++) {
-            String name= parties.get(i).getName();
+        String backName=" : 0 --> Back To Menu";
+        txtObjs[0].addText(backName+BLANK_SPACE.repeat(charLimit - txtObjs[0].countValidCharacters(backName)-2)+BLANK_SPACE);
+        for (int i = 1; i < parties.size()+1; i++) {
+            String name= parties.get(i-1).getName();
             if ( txtObjs[i/10].countValidCharacters(name)>=charLimit-14) {
                 txtObjs[i / 10].addText(" :" + (i >= 10 ? i : " " + i) + " --> "
                         + name.substring(0, charLimit - 13) + ".. ");
@@ -180,16 +182,20 @@ public class ConsolePrinter {
         }
         var finalTxtObj = new TextObject(HEADER,Scroll.BLOCK,LIMIT_X, LIMIT_Y);
         finalTxtObj.addText("------- PARTY SELECTION -------")
-                .addText(BLANK_SPACE.repeat(20))
-                .addText(BLANK_SPACE.repeat(20));
+                .addText(BLANK_SPACE.repeat(2))
+                .addText(BLANK_SPACE.repeat(2));
         if (txtObjs.length > 1) finalTxtObj.addGroupAligned(txtObjs.length, LIMIT_X, txtObjs);
         else finalTxtObj.addText(txtObjs[0].alignTextRight()).alignTextCenter();
         clearScreen();
         sendToQueue(finalTxtObj.alignTextTop().colorizeAllText().alignTextCenter());
-        sendToQueue(new TextObject("Select a party to play", Scroll.NO, LIMIT_X, LIMIT_Y).alignTextCenter().addText(CENTER_CARET));
+        sendToQueue(new TextObject("Select a party to play", Scroll.NO, LIMIT_X, LIMIT_Y)
+                .alignTextCenter().addText(CENTER_CARET));
 
         startPrint();
-        return parties.get(getIntFromInput(parties.toArray()));//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
+        parties.add(null);
+        int resVal=getIntFromInput(parties.toArray());
+        if (resVal==0) return null;
+        return parties.get(resVal-1);//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
     }
 
     public boolean confirmationNeeded(String message) {
@@ -209,7 +215,8 @@ public class ConsolePrinter {
     }
 
     public GameCharacter chooseCharacter(Party party) {
-        sendToQueue(party.toTextObject());
+        sendToQueue(new TextObject(TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
+                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject()));
         var txtObjArr = new TextObject[MAX_FIGHTERS];
         for (int i = 0; i < MAX_FIGHTERS; i++) {
             txtObjArr[i] = new TextObject("-" + i + "-", Scroll.NO, (LIMIT_X / MAX_FIGHTERS) - 1, 2).alignTextCenter().alignTextTop();
@@ -218,6 +225,7 @@ public class ConsolePrinter {
         sendToQueue(new TextObject(Scroll.NO, LIMIT_X, LIMIT_Y)
                 .addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr));
         startPrint();
+
 //        (partyToString(party));
         return null;
     }

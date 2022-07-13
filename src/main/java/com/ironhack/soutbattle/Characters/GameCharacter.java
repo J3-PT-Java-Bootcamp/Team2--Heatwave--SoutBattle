@@ -157,6 +157,7 @@ public abstract class GameCharacter implements Attacker  {
     public boolean isPlayer() {
         return this.isPlayer;
     }
+    abstract void recoverVarAttribute();
 }
 
 

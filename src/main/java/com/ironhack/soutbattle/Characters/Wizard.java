@@ -96,4 +96,10 @@ public class Wizard extends GameCharacter {
         /*Target*/ damage= intelligence;
         return null;
     }
+
+    @Override
+    void recoverVarAttribute() {
+        this.mana=MAX_MANA;
+    }
+
 }
