@@ -144,4 +144,12 @@ public class Party {
         return this;//MUST RETURN PARTY ITSELF TO ALLOW CHAIN CALLS
     }
 
+    public ArrayList<GameCharacter> getAliveFighters() {
+        var resVal= new ArrayList<GameCharacter>();
+        for (int i = 0; i < MAX_FIGHTERS; i++) {
+            if(getCharacter(i).isCharacterAlive())resVal.add(getCharacter(i));
+        }
+        resVal.add(null);
+        return resVal;
+    }
 }

@@ -105,6 +105,8 @@ public class GameManager {
             currentPlayer = printer.chooseCharacter(playerParty);
             if(currentPlayer==null) throw new GoBackException();
             currentEnemy = enemyParty.getRandomLiveCharacter();
+            System.out.println(currentPlayer.toFightTxtObj());
+            printer.waitFor(1000);
 //        }
 
 

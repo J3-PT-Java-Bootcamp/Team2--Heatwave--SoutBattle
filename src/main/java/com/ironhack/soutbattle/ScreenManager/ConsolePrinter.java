@@ -153,6 +153,12 @@ public class ConsolePrinter {
         return getNameFromInput();
     }
 
+    /**Method that prints a list of all parties,
+     *  waits until user enters a party number and return the selected party
+     * @param parties ArrayList of Party with all available parties
+     * @see GameManager
+     * @return Party chosen;
+     */
     public Party chooseParty(ArrayList<Party> parties) {
         int col = (int) Math.ceil(parties.size() / 10.0);
         int charLimit=  (int) Math.floor(col>2?LIMIT_X / col:LIMIT_X/2);
@@ -209,7 +215,12 @@ public class ConsolePrinter {
         startPrint();
         return Modal.values()[getIntFromInput(Modal.values())] == Modal.OK;
     }
-
+    /**Method that prints a list of all Characters in party,
+     *  waits until user enters a valid number and return the selected party
+     * @param party current Party
+     * @see GameManager
+     * @return GameCharacter chosen;
+     */
     public GameCharacter chooseCharacter(Party party) {
         var fullTxtObj= new TextObject(HEADER,TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
@@ -223,15 +234,17 @@ public class ConsolePrinter {
             txtObjArr[i] = new TextObject(party.getCharacter(i).isCharacterAlive()?"-" + j + "-":"RIP ",
                     Scroll.NO, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
                     .alignTextCenter();
-            j++;
+            if (party.getCharacter(i).isCharacterAlive())j++;
 
         }
         fullTxtObj.addText(new TextObject(Scroll.NO, LIMIT_X, 1)
                 .addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).alignTextTop().alignTextCenter().addText(CENTER_CARET));
         sendToQueue(fullTxtObj);
         startPrint();
-        var parties = java.util.Arrays.copyOf(party.getCharacterList().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
-        int resVal=getIntFromInput(parties);
+//        var aliveFighters = java.util.Arrays.copyOf(party.getCharacterList().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
+        var aliveFighters= party.getAliveFighters();
+        aliveFighters.add(null);
+        int resVal=getIntFromInput(aliveFighters.toArray(new GameCharacter[0]));
         if (resVal==0) return null;
         return party.getCharacter(resVal-1);
     }
@@ -341,7 +354,7 @@ public class ConsolePrinter {
      *
      * @param milis time to sleep in miliseconds
      */
-    private void waitFor(int milis) {
+    public void waitFor(int milis) {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException e) {
