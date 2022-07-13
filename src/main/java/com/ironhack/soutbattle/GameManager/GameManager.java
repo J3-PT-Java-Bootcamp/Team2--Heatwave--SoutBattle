@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 
 public class GameManager {
-    private static ArrayList<GameCharacter> graveyard;
+    private ArrayList<GameCharacter> graveyard;
     private final ConsolePrinter printer;
     Gson gson;
     private ArrayList<Party> parties;
@@ -48,7 +48,7 @@ public class GameManager {
         }
     }
 
-    public static void addToGraveyard(GameCharacter gameCharacter) {
+    public void addToGraveyard(GameCharacter gameCharacter) {
         graveyard.add(gameCharacter);
     }
 
@@ -57,7 +57,7 @@ public class GameManager {
     public void startGame() throws Exception {
         startMenu(printer);
     }
-
+    //START MENU LOOP, ANY EXCEPTION WILL RERUN THIS FUNCTION
     private void startMenu(ConsolePrinter printer)  {
         saveData();
         try {
@@ -76,15 +76,7 @@ public class GameManager {
         }
     }
 
-    private void closeGame() throws Exception {
-        if (printer.confirmationNeeded("Do you want to close game?")) {
-            printer.goodBye(userName);
-            System.exit(0);
-        } else {
-            startMenu(printer);
-        }
-    }
-
+    //CREATES A NEWPARTY AND GOES TO playGame()
     public void createNewParty() throws Exception {
         this.parties.add(new Party(printer.newPartyScreen(), true));
         try {
@@ -93,30 +85,42 @@ public class GameManager {
             startMenu(printer);
         }
     }
-
+    //Executes a play loop until one team wins, if there isn't any party, starts with party creation
     private void playGame() throws Exception {
-        if(this.parties.size()==0)createNewParty();
+        int securityExit=0;
+        if(this.parties.size()==0)createNewParty();//If there is no party, first create new party,
+                                                    // createNewParty() ---> callsback to playGame()
         else {
-            START:
-            this.playerParty = printer.chooseParty(parties);
-            if (this.playerParty==null) throw new GoBackException();
-            this.enemyParty = new Party(Faker.instance().rockBand().name(), false);
+            this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
+            if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
+            this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-                currentPlayer = printer.chooseCharacter(playerParty);
-                if(currentPlayer==null) throw new GoBackException();
-                currentEnemy = enemyParty.getRandomLiveCharacter();
+                currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
+                if(currentPlayer==null) throw new GoBackException();//==>GO BACK index returns a null value
+                currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
                 var report=new FightReport(printer,this,currentPlayer,currentEnemy);
                 do{
                     report.newRound(currentPlayer,currentEnemy);
                     currentPlayer.attack(currentEnemy,report.getCurrentRound());
                     currentEnemy.attack(currentPlayer,report.getCurrentRound());
+                    if (securityExit>10000)break;
+                    securityExit++;
                 }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
                 printer.printFight(report);
+
+                if (securityExit>10000)break;
+                securityExit++;
             }
+            if (securityExit>10000) {
+                System.err.println("ERR_FIGHT ROUND COUNTER IS BIGGER THAN 9999\n WE CANNOT MANAGE ALMOST ETERNAL FIGHTS\nABORTING FIGHT...");
+                printer.waitFor(1000);
+                throw new Exception();
+            }
+            securityExit++;
             gameOver();
         }
     }
-
+    //Executes logic before game ends, after it goues to startMenu() again
     private void gameOver() throws Exception {
         var playerWins= playerParty.hasMembersAlive();
         printer.printGameOver(playerWins);
@@ -130,8 +134,18 @@ public class GameManager {
             this.playerParty=null;
             //Delete party from parties
         }
+        saveData();
         startMenu(printer);
 
+    }
+
+    private void closeGame() throws Exception {
+        if (printer.confirmationNeeded("Do you want to close game?")) {
+            printer.goodBye(userName);
+            System.exit(0);
+        } else {
+            startMenu(printer);
+        }
     }
 
     //-------------------------------------------------------------------------------------------------------LOAD & SAVE

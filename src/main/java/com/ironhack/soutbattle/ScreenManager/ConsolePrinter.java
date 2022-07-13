@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
+import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.*;
 import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scroll;
 
 /**
@@ -122,7 +123,8 @@ public class ConsolePrinter {
         }
         finalTxtObj.addText(CANDLES);
         finalTxtObj.alignTextCenter();
-        finalTxtObj.setPrintSpeed(1);
+        finalTxtObj.setPrintSpeed(6);
+        sendToQueue(finalTxtObj.getResizedText(LIMIT_X,LIMIT_Y));
         startPrint();
 
     }
@@ -222,7 +224,7 @@ public class ConsolePrinter {
      * @return GameCharacter chosen;
      */
     public GameCharacter chooseCharacter(Party party) {
-        var fullTxtObj= new TextObject(HEADER,TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
+        var fullTxtObj= new TextObject(HEADER, Scroll.NO,LIMIT_X,LIMIT_Y)
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
                 .addText("Enter 0 to Go Back")
                 .alignTextCenter()
