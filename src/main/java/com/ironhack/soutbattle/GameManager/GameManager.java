@@ -32,9 +32,11 @@ public class GameManager {
         printer.splashScreen();
         try {
             loadData();
+            printer.helloUser(userName);
         } catch (Exception e) {
             this.gameData = new GameData();
             this.userName = printer.askUserName();
+            printer.welcomeNewUser();
             saveData();
         }
         if (this.userName == null) {
@@ -43,8 +45,6 @@ public class GameManager {
             printer.welcomeNewUser();
 
             saveData();
-        } else {
-            printer.helloUser(userName);
         }
     }
 
