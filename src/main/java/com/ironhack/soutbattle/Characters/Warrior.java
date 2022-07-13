@@ -95,24 +95,24 @@ public class Warrior extends GameCharacter {
     }
 
     //WARRIOR ATTACKS
-    private String weakAttack() {
+    private String weakAttack(com.ironhack.soutbattle.Characters.GameCharacter target) {
         //TODO
         /*Fighter*/
-        stamina += 1;
+        this.stamina += 1;
         /*Target*/
-        damage = strength / 2;
-
-        return null;
+        damage = this.strength / 2;
+        target.hp = target.getHp() - damage;
+        return "Weak Attack";
     }
 
     private String heavyAttack(com.ironhack.soutbattle.Characters.GameCharacter target) {
         //TODO
         /*Fighter*/
-        stamina -= 5;
+        this.stamina -= 5;
         /*Target*/
-        damage = strength/*Fighter*/;
-
-        return null;
+        damage = this.strength/*Fighter*/;
+        target.hp = target.getHp() - damage;
+        return "Heavy attack";
     }
     @Override
     void recoverVarAttribute() {
