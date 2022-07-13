@@ -16,8 +16,6 @@ import java.util.ArrayList;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
-import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.*;
-import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scroll;
 
 /**
  *
@@ -224,23 +222,22 @@ public class ConsolePrinter {
      * @return GameCharacter chosen;
      */
     public GameCharacter chooseCharacter(Party party) {
-        var fullTxtObj= new TextObject(HEADER, Scroll.NO,LIMIT_X,LIMIT_Y)
+        var fullTxtObj= new TextObject(HEADER, Scroll.BLOCK,LIMIT_X,LIMIT_Y)
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
-                .addText("Enter 0 to Go Back")
-                .alignTextCenter()
-                .colorizeAllText()
-                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject());
+                .addText("---"+party.getName()+"---");
         var txtObjArr = new TextObject[MAX_FIGHTERS];
         int j=1;
         for (int i = 0; i < MAX_FIGHTERS; i++) {
-            txtObjArr[i] = new TextObject(party.getCharacter(i).isCharacterAlive()?"-" + j + "-":"RIP ",
-                    Scroll.NO, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
+            txtObjArr[i] = new TextObject(party.getCharacter(i).isCharacterAlive()?("-" + j + "-"):"RIP ",
+                    Scroll.BLOCK, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
                     .alignTextCenter();
             if (party.getCharacter(i).isCharacterAlive())j++;
 
         }
-        fullTxtObj.addText(new TextObject(Scroll.NO, LIMIT_X, 1)
-                .addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).alignTextTop().alignTextCenter().addText(CENTER_CARET));
+        fullTxtObj.addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).colorizeAllText()
+                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject())
+       .addText(BLANK_SPACE).addText("Enter a Number // [0] TO CANCEL ") .alignTextCenter()
+                .addText(BLANK_SPACE).addText(CENTER_CARET);
         sendToQueue(fullTxtObj);
         startPrint();
 //        var aliveFighters = java.util.Arrays.copyOf(party.getCharacterList().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
@@ -252,9 +249,90 @@ public class ConsolePrinter {
     }
 
     public void printFight(FightReport report) {
+        try {
+            clearScreen();
+            sendToQueue(createFightScreenBase(report.getPlayerObject(),report.getEnemyObject()));
+            sendToQueue(createFightLine(report));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        startPrint();
+        waitFor(1000);
 
     }
 
+    private DynamicLine createFightLine(FightReport report) throws Exception {
+
+        var charLimit=LIMIT_X/3;
+        var resLine= new DynamicLine(LIMIT_X,LIMIT_Y,1,2,100);
+        int auxCounter=0;
+        for (int i = 0; i < report.totalRounds(); i++) {
+            String player= "";
+            String enemy= "";
+            String msg="";
+            //START
+            player= report.getRound(i).getPlayerState(0).get(0);
+            enemy= report.getRound(i).getEnemyState(0).get(0);
+            msg = " ";
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+            //PLAYER ATTACK ANOUNCE
+            msg = report.player.getName().split(" ")[0]+"performs: "+report.getRound(i).getPlayerAttack();
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+            //Player attack varAttribute discount
+            player= report.getRound(i).getPlayerState(1).get(0);
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+            //Enemy damage
+            enemy= report.getRound(i).getEnemyState(1).get(0);
+            msg = "";
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+            //enemy announce
+            msg = report.enemy.getName().split(" ")[0]+"performs: "+report.getRound(i).getEnemyAttack();
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+
+            //enemy discount
+            enemy= report.getRound(i).getEnemyState(2).get(0);
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+            //player damage
+            player= report.getRound(i).getPlayerState(2).get(0);
+            resLine.addText(constructResultTextFromRound(charLimit, resLine, player, enemy, msg));
+
+
+        }
+        resLine.setPrintSpeed(2);
+        resLine.constructAnimation();
+        return resLine;
+    }
+
+    @org.jetbrains.annotations.NotNull
+    private String constructResultTextFromRound(int charLimit, com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine resLine, String player, String enemy, String msg) {
+        return  BLANK_SPACE.repeat(charLimit - resLine.countValidCharacters(player))+player
+                + BLANK_SPACE.repeat((charLimit - resLine.countValidCharacters(msg)) / 2) + msg
+                + BLANK_SPACE.repeat((charLimit - resLine.countValidCharacters(msg)) / 2)
+                + enemy;
+    }
+
+    private TextObject createFightScreenBase(TextObject player, TextObject enemy) throws Exception {
+        var charLimit=LIMIT_X/3;
+        var res=new TextObject(HEADER,Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+                .addText(FIGHT_TITLE);
+//        int remSize= LIMIT_Y-HEADER.getTotalHeight()-FIGHT_TITLE.getTotalHeight()-player.getTotalHeight()-1;
+//        for (int i = 0; i < remSize; i++) {
+//            res.addText(BLANK_SPACE.repeat(charLimit));
+//        }
+        for (int i = 0; i < player.getTotalHeight(); i++) {
+
+            res.addText(BLANK_SPACE.repeat(charLimit-res.countValidCharacters(player.get(i)))+player.get(i)
+            +BLANK_SPACE.repeat(charLimit)
+            +enemy.get(i));
+
+        }
+        res.addText(BLANK_SPACE);
+        return res;
+    }
+    private TextObject createFightColumns(String player,String message,TextObject enemy){
+        return new TextObject(Scroll.BLOCK,LIMIT_X,1);
+
+    }
     public void printGameOver(Boolean playerWins) {
         //TODO print game over screen (model depends on player winning or not)
     }

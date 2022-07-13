@@ -183,14 +183,9 @@ public class GameManager {
             this.parties = new ArrayList<>();
             graveyard = new ArrayList<>();
             this.gameData = new GameData();
-            var file = new java.io.File("gameData.txt");
-            if (file.delete()) {
-                System.out.println("File deleted successfully");
-            } else {
-                System.out.println("Failed to delete the file, trying to let it in blank");
-                saveData();
-            }
-            throw new EmptyStackException();
+            this.userName = printer.askUserName();
+            saveData();
+
         }
     }
 

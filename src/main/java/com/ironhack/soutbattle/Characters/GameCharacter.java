@@ -115,12 +115,12 @@ public abstract class GameCharacter implements Attacker  {
       TextObject resVal= new TextObject(this.getImage(),
               TextObject.Scroll.BLOCK,
               (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
-              LIMIT_Y);
+              LIMIT_Y/2);
       resVal  .addText(this.name)
               .addText(printCharacterType())
               .addText(TextStyle.BOLD+"HP: "+
                       TextStyle.RESET+ (getHp() >= MAX_HP / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
-                      + getHp()+TextStyle.RESET+"/"+MAX_HP)
+                      + getHp()+TextStyle.RESET+"/"+MAX_HP).alignTextCenter()
       ;
 
         return getAttributes(resVal).alignTextCenter();

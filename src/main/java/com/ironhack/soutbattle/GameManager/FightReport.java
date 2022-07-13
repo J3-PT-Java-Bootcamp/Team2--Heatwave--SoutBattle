@@ -7,6 +7,8 @@ import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import java.util.ArrayList;
 
 public class FightReport {
+    public GameCharacter player;
+    public GameCharacter enemy;
     private TextObject imagePlayer,imageEnemy;
     private String namePlayer, nameEnemy;
     private final TextObject playerObject,enemyObject;
@@ -15,6 +17,8 @@ public class FightReport {
 
     GameManager game;
     public FightReport(ConsolePrinter printer, GameManager game, GameCharacter player, GameCharacter enemy) {
+        this.player=player;
+        this.enemy=enemy;
         setImage(player.getImage(),enemy.getImage());
         setName(player.getName(),enemy.getName());
 
@@ -50,7 +54,7 @@ public class FightReport {
     }
 
   public TextObject[] startPrint(){
-        printer.printFight(this);
+//        printer.printFight(this);
         imagePlayer.addText(namePlayer);
         imageEnemy.addText(nameEnemy);
         return new TextObject[] {imagePlayer, imageEnemy};
@@ -59,4 +63,22 @@ public class FightReport {
         if(roundsList.isEmpty()) throw new Exception();
         return  poll();
   }
+
+    public boolean hasNext() {
+        return roundsList.size()>0;
+    }
+    public int totalRounds(){
+        return this.roundsList.size();
+    }
+
+    public TextObject getPlayerObject() {
+        return playerObject;
+    }
+    public TextObject getEnemyObject() {
+        return enemyObject;
+    }
+
+    public FightRound getRound(int i) {
+        return this.roundsList.get(i);
+    }
 }

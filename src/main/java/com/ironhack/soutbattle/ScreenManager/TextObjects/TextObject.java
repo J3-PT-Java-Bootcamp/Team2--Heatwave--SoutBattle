@@ -184,7 +184,7 @@ public class TextObject {
      * @return this textObject to allow chain calls.
      */
     public TextObject addGroupAligned(int numberOfColumns, int totalSize, TextObject[] columnsContent) {
-        int charLimit = (numberOfColumns > 1 ? (totalSize / numberOfColumns) : totalSize) - numberOfColumns;
+        int charLimit = (numberOfColumns > 1 ? (totalSize / numberOfColumns) : totalSize);
         int totalLines = 0;
         for (TextObject textColumn : columnsContent) {
             textColumn.alignTextMiddle();
@@ -197,7 +197,7 @@ public class TextObject {
                 try {
                     currentVal = columnsContent[i].get(j);
                 } catch (Exception e) {
-                    currentVal = BLANK_SPACE.repeat(charLimit);
+                    currentVal = BLANK_SPACE.repeat(charLimit-1);
                 }
                 strBuilder.append(BLANK_SPACE).append(currentVal);
             }

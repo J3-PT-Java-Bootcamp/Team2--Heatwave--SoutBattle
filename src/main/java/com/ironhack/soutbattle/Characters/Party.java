@@ -95,7 +95,7 @@ public class Party {
      * @return TextObject with all characters from party aligned in columns to be printed
      */
     public TextObject[] toTextObject() {
-        var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y);
+        var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y/2);
 
         ArrayList<TextObject> fighters = new ArrayList<>();
         for (int i = 0; i < gameCharacterList.size(); i++) {

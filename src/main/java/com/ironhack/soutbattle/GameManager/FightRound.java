@@ -38,4 +38,28 @@ public class FightRound {
             this.enemyAttack=AttackName;
         }
     }
+    public TextObject getPlayerState(int index){
+        return playerStates.get(index);
+    }
+    public TextObject getEnemyState(int index){
+        return enemyStates.get(index);
+    }
+
+    public String getPlayerAttack() {
+        return playerAttack;
+    }
+
+    private FightRound setPlayerAttack(String playerAttack) {
+        this.playerAttack = playerAttack;
+        return this;
+    }
+
+    public String getEnemyAttack() {
+        return enemyAttack;
+    }
+
+    private FightRound setEnemyAttack(String enemyAttack) {
+        this.enemyAttack = enemyAttack;
+        return this;
+    }
 }
