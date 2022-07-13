@@ -7,6 +7,7 @@ import com.ironhack.soutbattle.GameManager.GameManager;
 import com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
+import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scroll;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.WindowObject;
 
 import java.io.BufferedReader;
@@ -81,16 +82,12 @@ public class ConsolePrinter {
         if (showError) {
             showErrorLine();
         } else {
-
             clearScreen();
             var numberTextObject = new TextObject(Scroll.NO, LIMIT_X / 2
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1));
-
-
             var titleTextObject = new TextObject(HEADER, Scroll.NO, LIMIT_X, HEADER.getTotalHeight() + 1);
             var nameTextObject = new TextObject(Scroll.NO, LIMIT_X / 3
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1));
-
             titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------")
                     .addText(EMPTY_LINE).alignTextCenter().colorizeAllText();
             sendToQueue(titleTextObject);
@@ -98,8 +95,6 @@ public class ConsolePrinter {
                 numberTextObject.addText(BLANK_SPACE.repeat((LIMIT_X / 2) - 10) + i + " -->");
                 nameTextObject.addText(Menu.values()[i].toString());
             }
-//            numberTextObject.alignTextRight();
-//            nameTextObject.fillAllLines();
             var finalTxtObj = new TextObject(Scroll.NO, LIMIT_X
                     , LIMIT_Y - (HEADER.getTotalHeight() + 2)).addGroupAligned(2,
                     LIMIT_X, new TextObject[]{numberTextObject.alignTextRight(), nameTextObject.fillAllLines()});
@@ -107,7 +102,6 @@ public class ConsolePrinter {
             sendToQueue(new TextObject("Enter a number to continue", Scroll.NO, LIMIT_X, 1)
                     .alignTextCenter().setPrintSpeed(6).addText(CENTER_CARET));
             startPrint();
-
         }
         int inputNumber;
         try {
@@ -121,14 +115,14 @@ public class ConsolePrinter {
         return showMenu(true);
     }
 
-    public void showMemorial() {
-
-//       Warrior trufa = new Warrior("Trufa",123, null,30, 10,false);
-////        sendToQueue(trufa.toTextObject());
-//
-//        Party team1 = new Party("Equipo1", true);
-//        sendToQueue(team1.toTextObject());
-
+    public void showMemorial(ArrayList<GameCharacter>graveyard) {
+        var finalTxtObj= new TextObject(IN_MEMORIAM, Scroll.BLOCK,LIMIT_X,LIMIT_Y);
+        for (int i = 0; i < graveyard.size() ; i++) {
+            finalTxtObj.addText(graveyard.get(i).toTextObject());
+        }
+        finalTxtObj.addText(CANDLES);
+        finalTxtObj.alignTextCenter();
+        finalTxtObj.setPrintSpeed(1);
         startPrint();
 
     }

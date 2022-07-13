@@ -65,7 +65,7 @@ public class GameManager {
                 case PLAY -> playGame();
                 case NEW_PARTY -> createNewParty();
                 case ABOUT -> printer.readMe();
-                case MEMORIAL -> printer.showMemorial();
+                case MEMORIAL -> printer.showMemorial(graveyard);
                 case CALIBRATE -> printer.calibrateScreen();
                 case CLEAR_DATA -> clearAllData();
                 case EXIT -> closeGame();
