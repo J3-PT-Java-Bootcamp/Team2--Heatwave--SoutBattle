@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.Characters.Party;
 import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
+import com.ironhack.soutbattle.ScreenManager.GoBackException;
 import net.datafaker.Faker;
 
 import java.io.FileReader;
@@ -57,18 +58,22 @@ public class GameManager {
         startMenu(printer);
     }
 
-    private void startMenu(ConsolePrinter printer) throws Exception {
+    private void startMenu(ConsolePrinter printer)  {
         saveData();
-        switch (printer.showMenu(false)) {
-            case PLAY -> playGame();
-            case NEW_PARTY -> createNewParty();
-            case ABOUT -> printer.readMe();
-            case MEMORIAL -> printer.showMemorial();
-            case CALIBRATE -> printer.calibrateScreen();
-            case CLEAR_DATA -> clearAllData();
-            case EXIT -> closeGame();
+        try {
+            switch (printer.showMenu(false)) {
+                case PLAY -> playGame();
+                case NEW_PARTY -> createNewParty();
+                case ABOUT -> printer.readMe();
+                case MEMORIAL -> printer.showMemorial();
+                case CALIBRATE -> printer.calibrateScreen();
+                case CLEAR_DATA -> clearAllData();
+                case EXIT -> closeGame();
+            }
+            startMenu(printer);
+        }catch (Exception e){
+            startMenu(printer);
         }
-        startMenu(printer);
     }
 
     private void closeGame() throws Exception {
@@ -80,17 +85,26 @@ public class GameManager {
         }
     }
 
-    public void createNewParty() {
+    public void createNewParty() throws Exception {
         this.parties.add(new Party(printer.newPartyScreen(), true));
-        playGame();
+        try {
+            playGame();
+        } catch (GoBackException e) {
+            startMenu(printer);
+        }
     }
 
-    private void playGame() {
-        this.playerParty = printer.chooseParty(parties);
-        this.enemyParty = new Party(Faker.instance().rockBand().name(), false);
+    private void playGame() throws Exception {
+        if(this.parties.size()==0)createNewParty();
+        else {
+            START:
+            this.playerParty = printer.chooseParty(parties);
+            if (this.playerParty==null) throw new GoBackException();
+            this.enemyParty = new Party(Faker.instance().rockBand().name(), false);
 //        while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-        currentPlayer = printer.chooseCharacter(playerParty);
-        currentEnemy = enemyParty.getRandomLiveCharacter();
+            currentPlayer = printer.chooseCharacter(playerParty);
+            if(currentPlayer==null) throw new GoBackException();
+            currentEnemy = enemyParty.getRandomLiveCharacter();
 //        }
 
 
@@ -108,6 +122,7 @@ public class GameManager {
 //
 //        }while(playerParty.hasAliveCharacters()&&enemyParty.hasAliveCharacters());
 //        gameOver();
+        }
     }
 
     private void gameOver() throws Exception {

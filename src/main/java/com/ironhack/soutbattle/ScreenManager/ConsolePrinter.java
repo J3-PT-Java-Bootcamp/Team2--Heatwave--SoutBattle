@@ -4,6 +4,7 @@ import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.Characters.Party;
 import com.ironhack.soutbattle.GameManager.FightReport;
 import com.ironhack.soutbattle.GameManager.GameManager;
+import com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.WindowObject;
@@ -91,7 +92,7 @@ public class ConsolePrinter {
                     , LIMIT_Y - (HEADER.getTotalHeight() + 1));
 
             titleTextObject.addText("--------------------------//  MENU  \\\\--------------------------")
-                    .addText(EMPTY_LINE).alignTextCenter();
+                    .addText(EMPTY_LINE).alignTextCenter().colorizeAllText();
             sendToQueue(titleTextObject);
             for (int i = 0; i < Menu.values().length; i++) {
                 numberTextObject.addText(BLANK_SPACE.repeat((LIMIT_X / 2) - 10) + i + " -->");
@@ -194,6 +195,7 @@ public class ConsolePrinter {
         startPrint();
         parties.add(null);
         int resVal=getIntFromInput(parties.toArray());
+        parties.remove(parties.size()-1);
         if (resVal==0) return null;
         return parties.get(resVal-1);//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
     }
@@ -215,19 +217,29 @@ public class ConsolePrinter {
     }
 
     public GameCharacter chooseCharacter(Party party) {
-        sendToQueue(new TextObject(TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
-                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject()));
+        var fullTxtObj= new TextObject(HEADER,TextObject.Scroll.NO,LIMIT_X,LIMIT_Y)
+                .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
+                .addText("Enter 0 to Go Back")
+                .alignTextCenter()
+                .colorizeAllText()
+                .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject());
         var txtObjArr = new TextObject[MAX_FIGHTERS];
+        int j=1;
         for (int i = 0; i < MAX_FIGHTERS; i++) {
-            txtObjArr[i] = new TextObject("-" + i + "-", Scroll.NO, (LIMIT_X / MAX_FIGHTERS) - 1, 2).alignTextCenter().alignTextTop();
+            txtObjArr[i] = new TextObject(party.getCharacter(i).isCharacterAlive()?"-" + j + "-":"RIP ",
+                    Scroll.NO, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
+                    .alignTextCenter();
+            j++;
 
         }
-        sendToQueue(new TextObject(Scroll.NO, LIMIT_X, LIMIT_Y)
-                .addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr));
+        fullTxtObj.addText(new TextObject(Scroll.NO, LIMIT_X, 1)
+                .addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).alignTextTop().alignTextCenter().addText(CENTER_CARET));
+        sendToQueue(fullTxtObj);
         startPrint();
-
-//        (partyToString(party));
-        return null;
+        var parties = java.util.Arrays.copyOf(party.getCharacterList().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
+        int resVal=getIntFromInput(parties);
+        if (resVal==0) return null;
+        return party.getCharacter(resVal-1);
     }
 
     public void printFight(FightReport report) {
