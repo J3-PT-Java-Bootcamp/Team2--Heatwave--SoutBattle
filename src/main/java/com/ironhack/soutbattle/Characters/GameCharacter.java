@@ -9,7 +9,7 @@ import static com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.*;
 
-public abstract class GameCharacter implements Attacker  {
+public abstract class GameCharacter implements Attacker {
     protected int damage;
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
     private final UUID id;
@@ -27,19 +27,21 @@ public abstract class GameCharacter implements Attacker  {
         this.name = name;
         this.hp = hp;
         this.MAX_HP = hp;
-        this.image=image;
-        this.isAlive=true;
+        this.image = image;
+        this.isAlive = true;
     }
+
     @Deprecated
     public GameCharacter(java.util.UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image, boolean isAlive, boolean isPlayer) {
         this.id = id;
         this.name = name;
         this.hp = hp;
         this.MAX_HP = hp;
-        this.image=image;
-        this.isAlive=isAlive;
+        this.image = image;
+        this.isAlive = isAlive;
         this.isPlayer = isPlayer;
     }
+
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
     public UUID getId() {
         return id;
@@ -53,7 +55,9 @@ public abstract class GameCharacter implements Attacker  {
         return Math.max(hp, 0);
     }
 
-    /**Modifies current HP by adding value (could be negative)
+    /**
+     * Modifies current HP by adding value (could be negative)
+     *
      * @param hp
      */
     public void modifyHp(int hp) {
@@ -64,20 +68,23 @@ public abstract class GameCharacter implements Attacker  {
         return MAX_HP;
     }
 
-    /**Method that returns the image to show depending on character isAlive value
+    /**
+     * Method that returns the image to show depending on character isAlive value
+     *
      * @return TextObject with the proper image in ascii
      */
-    public TextObject getImage(){
-        if(isAlive()) return image;
-        return ((int)(Math.random()*10)%2==0?TOMB:CROIX).alignTextCenter();
+    public TextObject getImage() {
+        if (isAlive()) return image;
+        return ((int) (Math.random() * 10) % 2 == 0 ? TOMB : CROIX).alignTextCenter();
     }
 
 //--------------------------------------------------------------------------------------------STARTS METHODS CHARACTER
 
     // DIE method just turns isAlive flag to false, but keeps character in Party until fights end
     public void die() {
-        this.isAlive=false;
+        this.isAlive = false;
     }
+
     // HEAL
     public void heal() {
         hp = MAX_HP;
@@ -100,43 +107,77 @@ public abstract class GameCharacter implements Attacker  {
     }
 
 
-
     //------------------------------------------------------------------------------------------------------------PRINT
     /*
      * Set of methods used by ConsolePrinter to print GameCharacter objects
      */
 
+    public ArrayList<String> checkName(ArrayList<String> nameList) {
+
+        int counter = 0;
+        for (String name : nameList) {
+            if (name.contains(this.name)) {
+                counter++;
+            }
+        }
+        switch (counter) {
+            case (1): {
+                this.name += "II";
+                break;
+            }
+            case (2): {
+                this.name += "III";
+                break;
+            }
+            case (3): {
+                this.name += "IV";
+                break;
+            }
+            case (4): {
+                this.name += "V";
+                break;
+            }
+            case (5): {
+                this.name += "VI";
+                break;
+            }
+        }
+        nameList.add(this.name);
+        return nameList;
+    }
+
 
     public TextObject toTextObject() {
-      TextObject resVal= new TextObject(this.getImage(),
-              TextObject.Scroll.BLOCK,
-              (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
-              LIMIT_Y/2);
-      resVal  .addText(this.name)
-              .addText(printCharacterType())
-              .addText(TextStyle.BOLD+"HP: "+
-                      TextStyle.RESET+ (getHp() >= MAX_HP / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
-                      + getHp()+TextStyle.RESET+"/"+MAX_HP).alignTextCenter()
-      ;
+        TextObject resVal = new TextObject(this.getImage(),
+                TextObject.Scroll.BLOCK,
+                (LIMIT_X - MAX_FIGHTERS) / MAX_FIGHTERS,
+                LIMIT_Y / 2);
+        resVal.addText(this.name)
+                .addText(printCharacterType())
+                .addText(TextStyle.BOLD + "HP: " +
+                        TextStyle.RESET + (getHp() >= MAX_HP / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
+                        + getHp() + TextStyle.RESET + "/" + MAX_HP).alignTextCenter()
+        ;
 
         return getAttributes(resVal).alignTextCenter();
 
     }
+
     private String printCharacterType() {
         return TextStyle.BOLD + getCharacterType() + TextStyle.RESET;
     }
 
     public String getCharacterType() {
-        return ((this instanceof com.ironhack.soutbattle.Characters.Warrior )? "WARRIOR" : "WIZARD");
+        return ((this instanceof com.ironhack.soutbattle.Characters.Warrior) ? "WARRIOR" : "WIZARD");
     }
 
 
-    public TextObject toFightTxtObj(){
-        TextObject resVal= new TextObject(this.getImage(),
+    public TextObject toFightTxtObj() {
+        TextObject resVal = new TextObject(this.getImage(),
                 TextObject.Scroll.BLOCK,
-                (LIMIT_X-MAX_FIGHTERS) / MAX_FIGHTERS,
+                (LIMIT_X - MAX_FIGHTERS) / MAX_FIGHTERS,
                 LIMIT_Y);
-        resVal  .addText(this.getName())
+        resVal.addText(this.getName())
                 .addText(printCharacterType())
         ;
 
@@ -147,16 +188,18 @@ public abstract class GameCharacter implements Attacker  {
     public abstract TextObject getVariableAttributes();
 
     abstract TextObject getAttributes(TextObject textObj);
+
     abstract TextObject getFixAttribute(TextObject txtObj);
 
 
     public boolean isPlayer() {
         return this.isPlayer;
     }
+
     abstract void recoverVarAttribute();
 
     public boolean isAlive() {
-        return hp>0;
+        return hp > 0;
     }
 
     public abstract boolean bonusRecovery(int playerBonus);

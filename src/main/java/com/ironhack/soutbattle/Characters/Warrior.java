@@ -6,6 +6,7 @@ import com.ironhack.soutbattle.ScreenManager.TextObjects.*;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.*;
 import net.datafaker.Faker;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
@@ -50,6 +51,7 @@ public class Warrior extends GameCharacter {
     //------------------------------------------------------------------------------------------------------------PRINT    /*
     //     * Set of methods used by ConsolePrinter to print GameCharacter objects
     //     */
+
 
     @Override
     public TextObject toFightTxtObj() {

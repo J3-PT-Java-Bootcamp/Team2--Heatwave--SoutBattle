@@ -13,9 +13,10 @@ public class GameData {
     public String[] graveyard;
     public String userName;
 //    public final com.google.gson.Gson gson;
-
+    public  ArrayList <String> namesList;
 
     GameData() {
+        this.namesList=new ArrayList<>();
     }
 
     public GameData serializeParties(ArrayList<Party> parties) {
@@ -65,4 +66,12 @@ public class GameData {
         this.userName = userName;
         return this;
     }
+
+
+
+
+
+
+
+
 }
