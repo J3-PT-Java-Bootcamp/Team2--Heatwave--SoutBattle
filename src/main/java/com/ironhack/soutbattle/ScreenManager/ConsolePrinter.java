@@ -170,10 +170,10 @@ public class ConsolePrinter {
                  charLimit , 1);
         }
         int objIndex = 0;
-        String backName=" : 0 --> Back To Menu";
+        String backName=" : 0 --> Back To Parties";
         txtObjs[0].addText(backName+BLANK_SPACE.repeat(charLimit - txtObjs[0].countValidCharacters(backName)-2)+BLANK_SPACE);
         for (int i = 1; i < parties.size()+1; i++) {
-            String name= parties.get(i-1).getName();
+            String name= parties.get(i-1).getName()+" win:"+ CColors.GREEN+parties.get(i-1).getWins()+TextStyle.RESET;
             if ( txtObjs[i/10].countValidCharacters(name)>=charLimit-14) {
                 txtObjs[i / 10].addText(" :" + (i >= 10 ? i : " " + i) + " --> "
                         + name.substring(0, charLimit - 13) + ".. ");
@@ -181,15 +181,17 @@ public class ConsolePrinter {
                 txtObjs[i / 10].addText(" :" + (i >= 10 ? i : " " + i) + " --> " + name
                         + BLANK_SPACE.repeat(charLimit - txtObjs[i/10].countValidCharacters(name)-10));
             }
+            txtObjs[i/10].colorizeAllText();
         }
         var finalTxtObj = new TextObject(HEADER,Scroll.BLOCK,LIMIT_X, LIMIT_Y);
         finalTxtObj.addText("------- PARTY SELECTION -------")
                 .addText(BLANK_SPACE.repeat(2))
-                .addText(BLANK_SPACE.repeat(2));
+                .addText(BLANK_SPACE.repeat(2))
+                .colorizeAllText();
         if (txtObjs.length > 1) finalTxtObj.addGroupAligned(txtObjs.length, LIMIT_X, txtObjs);
         else finalTxtObj.addText(txtObjs[0].alignTextRight()).alignTextCenter();
         clearScreen();
-        sendToQueue(finalTxtObj.alignTextTop().colorizeAllText().alignTextCenter());
+        sendToQueue(finalTxtObj.alignTextTop().alignTextCenter());
         sendToQueue(new TextObject("Select a party to play", Scroll.NO, LIMIT_X, LIMIT_Y)
                 .alignTextCenter().addText(CENTER_CARET));
 
@@ -225,7 +227,7 @@ public class ConsolePrinter {
     public GameCharacter chooseCharacter(Party party) {
         var fullTxtObj= new TextObject(HEADER, Scroll.BLOCK,LIMIT_X,LIMIT_Y)
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
-                .addText("---"+party.getName()+"---");
+                .addText("---  "+party.getName()+"  ---");
         var txtObjArr = new TextObject[MAX_FIGHTERS];
         for (int i = 0; i < MAX_FIGHTERS; i++) {
             txtObjArr[i] = new TextObject(party.getCharacter(i).isAlive()?("-" +
@@ -317,8 +319,15 @@ public class ConsolePrinter {
 
     private TextObject createFightScreenBase(TextObject player, TextObject enemy) throws Exception {
         var charLimit=LIMIT_X/3;
-        var res=new TextObject(HEADER,Scroll.BLOCK,LIMIT_X,LIMIT_Y)
-                .addText(FIGHT_TITLE.colorizeAllText());
+        var res=new TextObject(HEADER,Scroll.BLOCK,LIMIT_X,LIMIT_Y).colorizeAllText()
+                .addText(FIGHT_TITLE.colorizeAllText(
+                        CColors.BLUE,
+                        CColors.BRIGHT_BLUE,
+                        CColors.PURPLE,
+                        CColors.BRIGHT_PURPLE,
+                        CColors.BRIGHT_GREEN,
+                        CColors.GREEN
+                ));
 //        int remSize= LIMIT_Y-HEADER.getTotalHeight()-FIGHT_TITLE.getTotalHeight()-player.getTotalHeight()-1;
 //        for (int i = 0; i < remSize; i++) {
 //            res.addText(BLANK_SPACE.repeat(charLimit));

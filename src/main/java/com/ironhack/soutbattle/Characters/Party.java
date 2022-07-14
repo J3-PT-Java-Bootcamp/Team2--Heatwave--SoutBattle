@@ -54,7 +54,7 @@ public class Party {
         return wins;
     }
 
-    private Party addWin() {
+    public Party addWin() {
         this.wins++;
         return this;
     }

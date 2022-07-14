@@ -62,7 +62,7 @@ public class Warrior extends GameCharacter {
     public TextObject getVariableAttributes() {
         return new TextObject(TextStyle.BOLD+"HP: "+
                 TextStyle.RESET+ (getHp() >= getMAX_HP() / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
-                + getHp()+TextStyle.RESET+"/"+getMAX_HP() + "Stmn: "  + TextStyle.RESET + (stamina >= MAX_STAMINA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
+                + getHp()+TextStyle.RESET+"/"+getMAX_HP() + " Stmn: "  + TextStyle.RESET + (stamina >= MAX_STAMINA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                 + this.stamina + TextStyle.RESET + "/" + this.MAX_STAMINA,
                 Scroll.NO,
                 LIMIT_X / 3,

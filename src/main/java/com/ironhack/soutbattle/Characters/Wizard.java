@@ -61,7 +61,7 @@ public class Wizard extends GameCharacter {
     @Override
     TextObject getAttributes(TextObject textObj) {
         return textObj.addText("Intllignce: "+this.intelligence)
-                .addText( TextStyle.BOLD+"Mana: "
+                .addText( TextStyle.BOLD+" Mana: "
                         + TextStyle.RESET+ (mana >= MAX_MANA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                         +this.mana+ TextStyle.RESET+"/"+this.MAX_MANA);
     }

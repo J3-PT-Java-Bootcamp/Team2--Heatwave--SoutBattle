@@ -79,6 +79,7 @@ public class GameManager {
     //CREATES A NEWPARTY AND GOES TO playGame()
     public void createNewParty() throws Exception {
         this.parties.add(new Party(printer.newPartyScreen(), true));
+        saveData();
         try {
             playGame();
         } catch (GoBackException e) {
@@ -93,11 +94,18 @@ public class GameManager {
             this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
+
+            START:
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-                do{
                     currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
-                    if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone"))throw new GoBackException();//==>GO BACK index returns a null value
-                }while (currentPlayer==null);
+                while (currentPlayer==null){
+                    if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone")) {
+                        this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
+                        if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
+                        currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
+//                        break;// START;//REPLACE = throw new GoBackException();//==>GO BACK index returns a null value
+                    } else printer.chooseCharacter(playerParty);
+                };
                 currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
                 var report=new FightReport(printer,this,currentPlayer,currentEnemy);
                 do{
@@ -119,6 +127,7 @@ public class GameManager {
         printer.printGameOver(playerWins);
         //TODO Send dead characters to graveyard
         if (playerWins){
+            playerParty.addWin();
             playerParty.restoreParty(graveyard);
             //TODO heal survivors and recruit new characters
         }else{
