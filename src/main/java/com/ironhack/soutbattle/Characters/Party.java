@@ -146,10 +146,19 @@ public class Party {
      */
     public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
         var resArr = new ArrayList<GameCharacter>();
-        //TODO Create a method, check each character in party "isAlive" value
-        // if True heal() hp and recoverVarAttribute() for mana/Stamina recovery
-        // if not, send to graveyard(by adding them in "resArr" array)
-        //       delete from party & create a new random character in team.
+        GameCharacter currentChar;
+        for(int i = 0; i > graveyard.size(); i++){
+            currentChar = this.gameCharacterList.get(i);
+            if(currentChar.isAlive()){
+                currentChar.heal();
+                currentChar.recoverVarAttribute();
+            }
+            else{
+                this.gameCharacterList.remove(currentChar);
+                resArr.add(currentChar);
+                gameCharacterList.add(createRandomCharacter());
+            }
+        }
         graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
         return graveyard;
     }

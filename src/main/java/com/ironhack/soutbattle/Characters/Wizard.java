@@ -74,7 +74,7 @@ public class Wizard extends GameCharacter {
 //--------------------------------------------------------------------------------------------------------ATTACK_METHODS
     @Override
     public void attack(GameCharacter target, FightRound round) {
-        String attackName = null;//TODO Make throwFireball() y throwStaffHit() return the attack name string
+        String attackName = null;
         if (mana>=5){
             attackName=throwFireball(target);
         }else if (mana<5){
@@ -105,9 +105,12 @@ public class Wizard extends GameCharacter {
 
     @Override
     public boolean bonusRecovery(int playerBonus) {
-
-        //TODO METHOD THAT RECOVERS SOME RANDOM MANA playerBonus gets increased in every
-        // attack. This method is called after each round return tru if recovery is applied
+        Random randomPercent = new Random();
+       int random =  randomPercent.nextInt(0,10);
+       if(playerBonus + random > 20){
+           this.mana += randomPercent.nextInt(1,10);
+           return true;
+       }
         return false;
     }
 
