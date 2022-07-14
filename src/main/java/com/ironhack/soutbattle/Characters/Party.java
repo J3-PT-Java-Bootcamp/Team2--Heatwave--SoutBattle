@@ -145,21 +145,21 @@ public class Party {
      * @return
      */
     public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
-        var resArr = new ArrayList<GameCharacter>();
+//        var resArr = new ArrayList<GameCharacter>();
         GameCharacter currentChar;
-        for(int i = 0; i > graveyard.size(); i++){
+        for(int i = 0; i > gameCharacterList.size(); i++){
             currentChar = this.gameCharacterList.get(i);
             if(currentChar.isAlive()){
                 currentChar.heal();
                 currentChar.recoverVarAttribute();
             }
             else{
+                graveyard.add(currentChar);
                 this.gameCharacterList.remove(currentChar);
-                resArr.add(currentChar);
                 gameCharacterList.add(createRandomCharacter());
             }
         }
-        graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
+//        graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
         return graveyard;
     }
 

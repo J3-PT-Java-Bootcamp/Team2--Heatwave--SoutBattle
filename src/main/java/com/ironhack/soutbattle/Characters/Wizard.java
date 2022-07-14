@@ -33,7 +33,7 @@ public class Wizard extends GameCharacter {
         return mana;
     }
     public void setMana(int mana) {
-        this.mana = mana;
+        Math.min(this.mana +mana,MAX_MANA);
     }
     public int getIntelligence() {
         return intelligence;
@@ -108,7 +108,7 @@ public class Wizard extends GameCharacter {
         Random randomPercent = new Random();
        int random =  randomPercent.nextInt(0,10);
        if(playerBonus + random > 20){
-           this.mana += randomPercent.nextInt(1,10);
+           this.setMana(randomPercent.nextInt(1,10));
            return true;
        }
         return false;

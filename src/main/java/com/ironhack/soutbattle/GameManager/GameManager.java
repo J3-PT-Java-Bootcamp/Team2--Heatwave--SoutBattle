@@ -64,7 +64,9 @@ public class GameManager {
             switch (printer.showMenu(false)) {
                 case PLAY -> playGame();
                 case NEW_PARTY -> createNewParty();
-                case ABOUT ->  gameOver();            //  printer.readMe();
+                case ABOUT ->  {
+                    gameOver();            //  printer.readMe();
+                }
                 case MEMORIAL -> printer.showMemorial(graveyard);
                 case CALIBRATE -> printer.calibrateScreen();
                 case CLEAR_DATA -> clearAllData();
@@ -132,14 +134,12 @@ public class GameManager {
         //TODO Send dead characters to graveyard
         if (playerWins){
             playerParty.addWin();
-            playerParty.restoreParty(graveyard);
-            //TODO heal survivors and recruit new characters
+            this.graveyard=playerParty.restoreParty(graveyard);
         }else{
+            this.graveyard=this.playerParty.defeatParty(graveyard);
             this.parties.remove(playerParty);
             //Delete party from parties
         }
-        this.enemyParty=null;
-        this.playerParty=null;
         saveData();
         startMenu(printer);
 

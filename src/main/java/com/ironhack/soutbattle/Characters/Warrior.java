@@ -35,11 +35,6 @@ public class Warrior extends GameCharacter {
     public int getStamina() {
         return stamina;
     }
-
-    public void setStamina(int stamina) {
-        this.stamina = stamina;
-    }
-
     public int getStrength() {
         return strength;
     }
@@ -80,6 +75,10 @@ public class Warrior extends GameCharacter {
     @Override
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Strength: " + strength);
+    }
+
+    public void setStamina(int stmn) {
+        Math.min(this.stamina +stmn,MAX_STAMINA);
     }
 
     //----------------------------------------------------------------------------------------------------ATTACK_METHODS
