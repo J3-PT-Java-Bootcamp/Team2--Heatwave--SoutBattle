@@ -253,7 +253,7 @@ public class ConsolePrinter {
         try {
             clearScreen();
             sendToQueue(createFightScreenBase(report.getPlayerObject(),report.getEnemyObject()));
-            sendToQueue(createFightLine(report));
+            sendToQueue(createFightLine(report).setPrintSpeed(10));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -318,7 +318,7 @@ public class ConsolePrinter {
     private TextObject createFightScreenBase(TextObject player, TextObject enemy) throws Exception {
         var charLimit=LIMIT_X/3;
         var res=new TextObject(HEADER,Scroll.BLOCK,LIMIT_X,LIMIT_Y)
-                .addText(FIGHT_TITLE);
+                .addText(FIGHT_TITLE.colorizeAllText());
 //        int remSize= LIMIT_Y-HEADER.getTotalHeight()-FIGHT_TITLE.getTotalHeight()-player.getTotalHeight()-1;
 //        for (int i = 0; i < remSize; i++) {
 //            res.addText(BLANK_SPACE.repeat(charLimit));
@@ -341,7 +341,7 @@ public class ConsolePrinter {
         clearScreen();
         sendToQueue(playerWins?YOU_WIN.colorizeAllText():GAME_OVER.colorizeAllText(CColors.RED, CColors.PURPLE, CColors.BRIGHT_PURPLE));
         startPrint();
-        waitFor(2000);
+        waitFor(5000);
 ;    }
 
     public void goodBye(String userName) {

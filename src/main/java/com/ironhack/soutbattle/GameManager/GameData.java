@@ -21,7 +21,7 @@ public class GameData {
     public GameData serializeParties(ArrayList<Party> parties) {
         this.parties = new String[parties.size()][MAX_FIGHTERS + 1];
         for (int i = 0; i < parties.size(); i++) {
-            this.parties[i][0] = parties.get(i).getName();
+            this.parties[i][0] = parties.get(i).getName()+"//"+parties.get(i).getWins();
             for (int j = 1; j <= MAX_FIGHTERS; j++) {
                 this.parties[i][j] = (parties.get(i).getCharacter(j - 1).getCharacterType())
                         + "/CHARACTER/" + (new Gson().toJson(parties.get(i).getCharacter(j - 1)));

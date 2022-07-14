@@ -94,8 +94,10 @@ public class GameManager {
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-                currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
-                if(currentPlayer==null) throw new GoBackException();//==>GO BACK index returns a null value
+                do{
+                    currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
+                    if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone"))throw new GoBackException();//==>GO BACK index returns a null value
+                }while (currentPlayer==null);
                 currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
                 var report=new FightReport(printer,this,currentPlayer,currentEnemy);
                 do{

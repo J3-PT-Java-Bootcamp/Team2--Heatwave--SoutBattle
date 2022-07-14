@@ -16,6 +16,7 @@ public class Party {
     //    private GameManager.GameManager game;
     private final String name;
     private Boolean isPlayer;
+    private int wins;
 
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
@@ -28,6 +29,7 @@ public class Party {
             addCharacter(createRandomCharacter());
 
         }
+        this.wins=0;
     }
 
     /**Constructs a Party from a Json raw String[] and its Characters
@@ -35,8 +37,9 @@ public class Party {
      * @param rawData array of Character Json Strings(rawData[0] corresponds to Party.name
      */
     public Party(String[] rawData) {
-
-        this.name = rawData[0];
+        var aux= rawData[0].split("//");
+        this.name = aux[0];
+        this.wins= Integer.parseInt(aux[1]);
         this.isPlayer = true;
         gameCharacterList = new java.util.ArrayList<>();
         for (int i = 1; i < rawData.length; i++) {
@@ -46,6 +49,15 @@ public class Party {
         }
     }
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
+
+    public int getWins() {
+        return wins;
+    }
+
+    private Party addWin() {
+        this.wins++;
+        return this;
+    }
 
     public String getName() {
         return this.name;
