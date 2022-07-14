@@ -228,7 +228,8 @@ public class ConsolePrinter {
                 .addText("---"+party.getName()+"---");
         var txtObjArr = new TextObject[MAX_FIGHTERS];
         for (int i = 0; i < MAX_FIGHTERS; i++) {
-            txtObjArr[i] = new TextObject(party.getCharacter(i).isAlive()?("-" + i+1 + "-"):"RIP ",
+            txtObjArr[i] = new TextObject(party.getCharacter(i).isAlive()?("-" +
+                    (i+1) + "-"):"RIP ",
                     Scroll.BLOCK, (LIMIT_X / MAX_FIGHTERS) - 1, 1)
                     .alignTextCenter();
 
@@ -337,8 +338,11 @@ public class ConsolePrinter {
 
     }
     public void printGameOver(Boolean playerWins) {
-        //TODO print game over screen (model depends on player winning or not)
-    }
+        clearScreen();
+        sendToQueue(playerWins?YOU_WIN.colorizeAllText():GAME_OVER.colorizeAllText(CColors.RED, CColors.PURPLE, CColors.BRIGHT_PURPLE));
+        startPrint();
+        waitFor(2000);
+;    }
 
     public void goodBye(String userName) {
         clearScreen();

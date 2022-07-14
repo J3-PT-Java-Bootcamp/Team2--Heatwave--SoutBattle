@@ -68,7 +68,7 @@ public abstract class GameCharacter implements Attacker  {
      * @return TextObject with the proper image in ascii
      */
     public TextObject getImage(){
-        if(isAlive) return image;
+        if(isAlive()) return image;
         return ((int)(Math.random()*10)%2==0?TOMB:CROIX).alignTextCenter();
     }
 

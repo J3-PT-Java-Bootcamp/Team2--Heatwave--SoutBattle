@@ -116,15 +116,15 @@ public class GameManager {
         var playerWins= playerParty.hasMembersAlive();
         printer.printGameOver(playerWins);
         //TODO Send dead characters to graveyard
-        this.enemyParty=null;
         if (playerWins){
             playerParty.restoreParty(graveyard);
             //TODO heal survivors and recruit new characters
         }else{
             this.parties.remove(playerParty);
-            this.playerParty=null;
             //Delete party from parties
         }
+        this.enemyParty=null;
+        this.playerParty=null;
         saveData();
         startMenu(printer);
 
