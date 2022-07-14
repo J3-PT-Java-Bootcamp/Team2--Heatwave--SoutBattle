@@ -131,7 +131,7 @@ public class GameManager {
     private void gameOver() throws Exception {
         var playerWins= playerParty.hasMembersAlive();
         printer.printGameOver(playerWins);
-        //TODO Send dead characters to graveyard
+
         if (playerWins){
             playerParty.addWin();
             this.graveyard=playerParty.restoreParty(graveyard);

@@ -9,7 +9,7 @@ startMenu(){
 	printMenu();
 	switch(input.newLine();){
 		case SELECT-PARTY
-			//TODO save multiple partys? meanwhile could be simply PLAY with current party
+
 			playerParty=selectedParty OR loadedParty
 			startGame();
 		case NEW-PARTY
@@ -36,7 +36,7 @@ loadData(){
 	
 }
 saveData(){
-	//TODO
+
 }
 newGame(){
 	 enterPartyName(){

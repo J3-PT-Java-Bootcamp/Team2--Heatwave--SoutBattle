@@ -14,11 +14,12 @@ public class FightRound {
     private ArrayList<TextObject> playerStates;
     private ArrayList<TextObject> enemyStates;
     private String playerAttack,enemyAttack;
-    private FightReport report;
+    public FightReport report;
 
     public FightRound(GameCharacter player,GameCharacter enemy,FightReport report) {
         this.enemyStates=new java.util.ArrayList<>();
         this.playerStates=new java.util.ArrayList<>();
+        this.report=report;
         playerStates.add(player.getVariableAttributes());
         enemyStates.add(enemy.getVariableAttributes());
     }

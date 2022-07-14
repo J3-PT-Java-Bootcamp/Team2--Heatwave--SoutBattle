@@ -200,7 +200,7 @@ public class ConsolePrinter {
         int resVal=getIntFromInput(parties.toArray());
         parties.remove(parties.size()-1);
         if (resVal==0) return null;
-        return parties.get(resVal-1);//TODO CHANGE THIS METHOD TO ALLOW CANCEL AND NEW PARTY OPTION
+        return parties.get(resVal-1);
     }
 
     public boolean confirmationNeeded(String message) {
@@ -423,7 +423,7 @@ public class ConsolePrinter {
     }
 
     private void printAnimation() {
-        //TODO
+
         if (printQueue.get(0) instanceof DynamicLine) printAnimation((DynamicLine) pollNext());
     }
 
@@ -454,7 +454,7 @@ public class ConsolePrinter {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);//TODO report to log
+            throw new RuntimeException(e);
         }
     }
 

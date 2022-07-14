@@ -90,11 +90,7 @@ public abstract class GameCharacter implements Attacker  {
             die();
         }
     }
-@Deprecated
-//TODO manage deleting from list and moving to graveyard from Party class on restoreParty() method
-    public void deleteFromParty() {
-        System.out.println("Go home!");
-    }//FIXME Delete this method
+
     public boolean isCharacterAlive() {
 
        /* if (hp<=0) return false;
