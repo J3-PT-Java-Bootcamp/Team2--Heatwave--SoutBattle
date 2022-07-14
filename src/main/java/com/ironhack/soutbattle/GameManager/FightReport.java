@@ -40,7 +40,7 @@ public class FightReport {
         this.namePlayer = namePlayer;
     }
     public FightReport newRound(GameCharacter player,GameCharacter enemy){
-        roundsList.add(new FightRound(player,enemy));
+        roundsList.add(new FightRound(player,enemy,this));
         return this;
     }
     public FightRound getCurrentRound(){

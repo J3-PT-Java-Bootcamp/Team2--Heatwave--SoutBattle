@@ -162,6 +162,8 @@ public abstract class GameCharacter implements Attacker  {
     public boolean isAlive() {
         return hp>0;
     }
+
+    public abstract boolean bonusRecovery(int playerBonus);
 }
 
 

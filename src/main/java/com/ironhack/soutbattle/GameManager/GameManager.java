@@ -95,7 +95,6 @@ public class GameManager {
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
 
-            START:
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
                     currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
                 while (currentPlayer==null){
@@ -103,17 +102,22 @@ public class GameManager {
                         this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
                         if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
                         currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
-//                        break;// START;//REPLACE = throw new GoBackException();//==>GO BACK index returns a null value
                     } else printer.chooseCharacter(playerParty);
                 };
                 currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
                 var report=new FightReport(printer,this,currentPlayer,currentEnemy);
+                int playerBonus=0;
+                int enemyBonus=0;
                 do{
                     report.newRound(currentPlayer,currentEnemy);
                     currentPlayer.attack(currentEnemy,report.getCurrentRound());
                     currentEnemy.attack(currentPlayer,report.getCurrentRound());
+                    if(currentPlayer.bonusRecovery(playerBonus))playerBonus=0;
+
+                    if(currentEnemy.bonusRecovery(enemyBonus))enemyBonus =0;
                 }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
                 printer.printFight(report);
+
                 currentPlayer=null;
                 currentEnemy=null;
             }

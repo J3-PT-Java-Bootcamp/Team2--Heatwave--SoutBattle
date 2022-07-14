@@ -122,4 +122,11 @@ public class Warrior extends GameCharacter {
         this.stamina=MAX_STAMINA;
     }
 
+    @Override
+    public boolean bonusRecovery(int playerBonus) {
+        //TODO METHOD THAT RECOVERS SOME RANDOM MANA playerBonus gets increased in every
+        // attack. This method is called after each round return tru if recovery is applied
+        return false;
+    }
+
 }

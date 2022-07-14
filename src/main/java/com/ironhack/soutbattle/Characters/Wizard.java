@@ -50,7 +50,7 @@ public class Wizard extends GameCharacter {
         return new TextObject(TextStyle.BOLD+"HP: "+
                 TextStyle.RESET+ (getHp() >= getMAX_HP() / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                 + getHp()+TextStyle.RESET+"/"+getMAX_HP()
-                +TextStyle.BOLD+"Mana: " + TextStyle.RESET
+                +TextStyle.BOLD+" Mana: " + TextStyle.RESET
                 +(mana >= MAX_MANA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                 +this.mana+ TextStyle.RESET+"/"+this.MAX_MANA,
 
@@ -61,7 +61,7 @@ public class Wizard extends GameCharacter {
     @Override
     TextObject getAttributes(TextObject textObj) {
         return textObj.addText("Intllignce: "+this.intelligence)
-                .addText( TextStyle.BOLD+" Mana: "
+                .addText( TextStyle.BOLD+"Mana: "
                         + TextStyle.RESET+ (mana >= MAX_MANA / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                         +this.mana+ TextStyle.RESET+"/"+this.MAX_MANA);
     }
@@ -101,6 +101,14 @@ public class Wizard extends GameCharacter {
     @Override
     void recoverVarAttribute() {
         this.mana=MAX_MANA;
+    }
+
+    @Override
+    public boolean bonusRecovery(int playerBonus) {
+
+        //TODO METHOD THAT RECOVERS SOME RANDOM MANA playerBonus gets increased in every
+        // attack. This method is called after each round return tru if recovery is applied
+        return false;
     }
 
 }
