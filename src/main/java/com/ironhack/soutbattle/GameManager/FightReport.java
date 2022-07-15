@@ -12,18 +12,16 @@ public class FightReport {
     private TextObject imagePlayer,imageEnemy;
     private String namePlayer, nameEnemy;
     private final TextObject playerObject,enemyObject;
-    private ArrayList<FightRound> roundsList;
-    private ConsolePrinter printer;
+    private final ArrayList<FightRound> roundsList;
 
     GameManager game;
-    public FightReport(ConsolePrinter printer, GameManager game, GameCharacter player, GameCharacter enemy) {
+    public FightReport(GameManager game, GameCharacter player, GameCharacter enemy) {
         this.player=player;
         this.enemy=enemy;
         setImage(player.getImage(),enemy.getImage());
         setName(player.getName(),enemy.getName());
 
         roundsList = new ArrayList<>();
-        this.printer = printer;
         this.game = game;
 
         playerObject = player.toFightTxtObj();

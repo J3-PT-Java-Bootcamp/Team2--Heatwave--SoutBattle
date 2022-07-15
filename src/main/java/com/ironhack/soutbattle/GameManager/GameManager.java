@@ -11,7 +11,6 @@ import net.datafaker.Faker;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 
 import static com.ironhack.soutbattle.GameManager.RomanNumber.toRoman;
 
@@ -20,8 +19,7 @@ public class GameManager {
     private final ConsolePrinter printer;
     Gson gson;
     private ArrayList<Party> parties;
-    private Party playerParty, enemyParty;
-    private GameCharacter currentPlayer, currentEnemy;
+    private Party playerParty;
     private GameData gameData;
     private String userName;
     public static java.util.HashMap<String,Integer> usedNames;
@@ -61,14 +59,9 @@ public class GameManager {
         }
         return name;
     }
-
-    public void addToGraveyard(GameCharacter gameCharacter) {
-        graveyard.add(gameCharacter);
-    }
-
 //-------------------------------------------------------------------------------------------------------------GAME_FLOW
 
-    public void startGame() throws Exception {
+    public void startGame() {
         startMenu(printer);
     }
     //START MENU LOOP, ANY EXCEPTION WILL RERUN THIS FUNCTION
@@ -78,9 +71,8 @@ public class GameManager {
             switch (printer.showMenu(false)) {
                 case PLAY -> playGame();
                 case NEW_PARTY -> createNewParty();
-                case ABOUT ->  {
-                    gameOver();            //  printer.readMe();
-                }
+                case ABOUT -> gameOver();            //  printer.readMe();
+
                 case MEMORIAL -> printer.showMemorial(graveyard);
                 case CALIBRATE -> printer.calibrateScreen();
                 case CLEAR_DATA -> clearAllData();
@@ -110,45 +102,41 @@ public class GameManager {
             this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
             playerParty.restoreParty(graveyard,false);
-            this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
+            com.ironhack.soutbattle.Characters.Party enemyParty = new com.ironhack.soutbattle.Characters.Party(net.datafaker.Faker.instance().rockBand().name(), false);//Create random enemyParty
 
-            while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
-                    currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
-                while (currentPlayer==null){
+            while (playerParty.hasMembersAlive()&& enemyParty.hasMembersAlive()){
+                com.ironhack.soutbattle.Characters.GameCharacter currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
+                while (currentPlayer ==null){
                     if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone")) {
                         this.playerParty.restoreParty(graveyard,false);
                         this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
                         if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
                         currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
                     } else printer.chooseCharacter(playerParty);
-                };
-                currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
-                var report=new FightReport(printer,this,currentPlayer,currentEnemy);
+                }
+                com.ironhack.soutbattle.Characters.GameCharacter currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
+                var report=new FightReport(this, currentPlayer, currentEnemy);
                 int playerBonus=0;
                 int enemyBonus=0;
                 do{
-                    report.newRound(currentPlayer,currentEnemy);
+                    report.newRound(currentPlayer, currentEnemy);
                     currentPlayer.attack(currentEnemy,report.getCurrentRound());
                     currentEnemy.attack(currentPlayer,report.getCurrentRound());
                     if(currentPlayer.bonusRecovery(playerBonus))playerBonus=0;
                     else playerBonus++;
                     if(currentEnemy.bonusRecovery(enemyBonus))enemyBonus =0;
                     else enemyBonus++;
-                }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
+                }while (currentPlayer.isCharacterAlive()&& currentEnemy.isCharacterAlive());
                 printer.printFight(report);
                 if (currentPlayer.isCharacterAlive()) currentPlayer.healPartially();
                 else currentEnemy.healPartially();
-
-
-                currentPlayer=null;
-                currentEnemy=null;
             }
 
             gameOver();
         }
     }
     //Executes logic before game ends, after it goues to startMenu() again
-    private void gameOver() throws Exception {
+    private void gameOver() {
         var playerWins= playerParty.hasMembersAlive();
         printer.printGameOver(playerWins);
 
@@ -165,7 +153,7 @@ public class GameManager {
 
     }
 
-    private void closeGame() throws Exception {
+    private void closeGame() {
         if (printer.confirmationNeeded("Do you want to close game?")) {
             printer.goodBye(userName);
             System.exit(0);
@@ -204,7 +192,7 @@ public class GameManager {
         return gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName).setUsedNames(usedNames);
     }
 
-    private void clearAllData() throws Exception {
+    private void clearAllData() {
         if (printer.confirmationNeeded("Are you sure to clear all saved data? ")) {
             this.userName = null;
             this.parties = new ArrayList<>();
