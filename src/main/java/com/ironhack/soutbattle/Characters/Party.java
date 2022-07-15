@@ -147,7 +147,7 @@ public class Party {
     public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
 //        var resArr = new ArrayList<GameCharacter>();
         GameCharacter currentChar;
-        for(int i = 0; i > gameCharacterList.size(); i++){
+        for(int i = 0; i < gameCharacterList.size(); i++){
             currentChar = this.gameCharacterList.get(i);
             if(currentChar.isAlive()){
                 currentChar.heal();
@@ -159,7 +159,6 @@ public class Party {
                 gameCharacterList.add(createRandomCharacter());
             }
         }
-//        graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
         return graveyard;
     }
 

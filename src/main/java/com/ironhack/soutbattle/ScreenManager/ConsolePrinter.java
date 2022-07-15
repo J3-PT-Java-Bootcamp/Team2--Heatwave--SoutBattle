@@ -161,7 +161,7 @@ public class ConsolePrinter {
      * @return Party chosen;
      */
     public Party chooseParty(ArrayList<Party> parties) {
-        int col = (int) Math.ceil(parties.size() / 10.0);
+        int col = (int) Math.ceil((parties.size()+1 )/ 10.0);
         int charLimit=  (int) Math.floor(col>2?LIMIT_X / col:LIMIT_X/2);
         TextObject[] txtObjs = new TextObject[col];
         for (int i = 0; i < txtObjs.length; i++) {
