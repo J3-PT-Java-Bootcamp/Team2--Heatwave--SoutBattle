@@ -123,6 +123,7 @@ public class Party {
      * @return new Character
      */
     private GameCharacter createRandomCharacter() {
+
         Random rand = new Random();
         return (rand.nextBoolean() ? new Wizard(rand,this.isPlayer) : new Warrior(rand,this.isPlayer));
     }
