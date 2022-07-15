@@ -26,6 +26,7 @@ public class Party {
         this.isPlayer = isPlayer;
         gameCharacterList = new ArrayList<>();
         while (!isFull()) {
+
             addCharacter(createRandomCharacter());
 
         }
@@ -155,8 +156,7 @@ public class Party {
             }
             else{
                 graveyard.add(currentChar);
-                this.gameCharacterList.remove(currentChar);
-                gameCharacterList.add(createRandomCharacter());
+                this.gameCharacterList.set(i,createRandomCharacter());
             }
         }
         return graveyard;

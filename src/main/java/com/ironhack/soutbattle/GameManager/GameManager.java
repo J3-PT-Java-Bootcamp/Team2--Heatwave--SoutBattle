@@ -13,6 +13,8 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
+import static com.ironhack.soutbattle.GameManager.RomanNumber.toRoman;
+
 public class GameManager {
     private ArrayList<GameCharacter> graveyard;
     private final ConsolePrinter printer;
@@ -22,7 +24,7 @@ public class GameManager {
     private GameCharacter currentPlayer, currentEnemy;
     private GameData gameData;
     private String userName;
-
+    public static java.util.HashMap<String,Integer> usedNames;
     //-----------------------------------------------------------------------------------------------------------CONSTRUCTOR
     public GameManager() {
         gson = new GsonBuilder().create();
@@ -34,18 +36,30 @@ public class GameManager {
             loadData();
             printer.helloUser(userName);
         } catch (Exception e) {
+            usedNames=new java.util.HashMap<>();
             this.gameData = new GameData();
             this.userName = printer.askUserName();
             printer.welcomeNewUser();
             saveData();
         }
         if (this.userName == null) {
+            usedNames=new java.util.HashMap<>();
             this.gameData = new GameData();
             this.userName = printer.askUserName();
             printer.welcomeNewUser();
 
             saveData();
         }
+    }
+
+    public static String checkName(String name) {
+        if(usedNames.containsKey(name)) {
+            usedNames.put(name, usedNames.get(name) + 1);
+            name+=toRoman(usedNames.get(name));
+        }else {
+            usedNames.put(name,1);
+        }
+        return name;
     }
 
     public void addToGraveyard(GameCharacter gameCharacter) {
@@ -95,12 +109,14 @@ public class GameManager {
         else {
             this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
+            playerParty.restoreParty(graveyard);
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
 
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
                     currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
                 while (currentPlayer==null){
                     if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone")) {
+                        this.playerParty.restoreParty(graveyard);
                         this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
                         if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
                         currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
@@ -119,6 +135,9 @@ public class GameManager {
                     if(currentEnemy.bonusRecovery(enemyBonus))enemyBonus =0;
                 }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
                 printer.printFight(report);
+                if (currentPlayer.isCharacterAlive()) currentPlayer.healPartially();
+                else currentEnemy.healPartially();
+
 
                 currentPlayer=null;
                 currentEnemy=null;
@@ -160,6 +179,7 @@ public class GameManager {
         this.gameData = gson.fromJson(reader, GameData.class);
         this.userName = gameData.userName;
         this.parties = gameData.deserializeParties();
+        usedNames=gameData.usedNames;
         graveyard = gameData.deserializeGraveyard();
 
 
@@ -180,7 +200,7 @@ public class GameManager {
     }
 
     private GameData updateGameData() {
-        return gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName);
+        return gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName).setUsedNames(usedNames);
     }
 
     private void clearAllData() throws Exception {

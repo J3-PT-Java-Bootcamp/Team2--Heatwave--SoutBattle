@@ -111,42 +111,6 @@ public abstract class GameCharacter implements Attacker {
     /*
      * Set of methods used by ConsolePrinter to print GameCharacter objects
      */
-
-    public ArrayList<String> checkName(ArrayList<String> nameList) {
-
-        int counter = 0;
-        for (String name : nameList) {
-            if (name.contains(this.name)) {
-                counter++;
-            }
-        }
-        switch (counter) {
-            case (1): {
-                this.name += "II";
-                break;
-            }
-            case (2): {
-                this.name += "III";
-                break;
-            }
-            case (3): {
-                this.name += "IV";
-                break;
-            }
-            case (4): {
-                this.name += "V";
-                break;
-            }
-            case (5): {
-                this.name += "VI";
-                break;
-            }
-        }
-        nameList.add(this.name);
-        return nameList;
-    }
-
-
     public TextObject toTextObject() {
         TextObject resVal = new TextObject(this.getImage(),
                 TextObject.Scroll.BLOCK,
@@ -158,15 +122,11 @@ public abstract class GameCharacter implements Attacker {
                         TextStyle.RESET + (getHp() >= MAX_HP / 2 ? CColors.BRIGHT_GREEN : CColors.BRIGHT_RED)
                         + getHp() + TextStyle.RESET + "/" + MAX_HP).alignTextCenter()
         ;
-
         return getAttributes(resVal).alignTextCenter();
-
     }
-
     private String printCharacterType() {
         return TextStyle.BOLD + getCharacterType() + TextStyle.RESET;
     }
-
     public String getCharacterType() {
         return ((this instanceof com.ironhack.soutbattle.Characters.Warrior) ? "WARRIOR" : "WIZARD");
     }
@@ -203,6 +163,8 @@ public abstract class GameCharacter implements Attacker {
     }
 
     public abstract boolean bonusRecovery(int playerBonus);
+
+    public abstract void healPartially();
 }
 
 

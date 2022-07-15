@@ -13,10 +13,10 @@ public class GameData {
     public String[] graveyard;
     public String userName;
 //    public final com.google.gson.Gson gson;
-    public  ArrayList <String> namesList;
+    public java.util.HashMap<String,Integer> usedNames;
 
     GameData() {
-        this.namesList=new ArrayList<>();
+        this.usedNames=new java.util.HashMap<>();
     }
 
     public GameData serializeParties(ArrayList<Party> parties) {
@@ -67,11 +67,12 @@ public class GameData {
         return this;
     }
 
+    GameData setUsedNames(java.util.HashMap<String, Integer> usedNames) {
+        this.usedNames = usedNames;
+        return this;
+    }
 
-
-
-
-
-
-
+    private java.util.HashMap<String, Integer> getUsedNames() {
+        return usedNames;
+    }
 }

@@ -116,14 +116,23 @@ public class ConsolePrinter {
     }
 
     public void showMemorial(ArrayList<GameCharacter>graveyard) {
-        var finalTxtObj= new TextObject(IN_MEMORIAM, Scroll.BLOCK,LIMIT_X,LIMIT_Y);
-        for (int i = 0; i < graveyard.size() ; i++) {
-            finalTxtObj.addText(graveyard.get(i).toTextObject());
+        sendToQueue( new TextObject(IN_MEMORIAM, Scroll.BLOCK,LIMIT_X,LIMIT_Y).colorizeAllText(CColors.BRIGHT_BLACK,
+                CColors.WHITE,
+                CColors.BRIGHT_PURPLE,
+                CColors.PURPLE,
+                CColors.BLUE,
+                CColors.WHITE));
+        int tombLines= Math.ceilDiv(graveyard.size(),5);
+        for (int i = 0; i < tombLines; i++) {
+
+            var arr = new ArrayList<TextObject>();
+            for (int j = 0; j < (i == tombLines - 1 ? graveyard.size() % 5 : 5); j++) {
+                arr.add(graveyard.get(i+j).toFightTxtObj().alignTextCenter());
+            }
+            sendToQueue(new TextObject(TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
+                    .addGroupAligned(5,LIMIT_X,arr.toArray(new TextObject[0])).alignTextCenter());
         }
-        finalTxtObj.addText(CANDLES);
-        finalTxtObj.alignTextCenter();
-        finalTxtObj.setPrintSpeed(6);
-        sendToQueue(finalTxtObj.getResizedText(LIMIT_X,LIMIT_Y));
+        sendToQueue(CANDLES.alignTextCenter());
         startPrint();
 
     }
@@ -225,6 +234,7 @@ public class ConsolePrinter {
      * @return GameCharacter chosen;
      */
     public GameCharacter chooseCharacter(Party party) {
+        clearScreen();
         var fullTxtObj= new TextObject(HEADER, Scroll.BLOCK,LIMIT_X,LIMIT_Y)
                 .addText("------ Choose Fighter ------").stylizeAllText(TextStyle.BOLD)
                 .addText("---  "+party.getName()+"  ---");
@@ -238,7 +248,7 @@ public class ConsolePrinter {
         }
         fullTxtObj.addGroupAligned(MAX_FIGHTERS, LIMIT_X, txtObjArr).colorizeAllText()
                 .addGroupAligned(MAX_FIGHTERS,LIMIT_X,party.toTextObject())
-       .addText(BLANK_SPACE).addText("Enter a Number // [0] TO CANCEL ") .alignTextCenter()
+       .addText(BLANK_SPACE).alignTextTop().addText("Enter a Number // [0] TO CANCEL ") .alignTextCenter()
                 .addText(BLANK_SPACE).addText(CENTER_CARET);
         sendToQueue(fullTxtObj);
         startPrint();

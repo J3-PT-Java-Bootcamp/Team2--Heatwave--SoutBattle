@@ -1,6 +1,7 @@
 package com.ironhack.soutbattle.Characters;
 
 import com.ironhack.soutbattle.GameManager.FightRound;
+import com.ironhack.soutbattle.GameManager.GameManager;
 import com.ironhack.soutbattle.ScreenManager.ColorFactory;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import net.datafaker.Faker;
@@ -25,8 +26,11 @@ public class Wizard extends GameCharacter {
     }
 
     public Wizard(Random rand, Boolean isPlayer) {
-        super(Faker.instance().witcher().character(), rand.nextInt(50, 100), WIZARD_IMG, isPlayer);
-        this.intelligence = rand.nextInt(1, 50);
+        super(GameManager.checkName(net.datafaker.Faker.instance().witcher().character()),
+                rand.nextInt(50, 100),
+                WIZARD_IMG,
+                isPlayer);
+        this.intelligence = rand.nextInt(5, 50);
         this.MAX_MANA = rand.nextInt(10, 50);
         this.mana = MAX_MANA;
     }
@@ -137,5 +141,12 @@ public class Wizard extends GameCharacter {
         }
         return false;
     }
-
+    @Override
+    public void healPartially() {
+        Random rand =new Random();
+        int factor= getMAX_HP()/100;
+        this.hp+=rand.nextInt(1,3) *factor;
+        factor=MAX_MANA/100;
+        this.mana+=rand.nextInt(1,5)*factor;
+    }
 }
