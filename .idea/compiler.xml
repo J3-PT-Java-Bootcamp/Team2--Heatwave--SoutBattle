@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Team2--Heatwave--SoutBattle_12_07" />
+        <module name="Team2--Heatwave--SoutBattle_f" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Team2--Heatwave--SoutBattle_12_07" target="18" />
+      <module name="Team2--Heatwave--SoutBattle_f" target="18" />
     </bytecodeTargetLevel>
   </component>
 </project>
