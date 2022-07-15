@@ -1,6 +1,7 @@
 package com.ironhack.soutbattle.Characters;
 
 import com.google.gson.Gson;
+import com.ironhack.soutbattle.GameManager.GameManager;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 import java.util.ArrayList;
@@ -20,14 +21,14 @@ public class Party {
 
 
     //-------------------------------------------------------------------------------------------------------CONSTRUCTOR
-    public Party(String name, Boolean isPlayer) {
+    public Party(String name, Boolean isPlayer, ArrayList <String> nameList) {
 //        this.game = game;
         this.name = name;
         this.isPlayer = isPlayer;
         gameCharacterList = new ArrayList<>();
         while (!isFull()) {
             addCharacter(createRandomCharacter());
-
+            gameCharacterList.get(gameCharacterList.size() -1);
         }
         this.wins=0;
     }
@@ -144,7 +145,7 @@ public class Party {
      *
      * @return
      */
-    public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
+    public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard, ArrayList<String> namesList){
 //        var resArr = new ArrayList<GameCharacter>();
         GameCharacter currentChar;
         for(int i = 0; i > gameCharacterList.size(); i++){
@@ -156,7 +157,10 @@ public class Party {
             else{
                 graveyard.add(currentChar);
                 this.gameCharacterList.remove(currentChar);
-                gameCharacterList.add(createRandomCharacter());
+                GameCharacter aux = createRandomCharacter();
+
+                gameCharacterList.add(aux);
+                GameManager.checkName(aux);
             }
         }
 //        graveyard.addAll(resArr); //<---- characters added to "resArr" will go to graveyard.
