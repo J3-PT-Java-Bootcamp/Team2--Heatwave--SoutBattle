@@ -47,7 +47,7 @@ public class Warrior extends GameCharacter {
     }
 
     public void setStrength(int strength) {
-        this.strength = strength;
+        this.strength = (Math.min(strength,10));
     }
 
     //------------------------------------------------------------------------------------------------------------PRINT    /*
@@ -137,5 +137,10 @@ public class Warrior extends GameCharacter {
         this.hp+=rand.nextInt(1,3) *factor;
         factor=MAX_STAMINA/100;
         this.stamina+=rand.nextInt(1,5)*factor;
+    }
+
+    @Override
+    public void upgrade() {
+        this.setStrength(this.getStrength()+1);
     }
 }

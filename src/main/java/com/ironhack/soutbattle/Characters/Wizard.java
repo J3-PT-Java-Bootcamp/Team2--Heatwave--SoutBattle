@@ -49,7 +49,7 @@ public class Wizard extends GameCharacter {
     }
 
     public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
+        this.intelligence = Math.min(intelligence,50);
     }
 
     //-------------------------------------------------------------------------------------------------------------PRINT
@@ -148,5 +148,10 @@ public class Wizard extends GameCharacter {
         this.hp+=rand.nextInt(1,3) *factor;
         factor=MAX_MANA/100;
         this.mana+=rand.nextInt(1,5)*factor;
+    }
+
+    @Override
+    public void upgrade() {
+        this.setIntelligence(this.getIntelligence()+5);
     }
 }

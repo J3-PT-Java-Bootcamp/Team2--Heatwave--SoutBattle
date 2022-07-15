@@ -165,6 +165,7 @@ public abstract class GameCharacter implements Attacker {
     public abstract boolean bonusRecovery(int playerBonus);
 
     public abstract void healPartially();
+    public abstract void upgrade();
 }
 
 

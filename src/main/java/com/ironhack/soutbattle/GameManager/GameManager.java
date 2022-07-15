@@ -109,14 +109,14 @@ public class GameManager {
         else {
             this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
             if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
-            playerParty.restoreParty(graveyard);
+            playerParty.restoreParty(graveyard,false);
             this.enemyParty = new Party(Faker.instance().rockBand().name(), false);//Create random enemyParty
 
             while (playerParty.hasMembersAlive()&&enemyParty.hasMembersAlive()){
                     currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
                 while (currentPlayer==null){
                     if(printer.confirmationNeeded("Do you want to exit current battle?\n Damage on "+playerParty.getName()+" party won't be undone")) {
-                        this.playerParty.restoreParty(graveyard);
+                        this.playerParty.restoreParty(graveyard,false);
                         this.playerParty = printer.chooseParty(parties);//RETURNS THE CHOSEN PARTY
                         if (this.playerParty==null) throw new GoBackException();//==>GO BACK index returns a null value
                         currentPlayer = printer.chooseCharacter(playerParty);//RETURNS CHOSEN CHARACTER
@@ -131,8 +131,9 @@ public class GameManager {
                     currentPlayer.attack(currentEnemy,report.getCurrentRound());
                     currentEnemy.attack(currentPlayer,report.getCurrentRound());
                     if(currentPlayer.bonusRecovery(playerBonus))playerBonus=0;
-
+                    else playerBonus++;
                     if(currentEnemy.bonusRecovery(enemyBonus))enemyBonus =0;
+                    else enemyBonus++;
                 }while (currentPlayer.isCharacterAlive()&&currentEnemy.isCharacterAlive());
                 printer.printFight(report);
                 if (currentPlayer.isCharacterAlive()) currentPlayer.healPartially();
@@ -153,7 +154,7 @@ public class GameManager {
 
         if (playerWins){
             playerParty.addWin();
-            this.graveyard=playerParty.restoreParty(graveyard);
+            this.graveyard=playerParty.restoreParty(graveyard,playerWins);
         }else{
             this.graveyard=this.playerParty.defeatParty(graveyard);
             this.parties.remove(playerParty);

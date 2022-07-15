@@ -9,6 +9,7 @@ import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scrol
 public class PrinterConstants {
     public final static int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
     public final static String CENTER_CARET = BLANK_SPACE.repeat(LIMIT_X / 2);
+    public final static int FIGHT_SPEED=6;
     public final static String GAME_NAME="S.OUT.Battle";
     public final static TextObject HEADER=new TextObject("=".repeat(LIMIT_X)+"\n"
             +"-".repeat(LIMIT_X-GAME_NAME.length())+GAME_NAME+"\n"+"=".repeat(LIMIT_X),

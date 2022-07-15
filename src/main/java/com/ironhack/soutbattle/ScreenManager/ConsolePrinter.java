@@ -130,7 +130,7 @@ public class ConsolePrinter {
                 arr.add(graveyard.get(i+j).toFightTxtObj().alignTextCenter());
             }
             sendToQueue(new TextObject(TextObject.Scroll.BLOCK,LIMIT_X,LIMIT_Y)
-                    .addGroupAligned(5,LIMIT_X,arr.toArray(new TextObject[0])).alignTextCenter());
+                    .addGroupAligned(5,LIMIT_X,arr.toArray(new TextObject[0])).alignTextCenter().setPrintSpeed(1));
         }
         sendToQueue(CANDLES.alignTextCenter());
         startPrint();
@@ -265,7 +265,7 @@ public class ConsolePrinter {
         try {
             clearScreen();
             sendToQueue(createFightScreenBase(report.getPlayerObject(),report.getEnemyObject()));
-            sendToQueue(createFightLine(report).setPrintSpeed(10));
+            sendToQueue(createFightLine(report).setPrintSpeed(FIGHT_SPEED));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -317,8 +317,7 @@ public class ConsolePrinter {
         return resLine;
     }
 
-    @org.jetbrains.annotations.NotNull
-    private String constructResultTextFromRound(int charLimit, com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine resLine, String player, String enemy, String msg) {
+    private String constructResultTextFromRound(int charLimit, DynamicLine resLine, String player, String enemy, String msg) {
         int count=(charLimit - resLine.countValidCharacters(msg)) / 2;
         int rest=(charLimit - resLine.countValidCharacters(msg)) %2;
         return  BLANK_SPACE.repeat(charLimit - resLine.countValidCharacters(player))+player
@@ -351,10 +350,6 @@ public class ConsolePrinter {
         }
         res.addText(BLANK_SPACE);
         return res;
-    }
-    private TextObject createFightColumns(String player,String message,TextObject enemy){
-        return new TextObject(Scroll.BLOCK,LIMIT_X,1);
-
     }
     public void printGameOver(Boolean playerWins) {
         clearScreen();
@@ -430,18 +425,6 @@ public class ConsolePrinter {
                 }
             }
         }
-    }
-
-    private void printAnimation() {
-
-        if (printQueue.get(0) instanceof DynamicLine) printAnimation((DynamicLine) pollNext());
-    }
-
-    private void printAnimation(DynamicLine dynLine) {
-        do {
-            System.out.print(DELETE_CURRENT_LINE + dynLine.poll());
-//                waitFor(dynLine.getDelta());
-        } while (dynLine.hasText());
     }
 
     public void sendToQueue(TextObject txtObj) {

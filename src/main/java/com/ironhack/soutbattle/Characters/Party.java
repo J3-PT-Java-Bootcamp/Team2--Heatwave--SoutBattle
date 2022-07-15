@@ -145,7 +145,7 @@ public class Party {
      *
      * @return
      */
-    public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard){
+    public ArrayList<GameCharacter> restoreParty(ArrayList<GameCharacter> graveyard,boolean playerWins){
 //        var resArr = new ArrayList<GameCharacter>();
         GameCharacter currentChar;
         for(int i = 0; i < gameCharacterList.size(); i++){
@@ -153,6 +153,7 @@ public class Party {
             if(currentChar.isAlive()){
                 currentChar.heal();
                 currentChar.recoverVarAttribute();
+                if(playerWins)currentChar.upgrade();
             }
             else{
                 graveyard.add(currentChar);
