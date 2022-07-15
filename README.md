@@ -11,12 +11,13 @@
 <p text-align center >Es un proyecto creado por el equipo HEATWAVE para dar a conocer un nuevo juego que trata de realizar batallas entre dos equipos(uno creado por el usuario
 y otro que se crea automaticamente).</p>
 
-<h3>INTRO --> </h3>
+<h3><u>INTRO</u> --> </h3>
 <p>Antes de poder escojer ninguna de las opciones del menu, aparece una pantalla con un rectangulo azul para que puedas ajustar la pantalla de la consola para no perderte ningun
 grafico del juego. Te salta un mensaje para que puedas escribir tu nombre para seguir y personalizar la partida.
 En cuanto das 2 intros el programa muestra unos graficos (HEATWAVE presents SOUTBATTLE)y da la bienvenida "Welcome name" seguidamente aparece la pantalla del menu con las
 diferentes opciones.</p>
 
+<h3><u>MENU</u> --> </h3>
 <h4>0 --> Play Game</h4>
 <p>Para empezar a Jugar al SoutBattle en el menu debes dirigirte a "Play Game(0)": Esta pestaña te permitira crear un nuevo Party (-->Party Selection) Este equipo sera formado
 por 5 "guerreros" escojidos aleatoriamente entre la clase Warrior y Wizars. Se haran las rondas necesarias para que uno de los quipos pierda (usuario o jugador). En cada ronda se
@@ -48,8 +49,8 @@ te lleva de vuelta al menu.</p>
 ## Technologies
 ***
 A list of technologies used within the project:
-* [Technologie name]: Java Versión 18.0
-* [Technologie name]: Maven
+* Java Versión 18.0
+* Maven
 * [Library name] net.datafaker: Version 1.4.0
 * [Library name] com.google.code.gson: Version 2.9.0
 * [Library name] com.indvd00m.ascii.render: Version 2.2.0
@@ -60,8 +61,6 @@ A list of technologies used within the project:
 ## Installation
 ***
 You only can play with Console. No need an installation.
-
-
 
 
 ## Collaboration
