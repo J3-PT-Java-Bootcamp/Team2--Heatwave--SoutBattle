@@ -7,7 +7,6 @@ import com.ironhack.soutbattle.ScreenManager.TextObjects.*;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.*;
 import net.datafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.*;
@@ -38,10 +37,6 @@ public class Warrior extends GameCharacter {
     }
 
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
-    public int getStamina() {
-        return stamina;
-    }
-
     public int getStrength() {
         return strength;
     }
@@ -50,13 +45,6 @@ public class Warrior extends GameCharacter {
         this.strength = (Math.min(strength,10));
     }
 
-    //------------------------------------------------------------------------------------------------------------PRINT    /*
-    //     * Set of methods used by ConsolePrinter to print GameCharacter objects
-    //     */
-    @Override
-    public TextObject toFightTxtObj() {
-        return super.toFightTxtObj();
-    }
     @Override
     public TextObject getVariableAttributes() {
         return new TextObject(TextStyle.BOLD + "HP: " +
@@ -78,9 +66,6 @@ public class Warrior extends GameCharacter {
     @Override
     TextObject getFixAttribute(TextObject txtObj) {
         return txtObj.addText("Strength: " + strength);
-    }
-    public void setStamina(int stmn) {
-        Math.min(this.stamina + stmn, MAX_STAMINA);
     }
 
     //----------------------------------------------------------------------------------------------------ATTACK_METHODS

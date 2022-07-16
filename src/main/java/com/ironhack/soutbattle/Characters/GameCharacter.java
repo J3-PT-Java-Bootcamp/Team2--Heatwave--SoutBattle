@@ -13,10 +13,9 @@ public abstract class GameCharacter implements Attacker {
     protected int damage;
     //--------------------------------------------------------------------------------------------------------ATTRIBUTES
     private final UUID id;
-    private String name;
+    private final String name;
     public int hp;
     private final int MAX_HP;
-    private boolean isAlive;
     private final TextObject image;
     private final boolean isPlayer;
 
@@ -28,23 +27,16 @@ public abstract class GameCharacter implements Attacker {
         this.hp = hp;
         this.MAX_HP = hp;
         this.image = image;
-        this.isAlive = true;
     }
 
     @Deprecated
-    public GameCharacter(java.util.UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image, boolean isAlive, boolean isPlayer) {
+    public GameCharacter(java.util.UUID id, String name, int hp, ArrayList<GameCharacter> partyList, TextObject image, boolean isPlayer) {
         this.id = id;
         this.name = name;
         this.hp = hp;
         this.MAX_HP = hp;
         this.image = image;
-        this.isAlive = isAlive;
         this.isPlayer = isPlayer;
-    }
-
-    //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
-    public UUID getId() {
-        return id;
     }
 
     public String getName() {
@@ -58,7 +50,7 @@ public abstract class GameCharacter implements Attacker {
     /**
      * Modifies current HP by adding value (could be negative)
      *
-     * @param hp
+     * @param hp to be increased
      */
     public void modifyHp(int hp) {
         this.hp += hp;
@@ -80,11 +72,6 @@ public abstract class GameCharacter implements Attacker {
 
 //--------------------------------------------------------------------------------------------STARTS METHODS CHARACTER
 
-    // DIE method just turns isAlive flag to false, but keeps character in Party until fights end
-    public void die() {
-        this.isAlive = false;
-    }
-
     // HEAL
     public void heal() {
         hp = MAX_HP;
@@ -93,16 +80,9 @@ public abstract class GameCharacter implements Attacker {
     //HURT
     public void hurt(int damage) {
         hp = hp - damage;
-        if (!isCharacterAlive()) {
-            die();
-        }
     }
 
     public boolean isCharacterAlive() {
-
-       /* if (hp<=0) return false;
-        return true;*/
-        // checks if number is less than 0
         return hp > 0;
     }
 

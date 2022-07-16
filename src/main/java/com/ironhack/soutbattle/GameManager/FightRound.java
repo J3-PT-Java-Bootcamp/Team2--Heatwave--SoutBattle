@@ -6,15 +6,10 @@ import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import java.util.ArrayList;
 
 public class FightRound {
-//    final int hp_max
-// int hp_player_start, hp_enemy_start;
-// int hp_player_end, hp_enemy_end;
-// int staminaMana_player_start,staminaMana_enemy_start;
-// String attackName_player, attackName_enemy;
-    private ArrayList<TextObject> playerStates;
-    private ArrayList<TextObject> enemyStates;
+    private final ArrayList<TextObject> playerStates;
+    private final ArrayList<TextObject> enemyStates;
     private String playerAttack,enemyAttack;
-    public FightReport report;
+    public final FightReport report;
 
     public FightRound(GameCharacter player,GameCharacter enemy,FightReport report) {
         this.enemyStates=new java.util.ArrayList<>();
@@ -51,17 +46,8 @@ public class FightRound {
         return playerAttack;
     }
 
-    private FightRound setPlayerAttack(String playerAttack) {
-        this.playerAttack = playerAttack;
-        return this;
-    }
-
     public String getEnemyAttack() {
         return enemyAttack;
     }
 
-    private FightRound setEnemyAttack(String enemyAttack) {
-        this.enemyAttack = enemyAttack;
-        return this;
-    }
 }

@@ -88,9 +88,8 @@ public class TextObject {
         return totalWidth;
     }
 
-    private TextObject setTotalWidth(int totalWidth) {
+    private void setTotalWidth(int totalWidth) {
         this.totalWidth = Math.max(totalWidth, getTotalWidth());
-        return this;
     }
 
     public int getTotalHeight() {
@@ -98,9 +97,8 @@ public class TextObject {
         return this.totalHeight;
     }
 
-    private TextObject setTotalHeight() {
+    private void setTotalHeight() {
         this.totalHeight = getText().size();
-        return this;
     }
 
     public boolean hasText() {
@@ -157,20 +155,6 @@ public class TextObject {
                 return this;
             }
         }
-        return this;
-    }
-
-    /**
-     * Adds new lines to text by appending them vertically
-     *
-     * @param txtCollection TextObject[] collection to be added
-     *
-     * @return this TextObject itself to allow chained calls
-     *
-     * @//TODO: 04/07/2022 Create method to append various TextObjects vertically
-     */
-    TextObject addGroupMerged(TextObject[] txtCollection) {
-        //TODO
         return this;
     }
 
@@ -277,7 +261,6 @@ public class TextObject {
      *
      * @return String[] array with all resulting strings
      *
-     * @// TODO: 04/07/2022 Implement capacity to check if there is too much blank space and allow to trim it
      */
     private String[] wrapLine(String line, int limit) {
         String[] result;
@@ -433,7 +416,6 @@ public class TextObject {
      *
      * @return new TextObject
      *
-     * @// TODO: 04/07/2022 test method and check if deals with hard wrapping
      */
     public TextObject getResizedText(int newWidth, int newHeight) {
         return new TextObject(this, scroll, newWidth, newHeight);

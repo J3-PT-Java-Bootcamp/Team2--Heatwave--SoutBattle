@@ -4,16 +4,17 @@ import com.google.gson.Gson;
 import com.ironhack.soutbattle.Characters.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import static com.ironhack.soutbattle.ScreenManager.PrinterConstants.MAX_FIGHTERS;
 
 public class GameData {
-    public String[][] parties;
-    public String[] graveyard;
-    public String userName;
+    private String[][] parties;
+    private String[] graveyard;
+    private String userName;
 //    public final com.google.gson.Gson gson;
-    public java.util.HashMap<String,Integer> usedNames;
+    public HashMap<String,Integer> usedNames;
 
     GameData() {
         this.usedNames=new java.util.HashMap<>();
@@ -33,8 +34,8 @@ public class GameData {
 
     public ArrayList<Party> deserializeParties() {
         var resArr = new ArrayList<Party>();
-        for (int i = 0; i < this.parties.length; i++) {
-            resArr.add(new Party(parties[i]));
+        for (String[] party : this.parties) {
+            resArr.add(new com.ironhack.soutbattle.Characters.Party(party));
         }
         return resArr;
     }
@@ -58,7 +59,7 @@ public class GameData {
         return this;
     }
 
-    private String getUserName() {
+    public String getUserName() {
         return userName;
     }
 
@@ -67,12 +68,8 @@ public class GameData {
         return this;
     }
 
-    GameData setUsedNames(java.util.HashMap<String, Integer> usedNames) {
+    void setUsedNames(java.util.HashMap<String, Integer> usedNames) {
         this.usedNames = usedNames;
-        return this;
     }
 
-    private java.util.HashMap<String, Integer> getUsedNames() {
-        return usedNames;
-    }
 }

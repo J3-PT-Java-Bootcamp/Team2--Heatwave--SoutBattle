@@ -1,11 +1,10 @@
 package com.ironhack.soutbattle.ScreenManager.TextObjects.Animations;
 
 import com.ironhack.soutbattle.ScreenManager.ColorFactory;
-import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 public class TranslateAnimation extends AnimationObject {
     @Override
-    public TextObject animate(TextObject object, int frames, int max_width) {
+    public void animate(com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject object, int frames, int max_width) {
         String text = null;
         try {
             text = String.valueOf(object.get(0));
@@ -25,6 +24,6 @@ public class TranslateAnimation extends AnimationObject {
                 //TODO HANDLE
             }
         }
-        return object.setPrintSpeed(10);
+        object.setPrintSpeed(10);
     }
 }

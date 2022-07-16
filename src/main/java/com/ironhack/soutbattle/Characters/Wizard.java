@@ -4,7 +4,6 @@ import com.ironhack.soutbattle.GameManager.FightRound;
 import com.ironhack.soutbattle.GameManager.GameManager;
 import com.ironhack.soutbattle.ScreenManager.ColorFactory;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
-import net.datafaker.Faker;
 
 import java.util.Random;
 
@@ -36,12 +35,8 @@ public class Wizard extends GameCharacter {
     }
 
     //---------------------------------------------------------------------------------------------------GETTERSnSETTERS
-    public int getMana() {
-        return mana;
-    }
-
     public void setMana(int mana) {
-        Math.min(this.mana + mana, MAX_MANA);
+        this.mana=Math.min(this.mana + mana, MAX_MANA);
     }
 
     public int getIntelligence() {
@@ -52,10 +47,6 @@ public class Wizard extends GameCharacter {
         this.intelligence = Math.min(intelligence,50);
     }
 
-    //-------------------------------------------------------------------------------------------------------------PRINT
-    /*
-     * Set of methods used by ConsolePrinter to print GameCharacter objects
-     */
     @Override
     public TextObject getVariableAttributes() {
         return new TextObject(TextStyle.BOLD + "HP: " +
@@ -69,6 +60,10 @@ public class Wizard extends GameCharacter {
                 LIMIT_X / 3,
                 LIMIT_Y);
     }
+    //-------------------------------------------------------------------------------------------------------------PRINT
+    /*
+     * Set of methods used by ConsolePrinter to print GameCharacter objects
+     */
 
     @Override
     TextObject getAttributes(TextObject textObj) {
@@ -94,7 +89,7 @@ public class Wizard extends GameCharacter {
             } else {
                 attackName = throwFireball(target);
             }
-        } else if (mana < 5) {
+        } else{
             attackName = throwStaffHit(target);
         }
         if (isPlayer()) round.addAttackReport(this, target, attackName);

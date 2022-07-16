@@ -8,18 +8,14 @@ import static com.ironhack.soutbattle.ScreenManager.ColorFactory.DELETE_CURRENT_
 public class DynamicLine extends TextObject {
 
     int delay;//milliseconds
-    int repeat;
-    int duration;
     int currentFrame;
-    AnimationObject[] animations;
+    final AnimationObject[] animations;
 
-    public DynamicLine(int maxWidth, int maxHeight, int delay, int repeat, int duration, AnimationObject... animations) {
+    public DynamicLine(int maxWidth, int maxHeight, int delay, AnimationObject... animations) {
         super(Scroll.LINE, maxWidth, maxHeight);
         setDelay(delay);
-        setRepeat(repeat);
         this.animations = animations;
         this.currentFrame = 0;
-        this.duration = duration;
     }
 
     protected int calculateFrames(int duration) {
@@ -33,22 +29,8 @@ public class DynamicLine extends TextObject {
     }
 
 
-    private DynamicLine setDelay(int delay) {
+    private void setDelay(int delay) {
         this.delay = delay;
-        return this;
-    }
-
-    private int getRepeat() {
-        return repeat;
-    }
-
-    private DynamicLine setRepeat(int repeat) {
-        this.repeat = repeat;
-        return this;
-    }
-
-    private int getCurrentFrame() {
-        return currentFrame;
     }
 
     @Override

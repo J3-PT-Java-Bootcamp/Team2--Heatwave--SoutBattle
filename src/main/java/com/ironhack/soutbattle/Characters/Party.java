@@ -15,7 +15,7 @@ public class Party {
     private final ArrayList<GameCharacter> gameCharacterList;
     //    private GameManager.GameManager game;
     private final String name;
-    private Boolean isPlayer;
+    private final Boolean isPlayer;
     private int wins;
 
 
@@ -55,9 +55,8 @@ public class Party {
         return wins;
     }
 
-    public Party addWin() {
+    public void addWin() {
         this.wins++;
-        return this;
     }
 
     public String getName() {
@@ -108,11 +107,9 @@ public class Party {
      * @return TextObject with all characters from party aligned in columns to be printed
      */
     public TextObject[] toTextObject() {
-        var txt = new TextObject(Scroll.NO, LIMIT_X + 20, LIMIT_Y/2);
-
         ArrayList<TextObject> fighters = new ArrayList<>();
-        for (int i = 0; i < gameCharacterList.size(); i++) {
-            fighters.add(gameCharacterList.get(i).toTextObject());
+        for (GameCharacter character : gameCharacterList) {
+            fighters.add(character.toTextObject());
         }
 
         return fighters.toArray(new TextObject[0]);

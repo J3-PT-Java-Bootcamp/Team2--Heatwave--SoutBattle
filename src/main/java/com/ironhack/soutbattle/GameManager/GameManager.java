@@ -6,7 +6,6 @@ import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.Characters.Party;
 import com.ironhack.soutbattle.ScreenManager.ConsolePrinter;
 import com.ironhack.soutbattle.ScreenManager.GoBackException;
-import net.datafaker.Faker;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -17,7 +16,7 @@ import static com.ironhack.soutbattle.GameManager.RomanNumber.toRoman;
 public class GameManager {
     private ArrayList<GameCharacter> graveyard;
     private final ConsolePrinter printer;
-    Gson gson;
+    final Gson gson;
     private ArrayList<Party> parties;
     private Party playerParty;
     private GameData gameData;
@@ -115,7 +114,7 @@ public class GameManager {
                     } else printer.chooseCharacter(playerParty);
                 }
                 com.ironhack.soutbattle.Characters.GameCharacter currentEnemy = enemyParty.getRandomLiveCharacter();//get random enemy alive fighter;
-                var report=new FightReport(this, currentPlayer, currentEnemy);
+                var report=new FightReport(currentPlayer, currentEnemy);
                 int playerBonus=0;
                 int enemyBonus=0;
                 do{
@@ -142,7 +141,7 @@ public class GameManager {
 
         if (playerWins){
             playerParty.addWin();
-            this.graveyard=playerParty.restoreParty(graveyard,playerWins);
+            this.graveyard=playerParty.restoreParty(graveyard, true);
         }else{
             this.graveyard=this.playerParty.defeatParty(graveyard);
             this.parties.remove(playerParty);
@@ -166,7 +165,7 @@ public class GameManager {
     private void loadData() throws Exception {
         var reader = new FileReader("gameData.txt");
         this.gameData = gson.fromJson(reader, GameData.class);
-        this.userName = gameData.userName;
+        this.userName = gameData.getUserName();
         this.parties = gameData.deserializeParties();
         usedNames=gameData.usedNames;
         graveyard = gameData.deserializeGraveyard();
@@ -188,8 +187,8 @@ public class GameManager {
 
     }
 
-    private GameData updateGameData() {
-        return gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName).setUsedNames(usedNames);
+    private void updateGameData() {
+        gameData.serializeGraveyard(graveyard).serializeParties(this.parties).setUserName(this.userName).setUsedNames(usedNames);
     }
 
     private void clearAllData() {

@@ -1,11 +1,10 @@
 package com.ironhack.soutbattle.ScreenManager.TextObjects.Animations;
 
 import com.ironhack.soutbattle.ScreenManager.ColorFactory;
-import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 
 public class ReverseTranslateAnimation extends AnimationObject {
     @Override
-    public TextObject animate(TextObject object, int frames, int max_width) {
+    public void animate(com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject object, int frames, int max_width) {
         String text = null;
         try {
             text = String.valueOf(object.get(0));
@@ -21,6 +20,6 @@ public class ReverseTranslateAnimation extends AnimationObject {
             object.addText(ColorFactory.BLANK_SPACE.repeat(distance - frameDist * j) + text);
         }
         object.addText(text);
-        return object.setPrintSpeed(10);
+        object.setPrintSpeed(10);
     }
 }

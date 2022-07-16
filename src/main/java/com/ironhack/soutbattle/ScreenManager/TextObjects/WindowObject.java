@@ -10,13 +10,12 @@ import static com.ironhack.soutbattle.ScreenManager.ColorFactory.BLANK_SPACE;
 import static com.ironhack.soutbattle.ScreenManager.ColorFactory.NEW_LINE;
 
 public class WindowObject extends TextObject{
-    Point borderSize;
-    Point margin;
+    final Point borderSize;
+    final Point margin;
     String[] pattern;
     String title;
-    String[] horizontalPattern;
-    String[] verticalPattern;
-    int windowWidth,windowHeight;
+    final int windowWidth;
+    final int windowHeight;
     private BgColors frameColor,bgColor;
     private CColors txtColor,titleColor;
 

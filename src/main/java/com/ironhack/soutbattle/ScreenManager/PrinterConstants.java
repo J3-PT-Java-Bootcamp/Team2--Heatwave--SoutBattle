@@ -7,7 +7,8 @@ import static com.ironhack.soutbattle.ScreenManager.ColorFactory.TextStyle;
 import static com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scroll;
 
 public class PrinterConstants {
-    public final static int LIMIT_X=120,LIMIT_Y=20,TAB_INDENT=5; //Screen sizes in characters
+    public final static int LIMIT_X=120;
+    public final static int LIMIT_Y=20;
     public final static String CENTER_CARET = BLANK_SPACE.repeat(LIMIT_X / 2);
     public final static int FIGHT_SPEED=6;
     public final static String GAME_NAME="SOUT.Battle";

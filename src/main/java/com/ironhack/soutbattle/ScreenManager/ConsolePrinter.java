@@ -4,8 +4,6 @@ import com.ironhack.soutbattle.Characters.GameCharacter;
 import com.ironhack.soutbattle.Characters.Party;
 import com.ironhack.soutbattle.GameManager.FightReport;
 import com.ironhack.soutbattle.GameManager.GameManager;
-import com.ironhack.soutbattle.ScreenManager.ColorFactory.BgColors;
-import com.ironhack.soutbattle.ScreenManager.ColorFactory.CColors;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.DynamicLine;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject;
 import com.ironhack.soutbattle.ScreenManager.TextObjects.TextObject.Scroll;
@@ -134,6 +132,7 @@ public class ConsolePrinter {
         }
         sendToQueue(CANDLES.alignTextCenter());
         startPrint();
+        waitFor(500);
 
     }
 
@@ -178,6 +177,7 @@ public class ConsolePrinter {
      * @see GameManager
      * @return Party chosen;
      */
+    @SuppressWarnings("unused")
     public Party chooseParty(ArrayList<Party> parties) {
         int col = (int) Math.ceil((parties.size()+1 )/ 10.0);
         int charLimit=  (int) Math.floor(col>2?LIMIT_X / col:LIMIT_X/2);
@@ -187,7 +187,6 @@ public class ConsolePrinter {
             txtObjs[i] = new TextObject(Scroll.BLOCK,
                  charLimit , 1);
         }
-        int objIndex = 0;
         String backName=" : 0 --> Back To Parties";
         txtObjs[0].addText(backName+BLANK_SPACE.repeat(charLimit - txtObjs[0].countValidCharacters(backName)-2)+BLANK_SPACE);
         for (int i = 1; i < parties.size()+1; i++) {
@@ -262,8 +261,6 @@ public class ConsolePrinter {
         sendToQueue(fullTxtObj);
         startPrint();
         GameCharacter[] aliveFighters = java.util.Arrays.copyOf(party.getAliveFighters().toArray(new GameCharacter[0]),MAX_FIGHTERS+1);
-//        var aliveFighters= party.getAliveFighters();
-//        aliveFighters.add(null);
         int resVal=getIntFromInput(aliveFighters);
         if (resVal==0) return null;
         if(!party.getCharacter(resVal-1).isAlive())return chooseCharacter(party);
@@ -286,8 +283,7 @@ public class ConsolePrinter {
     private DynamicLine createFightLine(FightReport report) throws Exception {
 
         var charLimit=LIMIT_X/3;
-        var resLine= new DynamicLine(LIMIT_X,LIMIT_Y,1,2,100);
-        int auxCounter=0;
+        var resLine= new DynamicLine(LIMIT_X,LIMIT_Y,1);
         String player= "";
         String enemy= "";
         String msg="";
@@ -346,10 +342,6 @@ public class ConsolePrinter {
                         CColors.BRIGHT_GREEN,
                         CColors.GREEN
                 ));
-//        int remSize= LIMIT_Y-HEADER.getTotalHeight()-FIGHT_TITLE.getTotalHeight()-player.getTotalHeight()-1;
-//        for (int i = 0; i < remSize; i++) {
-//            res.addText(BLANK_SPACE.repeat(charLimit));
-//        }
         for (int i = 0; i < player.getTotalHeight(); i++) {
 
             res.addText(BLANK_SPACE.repeat(charLimit-res.countValidCharacters(player.get(i)))+player.get(i)
@@ -365,7 +357,7 @@ public class ConsolePrinter {
         sendToQueue(playerWins?YOU_WIN.colorizeAllText():GAME_OVER.colorizeAllText(CColors.RED, CColors.PURPLE, CColors.BRIGHT_PURPLE));
         startPrint();
         waitFor(2500);
-;    }
+    }
 
     public void goodBye(String userName) {
         clearScreen();
@@ -480,7 +472,7 @@ public class ConsolePrinter {
 
     //-----------------------------------------------------------------------------------------------------INPUT_METHODS
     private void showErrorLine() {
-        var line = new DynamicLine(LIMIT_X, 1, 1, 0, 2);
+        var line = new DynamicLine(LIMIT_X, 1, 1);
         line.addText(CColors.BRIGHT_RED + "ERR_   Input not recognized" + TextStyle.RESET);
         line.addText(CColors.BRIGHT_GREEN + " TRY AGAIN " + TextStyle.RESET).alignTextCenter();
         line.addText(CENTER_CARET);
