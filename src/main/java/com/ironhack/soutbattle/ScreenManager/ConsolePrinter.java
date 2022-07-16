@@ -138,16 +138,25 @@ public class ConsolePrinter {
     }
 
     public void readMe() {
-        sendToQueue(GAME_OVER);
-        sendToQueue(FIGHT_TITLE);
-        sendToQueue(YOU_WIN);
+        sendToQueue(TEAM_LOGO);
+        sendToQueue(new TextObject("Welcome to "+GAME_NAME, TextObject.Scroll.TYPEWRITER,LIMIT_X,LIMIT_Y)
+                .addText(BLANK_SPACE).addText("This is a group projects done in our IronHack Backend Developer Bootcamp")
+                .addText("Our team is called HeatWave!")
+                .addText("And is formed by: \n-Abby Freeman\n-Beatriz Ibanez\n-Didac Llorens")
+                .addText(BLANK_SPACE)
+                .addText("HOW TO PLAY?")
+                .addText("To start playing, you will need a party full of fighters first!")
+                .addText("Assign a name to your random generated party, and select it in the next screen")
+                .addText("Lately you should choose a character to fight against enemy")
+                .addText("They will fight until only one lasts")
+                .addText("All fighters will fight until a entire party is destroyed...")
+                .addText("Think well who to send in each occasion, it may change your destiny!!!")
+                .addText(BLANK_SPACE)
+                .addText("Thanx 4 Playing!")
+                .alignTextCenter().alignTextMiddle().setPrintSpeed(10)
+        );
         sendToQueue(CANDLES);
-        sendToQueue(CASTLE);
-        sendToQueue(TOMB);
-        sendToQueue(CROIX);
-        sendToQueue(IN_MEMORIAM);
-        sendToQueue(WARRIOR_IMG);
-        sendToQueue(WIZARD_IMG);
+        startPrint();
 
 
     }
@@ -355,7 +364,7 @@ public class ConsolePrinter {
         clearScreen();
         sendToQueue(playerWins?YOU_WIN.colorizeAllText():GAME_OVER.colorizeAllText(CColors.RED, CColors.PURPLE, CColors.BRIGHT_PURPLE));
         startPrint();
-        waitFor(5000);
+        waitFor(2500);
 ;    }
 
     public void goodBye(String userName) {

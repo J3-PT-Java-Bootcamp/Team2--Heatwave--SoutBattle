@@ -71,7 +71,7 @@ public class GameManager {
             switch (printer.showMenu(false)) {
                 case PLAY -> playGame();
                 case NEW_PARTY -> createNewParty();
-                case ABOUT -> gameOver();            //  printer.readMe();
+                case ABOUT ->  printer.readMe();
 
                 case MEMORIAL -> printer.showMemorial(graveyard);
                 case CALIBRATE -> printer.calibrateScreen();
